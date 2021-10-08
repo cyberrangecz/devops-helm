@@ -1,0 +1,34 @@
+{{- with .Values.trainingFeedback }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-configmap
+data:
+  kypo-training-feedback.properties: |
+    ## server port for a given service, e.g., 8088
+    server.port=8088
+    ## server context path (the base url for the service), e.g., /kypo-training-feedback/api/v1
+    server.servlet.context-path={{ $.Values.trainingFeedback.contextPath }}
+    ## microservice name which is used in user management service for identification of this service, e.g. kypo-training-feedback
+    microservice.name=kypo-training-feedback
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    cors.allowed.origins={{ $.Values.kypoCrpUrl }}
+
+    # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
+    user-and-group-server.uri=http://{{ $.Values.userAndGroup.name }}:{{ $.Values.userAndGroup.port }}{{ $.Values.userAndGroup.contextPath }}
+    # calling kypo-elasticsearch-service, e.g., http://elastic-service:8085/kypo-elastic/api/v1
+    elasticsearch-service.uri=http://{{ $.Values.elasticsearch.name }}:{{ $.Values.elasticsearch.port }}{{ $.Values.elasticsearch.contextPath }}
+
+    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+    spring.datasource.url=jdbc:postgresql://{{ $.Values.databaseHost }}:5432/kypo-training-feedback
+    spring.datasource.username=postgres
+    spring.datasource.password=postgres
+    spring.datasource.driver-class-name=org.postgresql.Driver
+
+    spring.jpa.open-in-view=false
+
+    #logging
+    spring.jpa.show-sql=true
+    logging.level.cz.muni.ics.kypo.training.feedback=DEBUG
+{{- end -}}

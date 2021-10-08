@@ -1,0 +1,486 @@
+#  There are basically two types of variables in this file:
+#
+#  1. Classic variables, which every of them is commented and represent some key and value.
+#  2. Variables representing services, which are used for deployment.
+#
+#  Structure of service variable is shown at the end of this file. 
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+angularFrontend:
+  name: angular-frontend
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-frontend
+    tag: v12.1.0
+ 
+  port: 8000
+  contextPath: /
+
+  mounts:
+    - name: kypo-config
+      extension: .json
+      mountPath: /app/assets/
+      isOneFile: true
+      type: 
+        configMap:
+          name: angular-frontend-configmap
+
+sandbox:
+  name: sandbox-service
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
+    tag: v0.15.1
+
+  port: 8000
+  contextPath: /kypo-sandbox-service/api/v1/
+
+  environments:
+    - name: SERVICE_PRECONDITION
+      value: uag-service:8084
+
+  mounts:
+    - name: config
+      extension: .yml
+      mountPath: /app/
+      isOneFile: true
+      type: 
+        configMap:
+          name: sandbox-service-configmap
+
+    - name: supervisord
+      extension: .conf
+      mountPath: /etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: sandbox-service-configmap
+
+    - name: git-ssh-key
+      extension:
+      mountPath: /root/.ssh/
+      isOneFile: true
+      mode: 256
+      type: 
+        secret:
+          secretName: private-git-ssh-key
+
+    - name: ca-certificates
+      extension: .crt
+      mountPath: /etc/ssl/certs/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: ca-certificates-secret
+
+    - name: kypo-crp-proxy-key
+      extension:
+      mountPath: /root/.ssh/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: kypo-crp-proxy-key
+
+    - name: ansible-runner-vol
+      extension:
+      mountPath: /var/opt/kypo/kypo-ansible-runner-volumes
+      isOneFile: false
+      type: 
+        hostPath:
+          path: /var/opt/kypo/kypo-ansible-runner-volumes
+          type: Directory
+
+    - name: docker-socket
+      extension:
+      mountPath: /var/run/docker.sock
+      isOneFile: false
+      type: 
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+
+adaptiveTraining:
+  name: adaptive-training-service
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-adaptive-training-service
+    tag: v1.0.43
+
+  port: 8082
+  contextPath: /kypo-adaptive-training/api/v1/
+
+  environments:
+    - name: SERVICE_PRECONDITION
+      value: uag-service:8084
+
+  mounts:
+    - name: kypo-adaptive-training
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: adaptive-training-service-configmap
+
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+training:
+  name: training-service
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-training-service
+    tag: v1.1.77
+
+  port: 8083
+  contextPath: /kypo-rest-training/api/v1/
+
+  environments:
+    - name: SERVICE_PRECONDITION
+      value: uag-service:8084
+
+  mounts:
+    - name: training
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: training-service-configmap
+
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+userAndGroup:
+  name: uag-service
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-uag-service
+    tag: v1.1.81
+
+  port: 8084
+  contextPath: /kypo-rest-user-and-group/api/v1/
+
+  mounts:
+    - name: user-and-group
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: uag-service-configmap
+
+    - name: initial-users
+      extension: .yml
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: uag-service-configmap
+
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+elasticsearch:
+  name: elasticsearch-service
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-elasticsearch-service
+    tag: v1.0.32
+  
+  port: 8085
+  contextPath: /kypo-elasticsearch-service/api/v1/
+
+  environments:
+    - name: SERVICE_PRECONDITION
+      value: uag-service:8084
+
+  mounts:
+    - name: kypo-elasticsearch-service
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: elasticsearch-service-configmap
+          
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+smartAssistant:
+  name: smart-assistant
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-adaptive-smart-assistant-service
+    tag: 21.06
+
+  port: 8086
+  contextPath: /kypo-adaptive-smart-assistant/api/v1/
+
+  mounts:
+    - name: kypo-adaptive-smart-assistant
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: smart-assistant-configmap
+
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+answersStorage:
+  name: answers-storage
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-answers-storage-service
+    tag: v1.0.6
+  
+  port: 8087
+  contextPath: /kypo-answers-storage/api/v1/
+
+  mounts:
+    - name: kypo-answers-storage
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: answers-storage-configmap
+
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+trainingFeedback:
+  name: training-feedback-service
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-training-feedback-service
+    tag: v1.0.2
+
+  port: 8088
+  contextPath: /kypo-training-feedback/api/v1/
+
+  mounts:
+    - name: kypo-training-feedback
+      extension: .properties
+      mountPath: /app/etc/
+      isOneFile: true
+      type: 
+        configMap:
+          name: training-feedback-service-configmap
+
+    - name: cacerts
+      extension:
+      mountPath: /usr/local/openjdk-11/lib/security/
+      isOneFile: true
+      type: 
+        secret:
+          secretName: java-cacerts-secret
+
+postgres:
+  name: postgres
+  replicasCount: 1
+  image:
+    url: postgres
+    tag: latest
+
+  port: 5432
+
+  environments:
+    - name: POSTGRES_PASSWORD
+      value: postgres
+  
+  dbUser: postgres
+  dbPassword: postgres
+
+  mounts:
+    - name: add-databases
+      extension: .sh
+      mountPath: /tmp/
+      isOneFile: true
+      mode: 0777
+      type: 
+        configMap:
+          name: postgres-configmap
+
+    - name: user-and-groups-init
+      extension: .sql
+      mountPath: /app/etc/
+      isOneFile: true
+      mode: 0777
+      type: 
+        configMap:
+          name: postgres-configmap
+      
+    - name: initial-users
+      extension: .yml
+      mountPath: /app/etc/
+      isOneFile: true
+      mode: 0777
+      type: 
+        configMap:
+          name: postgres-configmap
+
+    - name: postgres-pvc
+      mountPath: /var/lib/postgresql
+      isOneFile: false
+      type:
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+
+ansibleRunner:
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ansible-runner
+    tag: v1.3.2
+
+#kypoCrpUsers defines list of users created at the deploy of KYPO CRP, keys are self-explanatory
+kypoCrpUsers:
+    - sub: kypo-admin
+      iss: 'cda'
+      password: password
+      email: kypo-admin@example.com
+      fullName: "Demo Admin"
+      givenName: "Demo"
+      familyName: "Admin"
+      admin: True
+
+#databaseHost defines service which is used as database server for other services  
+databaseHost: postgres
+
+#kypoCrpHeadIp is the IP address of the KYPO head server.
+kypoCrpHeadIp:
+
+#These unfilled variables are filled by Ansible while deploying KYPO CRP.
+#-----------------------------------------------------------------------
+
+#kypoCrpUrl is the domain name of the KYPO head server.
+kypoCrpUrl:
+
+#kypoCrpDomain is the domain name of the KYPO head server.
+kypoCrpDomain:
+
+#kypoCrpInstanceName is the prefix of objects created in Openstack.
+kypoCrpInstanceName:
+
+#kypoCrpDns is the list of IP addresses to custom DNS servers.
+kypoCrpDns:
+
+#kypoCrpOsAuthUrl is the URL of OpenStack Identity service API.
+kypoCrpOsAuthUrl:
+
+#kypoCrpOsConsoleType is the OpenStack console type. One of: novnc, xvpvnc, spice-html5, rdp-html5, serial, webmks.
+kypoCrpOsConsoleType:
+
+#kypoCrpOidcs defines OIDC providers host/domain name, ID and logout url.
+kypoCrpOidcs:
+  - url: 
+    logoutUrl:
+    clientId:
+    label:
+#kypoCrpGit defines settings of used Git server.
+kypoCrpGit:
+  type:
+  server:
+  restServerUrl:
+  user:
+  accessToken:
+  ansibleNetworkingUrl:
+  ansibleNetworkingRev:
+
+#kypoCrpOpenstackWorkers defines number of Openstack workers deployed.
+kypoCrpOpenstackWorkers:
+
+#kypoCrpAnsibleWorkers defines number of Ansible workers deployed.
+kypoCrpAnsibleWorkers:
+
+#kypoCrpDefaultWorkers defines number of default workers deployed.
+kypoCrpDefaultWorkers:
+
+#kypoSandboxBuildTimeout defines timeout of sandbox (stack) creation in cloud in seconds.
+kypoSandboxBuildTimeout:
+
+#kypoSandboxDeleteTimeout defines timeout of sandbox (stack) deletion in cloud in seconds.
+kypoSandboxDeleteTimeout:
+
+#kypoSandboxAnsibleTimeout defines timeout for Ansible.
+kypoSandboxAnsibleTimeout:
+
+#kypoCrpProxyHost is hostname of used proxy server
+kypoCrpProxyHost:
+
+#kypoCrpProxyUser is user used for SSH of used proxy server
+kypoCrpProxyUser:
+
+#kypoCrpProxyKeyName is name of private key of used proxy server
+kypoCrpProxyKeyName:
+
+#kypoCrpProxyKey is private key of used proxy server
+kypoCrpProxyKey:
+
+# Service variable example
+# ------------------------
+# exampleService defines name of the service written in camelCase (do not use hyphens in this name)
+exampleService:
+# name, which will created pod contain, (recommended to split name by hyphens) 
+  name: example-service
+# replicasCount defines number of replicas created for this service
+  replicasCount:
+# image defines Docker image used for this service
+  image:
+#   url of Docker image
+    url: busybox
+#   tag of Docker image
+    tag: latest
+# list of ports of service, accessible only by other pods
+  ports:
+  - port: 8000
+    protocol: TCP
+# contextPath is path in url, which will point ingress to this service
+  contextPath: /path/to/service
+# list of mounts, which will be mounted into the created pod
+  mounts:
+#     name of mount, if the mount is file, it'll have the same name in pod
+#     name of mount, if the mount is volume, it has just representative function
+    - name: file
+#     extension is used only if the mount is SINGLE file, it's the extension of mounted file, OPTIONAL
+      extension: .yml
+#     mountPath is path in the created pod, where the file/folder'll be mounted
+      mountPath: /app/etc/
+#     isOneFile is used to recognize, if the mount is the SINGLE file 
+      isOneFile: true
+#     type is unique variable, defining type of used mount. It must be one of these https://kubernetes.io/docs/concepts/storage/volumes/
+#     and must have the exact structure of chosen volume
+      type:
+        configMap:
+          name: postgres-configmap

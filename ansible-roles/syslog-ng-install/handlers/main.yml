@@ -1,0 +1,4 @@
+---
+
+- name: syslog_ng_certificate_rehash
+  command: c_rehash /etc/ssl/certs

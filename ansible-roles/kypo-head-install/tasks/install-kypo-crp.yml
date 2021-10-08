@@ -1,0 +1,47 @@
+- name: create KYPO CRP Docker network
+  docker_network:
+    name: '{{ kypo_crp_docker_network_name }}'
+    driver: bridge
+    driver_options:
+      com.docker.network.driver.mtu: '{{ kypo_crp_docker_network_mtu }}'
+    ipam_driver: default
+    ipam_config:
+      - subnet: 192.168.44.0/24
+
+- name: Ensure k8s namespace is created
+  become: no
+  kubernetes.core.k8s:
+    name: "{{ helm_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Import KYPO CRP secrets for Kubernetes
+  become: no
+  command: sudo kubectl create secret generic "{{ item.name }}" --from-file="{{ item.secretName }}"="{{ item.path }}" --namespace="{{ helm_namespace }}"
+  with_items:
+  - { name: java-cacerts-secret, secretName: cacerts, path: "{{ kypo_crp_java_cacerts_dest }}"}
+  - { name: ca-certificates-secret, secretName: ca-certificates.crt, path: "/etc/ssl/certs/ca-certificates.crt"}
+  - { name: private-git-ssh-key, secretName: git-ssh-key, path: "{{ kypo_crp_runtime_dest }}/git-ssh-key"}
+  - { name: kypo-crp-proxy-key, secretName: kypo-crp-proxy-key, path: "{{ kypo_crp_runtime_dest }}/kypo-crp-proxy-key"}
+  register: result
+  failed_when:
+    - "'FAILED' in result.stderr"
+    - '"already exist" not in result.stdout'
+
+- name: Import tls secret
+  become: no
+  command: sudo kubectl create secret tls tls-secret --cert="{{ kypo_crp_runtime_dest }}/{{ kypo_crp_cert_name }}" --key="{{ kypo_crp_runtime_dest }}/{{ kypo_crp_cert_key_name }}" --namespace="{{ helm_namespace }}"
+  register: result
+  failed_when:
+    - "'FAILED' in result.stderr"
+    - '"already exist" not in result.stdout'
+    
+- name: Install Kypo head Helm chart
+  community.kubernetes.helm:
+    name: "kypo-head"
+    kubeconfig: "{{ kubeconfig_path }}"
+    namespace: "{{ helm_namespace }}"
+    chart_ref: "{{ role_path }}/../../helm/kypo-crp-head"
+    chart_version: "{{ kypo_chart_version }}"
+    values: "{{ lookup('template', 'templates/helm_values.yaml.j2') | from_yaml  }}"

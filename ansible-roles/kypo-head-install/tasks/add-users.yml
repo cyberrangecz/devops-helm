@@ -1,0 +1,71 @@
+---
+
+- name: Search for all Pods labelled app=postgres
+  become: no
+  community.kubernetes.k8s_info:
+    namespace: "{{ helm_namespace }}"
+    kind: Pod
+    label_selectors:
+      - app = postgres
+  register: postgres_pod
+  until: (postgres_pod.resources | length) != 0
+  retries: 15
+  delay: 6
+
+- name: Wait for connection to Postgres pod
+  become: no
+  community.kubernetes.k8s_exec:
+    namespace: "{{ helm_namespace }}"
+    pod: "{{ postgres_pod.resources[0].metadata.name }}"
+    command: "echo connected"
+  register: result
+  until: result is not failed
+  retries: 25
+  delay: 6
+
+- name: Check if all microservices are running
+  become: no
+  community.kubernetes.k8s_exec:
+    namespace: "{{ helm_namespace }}"
+    pod: "{{ postgres_pod.resources[0].metadata.name }}"
+    command: su postgres -c "psql --dbname user-and-group -c 'select * from microservice'"
+  register: microservices
+  until: microservices.stdout is search("5 rows")
+  changed_when: False
+  retries: 15
+  delay: 20
+
+- name: Check if KYPO user roles exist
+  become: no
+  community.kubernetes.k8s_exec:
+    namespace: "{{ helm_namespace }}"
+    pod: "{{ postgres_pod.resources[0].metadata.name }}"
+    command: su postgres -c "psql --dbname user-and-group -c "select * from role where role_type='{{ item }}'""
+  ignore_errors: True
+  register: kypo_role
+  until: kypo_role.stdout is search("1 row")
+  changed_when: False
+  retries: 10
+  delay: 3
+  loop:
+    - ROLE_ADAPTIVE_TRAINING_ADMINISTRATOR
+    - ROLE_ADAPTIVE_TRAINING_DESIGNER
+    - ROLE_ADAPTIVE_TRAINING_ORGANIZER
+    - ROLE_ADAPTIVE_TRAINING_TRAINEE
+    - ROLE_KYPO-SANDBOX-SERVICE_ADMIN
+    - ROLE_KYPO-SANDBOX-SERVICE_DESIGNER
+    - ROLE_KYPO-SANDBOX-SERVICE_ORGANIZER
+    - ROLE_KYPO-SANDBOX-SERVICE_TRAINEE
+    - ROLE_TRAINING_ADMINISTRATOR
+    - ROLE_TRAINING_DESIGNER
+    - ROLE_TRAINING_ORGANIZER
+    - ROLE_TRAINING_TRAINEE
+    - ROLE_USER_AND_GROUP_ADMINISTRATOR
+
+- name: Add users to database
+  become: no
+  community.kubernetes.k8s_exec:
+    namespace: "{{ helm_namespace }}"
+    pod: "{{ postgres_pod.resources[0].metadata.name }}"
+    command: su postgres -c "psql --dbname user-and-group -a < /app/etc/user-and-groups-init.sql"
+  ignore_errors: True

@@ -1,0 +1,9 @@
+---
+
+- include_tasks: ssl-certs-keys.yml
+
+- include_tasks: configure.yml
+
+- include_tasks: install-git.yml
+
+- include_tasks: populate-git.yml

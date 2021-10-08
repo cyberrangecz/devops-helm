@@ -1,0 +1,184 @@
+#-------------------------------------------------------------------------------
+# General Settings
+#-------------------------------------------------------------------------------
+
+
+# The FQDN of KYPO CRP.
+kypo_crp_domain: kypo.example.com
+
+# Complete URL of KYPO CRP
+kypo_crp_url: "https://{{ kypo_crp_domain }}"
+
+# Internal IP address of KYPO HEAD
+kypo_crp_internal_ip:
+
+# The prefix of the sandbox in the OpenStack cloud, maximum 8 characters.
+kypo_crp_instance_name: 
+
+# The maximum transmission unit for KYPO services.
+kypo_crp_docker_network_mtu: 1442
+
+# The URL of OpenStack Identity service API.
+kypo_crp_os_auth_url: "https://identity.cloud.muni.cz/v3"
+
+# The ID of application credentials to authenticate at the OpenStack cloud platform.
+kypo_crp_os_application_credential_id: 
+
+# The secret string of `kypo_crp_os_application_credential_id`.
+kypo_crp_os_application_credential_secret: 
+
+# The KYPO Jump host IP address or hostname.
+kypo_crp_proxy_host: 
+
+# The name of the user on the KYPO Jump host.
+kypo_crp_proxy_user: kypo
+
+# The list of IP addresses to custom DNS servers.
+kypo_crp_dns: []
+
+# The OpenStack console type. One of: novnc, spice-html5
+kypo_crp_os_console_type: spice-html5
+
+#-------------------------------------------------------------------------------
+# OIDC Providers
+#-------------------------------------------------------------------------------
+
+# The list of OIDC providers and their specification.
+#kypo_crp_oidc_providers:
+#      # The label that is displayed as an option for authentication.
+#    - label: Login with Example issuer
+#
+#      # The URL of resource server configuration.
+#      url: https://example.com:443/issuer
+#
+#      # The ID of OIDC client.
+#      client_id: alpha-num-string
+#
+#      # The ID of resource client.
+#      resource_client_id: alpha-num-string
+#
+#      # The secret for resource client `resource_client_id`.
+#      resource_client_secret: alpha-num-string
+
+kypo_crp_oidc_providers:
+     # The label that is displayed as an option for authentication.
+   - label: Login with Example issuer
+
+     # The URL of resource server configuration.
+     url: 
+
+     # The ID of OIDC client.
+     client_id: 
+
+     # The ID of resource client.
+     resource_client_id: 
+
+     # The secret for resource client `resource_client_id`.
+     resource_client_secret: 
+#-------------------------------------------------------------------------------
+# Initial Users
+#-------------------------------------------------------------------------------
+
+# The list of KYPO CRP users that will be added to the KYPO CRP users and groups
+#   service and the local OIDC provider (if present).
+#kypo_crp_users:
+#      # The unique identifier of the user within the OIDC provider.
+#    - sub: admin@example.com
+#
+#      # The URL of the OIDC provider.
+#      iss: https://example.com:443/issuer
+#
+#      # A password of the user.
+#      password: password
+#
+#      # An email address of the user.
+#      email: admin@example.com
+#
+#      # The user full name.
+#      fullName: "Demo Admin"
+#
+#      # The user given name.
+#      givenName: "Demo"
+#
+#      # The user family name.
+#      familyName: "Admin"
+#
+#      # The boolean value that represents whether the user is admin or not.
+#      admin: True
+
+# EXAMPLE for local issuer
+#
+kypo_crp_users:
+    - sub: kypo-admin
+      iss: '{{ kypo_crp_oidc_providers[0].url }}'
+      password: password
+      email: kypo-admin@example.com
+      fullName: "Demo Admin"
+      givenName: "Demo"
+      familyName: "Admin"
+      admin: True
+
+    - sub: kypo-user
+      iss: '{{ kypo_crp_oidc_providers[0].url }}'
+      password: password
+      email: kypo-user@example.com
+      fullName: "Demo User"
+      givenName: "Demo"
+      familyName: "User"
+      admin: False
+
+    - sub: john.doe
+      iss: '{{ kypo_crp_oidc_providers[0].url }}'
+      password: password
+      email: john.doe@example.com
+      fullName: "John Doe"
+      givenName: "John"
+      familyName: "Doe"
+      admin: False
+
+    - sub: jane.doe
+      iss: '{{ kypo_crp_oidc_providers[0].url }}'
+      password: password
+      email: jane.doe@example.com
+      fullName: "Jane Doe"
+      givenName: "Jane"
+      familyName: "Doe"
+      admin: False
+
+#-------------------------------------------------------------------------------
+# Git Settings
+#-------------------------------------------------------------------------------
+
+## The Git repository settings.
+#kypo_crp_git: '{{ kypo_crp_git_internal }}'
+kypo_crp_git:
+   # The type of Git repository. For external, keep the value set to GITLAB.
+   type: GITLAB
+
+   # The Git server hostname or IP address.
+   server: example.com
+
+   # The URL of Git REST server.
+   rest_server_url: https://example.com/
+
+   # The name of user used for communication with Git repository.
+   user: git
+
+   # The base64 encoded content of private SSL key that KYPO CRP uses to communicate with Git repository.
+   private_key: |-
+       <encoded-ssh-key
+       spanning-multiple-lines>
+
+   # The base64 encoded content of public part of `kypo_crp_git.private_key` SSL key.
+   public_key: |-
+       <encoded-ssh-key
+       spanning-multiple-lines>
+
+   # The access token for Git REST server.
+   access_token: alpha-num-string
+
+   # The URL of Ansible networking Git repository.
+   ansible_networking_url: git@example.com:kypo-ansible-stage-one.git
+
+   # The revision of Ansible networking Git repository. Either branch name, tag, or SHA commit hash.
+   ansible_networking_rev: master

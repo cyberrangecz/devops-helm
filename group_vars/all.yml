@@ -1,0 +1,20 @@
+#Version of Helm which will be used | latest if empty
+helm_release:
+
+#Kubernetes namespace in which will be KYPO CRP deployed
+helm_namespace: kypo
+
+#version of Elk Helm chart | latest if empty
+elk_chart_version:
+
+#version of Git Helm chart | latest if empty
+git_chart_version:
+
+#version of Syslog-ng Helm chart | latest if empty
+syslog_chart_version:
+
+#version of Kypo-CRP Helm chart | latest if empty
+kypo_chart_version:
+
+#path to Kubernetes config file
+kubeconfig_path: ~/.kube/config

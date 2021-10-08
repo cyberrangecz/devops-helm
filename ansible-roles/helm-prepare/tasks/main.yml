@@ -1,0 +1,38 @@
+---
+- name: Ensure Ansible version >= 2.9 is installed
+  block:
+    - name: Update package list
+      apt:
+        update_cache: yes
+
+    - name: Install software-properties-common
+      apt:
+        name: software-properties-common
+        state: present
+
+    - name: Add nginx stable repository from PPA and install its signing key on Debian target
+      ansible.builtin.apt_repository:
+        repo: 'ppa:ansible/ansible'
+        
+    - name: Install Ansible
+      apt:
+        name: ansible
+        state: present
+  when: ansible_version.full < "2.9"
+
+- name: Download Helm.
+  unarchive:
+    src: https://get.helm.sh/helm-{{ helm_version }}-{{ helm_platform }}-{{ helm_arch }}.tar.gz
+    dest: /tmp
+    remote_src: true
+    mode: 0755
+
+- name: Copy helm binary into place.
+  copy:
+    src: "/tmp/{{ helm_platform }}-{{ helm_arch }}/helm"
+    dest: "{{ helm_bin_path }}"
+    mode: 0755
+    remote_src: true
+
+- name: Install Kubernetes ansible module
+  command: ansible-galaxy collection install community.kubernetes

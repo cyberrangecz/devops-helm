@@ -1,0 +1,33 @@
+- name: Ensure /etc/docker exists
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: Ensure docker/deamon.json exists
+  file:
+    path: /etc/docker/daemon.json
+    state: touch
+
+- name: Set mtu for Docker containers
+  lineinfile:
+    path: /etc/docker/daemon.json
+    line: |
+      {
+        "mtu": 1442
+      }
+
+- name: Set default memlock for containers
+  lineinfile: 
+    path: /lib/systemd/system/docker.service
+    regexp: '^(.*)ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock(.*)$' 
+    line: 'ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --default-ulimit memlock=-1:-1'
+    backrefs: yes
+
+- name: Force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: Restart Docker
+  service:
+    name: docker
+    state: restarted

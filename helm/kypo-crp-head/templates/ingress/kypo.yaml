@@ -1,0 +1,92 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kypo-ingress
+spec:
+  tls:
+  - hosts:
+      - {{ .Values.kypoCrpDomain }}
+    secretName: tls-secret
+  rules:
+  - host: {{ .Values.kypoCrpDomain }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: angular-frontend
+            port:
+              number: 8000
+
+      - path: /kypo-sandbox-service/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: sandbox-service
+            port:
+              number: 8000
+
+      - path: /kypo-adaptive-training/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: adaptive-training-service
+            port:
+              number: 8082
+
+      - path: /kypo-rest-training/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: training-service
+            port:
+              number: 8083
+
+      - path: /kypo-rest-user-and-group/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: uag-service
+            port:
+              number: 8084
+
+      - path: /kypo-rest-user-and-group/api/v1/microservices
+        pathType: Prefix
+        backend:
+          service:
+            name: uag-service
+            port:
+              number: 8084
+
+      - path: /kypo-elasticsearch-service/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: elasticsearch-service
+            port:
+              number: 8085
+
+      - path: /kypo-adaptive-smart-assistant/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: smart-assistant
+            port:
+              number: 8086
+
+      - path: /kypo-answers-storage/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: answers-storage
+            port:
+              number: 8087
+
+      - path: /kypo-training-feedback/api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: training-feedback-service
+            port:
+              number: 8088

@@ -1,0 +1,143 @@
+elasticsearch:
+  name: kypo-elasticsearch
+  replicasCount: 1
+  image:
+    url: docker.elastic.co/elasticsearch/elasticsearch
+    tag: 7.7.0
+
+  ports:
+    - port: 9200
+      protocol: TCP
+    - port: 9300
+      protocol: TCP
+
+  environments:
+    - name: node.name
+      value: es01
+
+    - name: bootstrap.memory_lock
+      value: true
+
+    - name: discovery.type
+      value: single-node
+
+    - name: ES_JAVA_OPTS
+      value: -Xms512m -Xmx512m
+      
+  mounts:
+    - name: set-template
+      extension: .sh
+      mountPath: /tmp/
+      mode: 0777
+      isOneFile: true
+      type:
+        configMap:
+          name: kypo-elasticsearch-configmap
+
+    - name: data-elasticsearch
+      extension:
+      mountPath: /usr/share/elasticsearch/data
+      isOneFile: false
+      type:
+        persistentVolumeClaim:
+          claimName: data-elasticsearch-pvc
+
+logstash:
+  name: kypo-logstash
+  replicasCount: 1
+  image:
+    url: docker.elastic.co/logstash/logstash
+    tag: 7.7.0
+
+  ports:
+    - port: 5044
+      protocol: TCP
+    - port: 9600
+      protocol: TCP
+    - port: 10514
+      protocol: UDP
+    - port: 10515
+      protocol: UDP
+    - port: 10516
+      protocol: UDP
+
+  environments:
+
+  mounts:
+    - name: logstash
+      extension: .yml
+      mountPath: /usr/share/logstash/config/
+      isOneFile: true
+      type: 
+        configMap:
+          name: kypo-logstash-configmap
+
+    - name: pipelines
+      extension: .yml
+      mountPath: /usr/share/logstash/config/
+      isOneFile: true
+      type: 
+        configMap:
+          name: kypo-logstash-configmap
+
+    - name: 10-kypo-logstash-portal-actions
+      extension: .conf
+      mountPath: /usr/share/logstash/pipeline/
+      isOneFile: true
+      type: 
+        configMap:
+          name: kypo-logstash-configmap
+
+    - name: 20-kypo-logstash-bash-commands
+      extension: .conf
+      mountPath: /usr/share/logstash/pipeline/
+      isOneFile: true
+      type: 
+        configMap:
+          name: kypo-logstash-configmap
+
+    - name: 30-kypo-logstash-msf-commands
+      extension: .conf
+      mountPath: /usr/share/logstash/pipeline/
+      isOneFile: true
+      type: 
+        configMap:
+          name: kypo-logstash-configmap
+
+
+# Service variable example
+# ------------------------
+# exampleService defines name of the service written in camelCase (do not use hyphens in this name)
+exampleService:
+# name, which will created pod contain, (recommended to split name by hyphens) 
+  name: example-service
+# replicasCount defines number of replicas created for this service
+  replicasCount:
+# image defines Docker image used for this service
+  image:
+#   url of Docker image
+    url: busybox
+#   tag of Docker image
+    tag: latest
+# list of ports of service, accessible only by other pods
+  ports:
+  - port: 8000
+    protocol: TCP
+# contextPath is path in url, which will point ingress to this service
+  contextPath: /path/to/service
+# list of mounts, which will be mounted into the created pod
+  mounts:
+#     name of mount, if the mount is file, it'll have the same name in pod
+#     name of mount, if the mount is volume, it has just representative function
+    - name: file
+#     extension is used only if the mount is SINGLE file, it's the extension of mounted file, OPTIONAL
+      extension: .yml
+#     mountPath is path in the created pod, where the file/folder'll be mounted
+      mountPath: /app/etc/
+#     isOneFile is used to recognize, if the mount is the SINGLE file 
+      isOneFile: true
+#     type is unique variable, defining type of used mount. It must be one of these https://kubernetes.io/docs/concepts/storage/volumes/
+#     and must have the exact structure of chosen volume
+      type:
+        configMap:
+          name: postgres-configmap

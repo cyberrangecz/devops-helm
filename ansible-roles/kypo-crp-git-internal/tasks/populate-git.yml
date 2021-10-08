@@ -1,0 +1,51 @@
+- name: disable strict host key checking for gitlab.ics.muni.cz
+  blockinfile:
+      path: ~/.ssh/config
+      create: yes
+      block: |
+          Host gitlab.ics.muni.cz
+              StrictHostKeyChecking no
+
+- name: Clone required repositories
+  command: git clone -q --bare "{{ item }}"
+  args:
+    chdir: '{{ kypo_crp_config_dest }}'
+  with_items: "{{ internal_git_repos }}"
+  register: result
+  failed_when:
+    - "'FAILED' in result.stderr"
+    - '"already exists" not in result.stdout'
+    
+- name: Search for Pod labelled app=git-internal-ssh
+  become: no
+  community.kubernetes.k8s_info:
+    namespace: "{{ helm_namespace }}"
+    kind: Pod
+    label_selectors:
+      - app = git-internal-ssh
+  register: git_pod
+  until: (git_pod.resources | length) != 0
+  retries: 15
+  delay: 6
+
+- name: Prepare git folders
+  become: no
+  community.kubernetes.k8s_exec:
+    namespace: "{{ helm_namespace }}"
+    pod: "{{ git_pod.resources[0].metadata.name }}"
+    command: "mkdir -p /repos/{{ item }}"
+  register: result
+  until: result is not failed
+  retries: 15
+  delay: 6
+  with_items:
+    - backend-python/ansible-networking-stage
+    - prototypes-and-examples/sandbox-definitions
+    - useful-ansible-roles
+    
+- name: Copy cloned repositories
+  become: no
+  command: kubectl cp "{{ item.name }}" "{{ helm_namespace }}/{{ git_pod.resources[0].metadata.name }}:/repos/{{ item.dest }}"
+  args:
+    chdir: '{{ kypo_crp_config_dest }}'
+  with_items: "{{ internal_git_cloned_repos }}"

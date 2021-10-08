@@ -1,0 +1,72 @@
+{{- with .Values.adaptiveTraining }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-configmap
+data:
+  kypo-adaptive-training.properties: |
+    ## server port for a given service, e.g., 8082
+    server.port=8082
+    ## server context path (the base url for the service), e.g., /kypo-adaptive-training/api/v1
+    server.servlet.context-path={{ $.Values.adaptiveTraining.contextPath }}
+    ## microservice name which is used in user management service for identification of this service, e.g. kypo-adaptive-training
+    microservice.name=kypo-adaptive-training
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    cors.allowed.origins={{ $.Values.kypoCrpUrl }}
+
+    # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
+    user-and-group-server.uri=http://{{ $.Values.userAndGroup.name }}:{{ $.Values.userAndGroup.port }}{{ $.Values.userAndGroup.contextPath }}
+    # calling kypo-openstack, e.g., http://localhost:8080/kypo-openstack/api/v1
+    openstack-server.uri=http://{{ $.Values.sandbox.name }}:{{ $.Values.sandbox.port }}{{ $.Values.sandbox.contextPath }}
+    # calling kypo-elasticsearch-service, e.g., http://elastic-service:8085/kypo-elastic/api/v1
+    elasticsearch-service.uri=http://{{ $.Values.elasticsearch.name }}:{{ $.Values.elasticsearch.port }}{{ $.Values.elasticsearch.contextPath }}
+    # calling kypo-smart-assistant-service, e.g., http://smart-assistant-service:8086/kypo-adaptive-smart-assistant/api/v1
+    smart-assistant-service.uri=http://{{ $.Values.smartAssistant.name }}:{{ $.Values.smartAssistant.port }}{{ $.Values.smartAssistant.contextPath }}
+
+    # OpenID Connect OIDC configuration settings for a resource servers configuration
+    # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
+    ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server
+{{- range $index, $element := $.Values.kypoCrpOidcs }}
+    kypo.identity.providers[{{ $index }}].issuer= {{ $element.url }}
+    kypo.identity.providers[{{ $index }}].userInfoEndpoint=
+{{- end }}
+
+    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+    spring.datasource.url=jdbc:postgresql://{{ $.Values.databaseHost }}:5432/kypo-adaptive-training
+    spring.datasource.username=postgres
+    spring.datasource.password=postgres
+    spring.datasource.driver-class-name=org.postgresql.Driver
+
+    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
+    spring.data.jpa.repositories.enabled=true
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.hibernate.ddl-auto=
+    spring.jpa.show-sql=true 
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+
+    # spring-cloud
+    spring.cloud.refresh.enabled = false
+    ## disables the settings in application.properties in resource folder
+    spring.jmx.enabled=false
+    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
+    spring.jackson.serialization.write_dates_as_timestamps=false 
+    ## all atributes in JSON are in SNAKE_CASE
+    spring.jackson.property-naming-strategy=SNAKE_CASE
+
+    ## the requirement for ssl, e.g., false
+    security.require-ssl=false
+    management.health.refresh.enabled=false
+
+    # Logging
+    ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
+    logging.level.cz.muni.ics=DEBUG
+    kypo.audit.syslog.host=kypo-syslog-ng
+    kypo.audit.syslog.port=514
+    kypo.audit.messages.format=kypo-adaptive-training --- KYPO_PORTAL_EVENTS_AUDIT [%thread] %logger{5} --- %msg%n
+
+    elasticsearch.protocol=http
+    elasticsearch.host=kypo-elasticsearch
+    elasticsearch.port=9200
+{{- end -}}

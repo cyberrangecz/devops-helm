@@ -1,0 +1,15 @@
+{{- with .Values.elasticsearch }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-configmap
+data:
+  set-template.sh: |
+    #!/bin/bash
+    ELASTICSEARCH_API_ROOT="http://localhost:9200/"
+    TEMPLATE_INFO="_template/template_1"
+
+    #Set template
+    curl -H 'Content-Type: application/json' -X PUT -d '{"template":"*","index_patterns":["kypo*"],"mappings":{"default":{"properties":{"timestamp":{"type":"date","format":"epoch_millis"},"timestamp_ms":{"type":"date","format":"epoch_millis"},"start_time":{"type":"date","format":"epoch_millis"},"end_time":{"type":"date","format":"epoch_millis"},"game_time":{"type":"date","format":"epoch_millis"}}}},"settings":{"index.refresh_interval":"5s"}}' ${ELASTICSEARCH_API_ROOT}${TEMPLATE_INFO}?include_type_name=true
+
+{{- end -}}

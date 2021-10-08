@@ -1,0 +1,9 @@
+---
+# See available releases of helm: https://github.com/helm/helm/releases/
+helm_version: "v3.7.1"
+helm_platform: linux
+helm_arch: amd64
+helm_bin_path: /usr/local/bin/helm
+
+# See available releases of helm secrets: https://github.com/jkroepke/helm-secrets/tags
+helm_secrets_version: "v3.9.1"

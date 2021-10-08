@@ -1,0 +1,71 @@
+---
+kypo_crp_git_internal:
+    type: INTERNAL
+    server: git-internal-ssh
+    rest_server_url: http://git-internal-rest.lan:5000/
+    user: git
+    private_key: '{{ kypo_crp_git_internal_private_key }}'
+    public_key: '{{ kypo_crp_git_internal_public_key }}'
+    access_token: no-gitlab-token
+    ansible_networking_url: git@git-internal-ssh:/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
+    ansible_networking_rev: v1.0.0
+
+kypo_crp_templates_dir: '{{ role_path }}/templates'
+kypo_crp_files_dir: '{{ role_path }}/files'
+kypo_crp_cert_name: localhost.crt
+kypo_crp_cert_key_name: localhost.key
+
+kypo_crp_docker_network_name: kypo-platform-net
+kypo_crp_docker_network_mtu: 1442
+
+kypo_crp_instance_name: default0
+kypo_crp_internal_ip:
+kypo_crp_domain:
+kypo_crp_url: https://{{ kypo_crp_domain }}
+kypo_crp_config_dest: /opt/kypo
+kypo_crp_runtime_dest: '{{ kypo_crp_config_dest }}/runtime-data'
+kypo_crp_os_auth_url:
+kypo_crp_os_application_credential_id:
+kypo_crp_os_application_credential_secret:
+kypo_crp_proxy_host:
+kypo_crp_proxy_user:
+kypo_crp_proxy_key:
+kypo_crp_dns: []
+
+kypo_crp_os_console_type: spice-html5
+
+kypo_crp_proxy_key_name: kypo-crp-proxy-key
+
+kypo_crp_java_package: openjdk-11-jre-headless
+kypo_crp_java_cacerts_dest: /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts
+kypo_crp_java_cacerts_pass: changeit
+
+logout_uris: '{{ kypo_crp_oidc_configurations | map(attribute="end_session_endpoint") | list }}'
+
+kypo_crp_openstack_workers: 2
+kypo_crp_ansible_workers: 2
+kypo_crp_default_workers: 2
+
+kypo_crp_head_ip: 0.0.0.0
+
+kypo_sandbox_build_timeout: 7200
+kypo_sandbox_delete_timeout: 3600
+kypo_sandbox_ansible_timeout: 7200
+
+kypo_crp_oidc_providers:
+     # The label that is displayed as an option for authentication.
+   - label: Login with Example issuer
+
+     # The URL of resource server configuration.
+     url: "{{ kypo_crp_internal_ip }}:8443/csirtmu-dummy-issuer-server/"
+
+     # The ID of OIDC client.
+     client_id: alpha-num-string
+
+     # The ID of resource client.
+     resource_client_id: alpha-num-string
+
+     # The secret for resource client `resource_client_id`.
+     resource_client_secret: alpha-num-string
+
+data_index: 0

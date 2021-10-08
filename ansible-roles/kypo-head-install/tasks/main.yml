@@ -1,0 +1,8 @@
+
+- include_tasks: ssl-certs-keys.yml
+
+- include_tasks: oidc-configure.yml
+
+- include_tasks: install-kypo-crp.yml
+
+- include_tasks: add-users.yml

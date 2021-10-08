@@ -1,0 +1,5 @@
+- hosts: localhost
+  gather_facts: yes
+  become: yes
+  roles:
+      - name: ansible-roles/docker_prepare

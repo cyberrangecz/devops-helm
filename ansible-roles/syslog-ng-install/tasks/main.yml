@@ -1,0 +1,6 @@
+---
+- name: Include TLS configuration 
+  include_tasks: configure-tls.yml
+  when: syslog_ng_source_sandbox_protocol == "tls"
+
+- include_tasks: install-syslog-ng.yml

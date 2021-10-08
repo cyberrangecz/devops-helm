@@ -1,0 +1,47 @@
+{{- with .Values.trainingFeedback }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: {{ .replicasCount }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}
+        image: "{{ .image.url }}:{{ .image.tag }}"
+        volumeMounts:
+        {{- range .mounts }}
+        - name: {{ .name }}
+          mountPath: "{{ .mountPath }}{{ if .isOneFile }}{{ .name }}{{ .extension }}{{ end }}"
+          {{- if .isOneFile }}
+          subPath: "{{ .name }}{{ .extension }}"
+          {{- end }}
+        {{- end }}
+        {{- if .environments}}
+        env:
+          {{- range .environments }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+          {{- end }}
+        {{- end }}
+      volumes:
+        {{- range .mounts }}
+        - name: {{ .name }}
+          {{- .type | toYaml | nindent 10 }}
+          {{- if .isOneFile }}
+            items:
+            - key: "{{ .name }}{{ .extension }}"
+              path: "{{ .name }}{{ .extension }}" 
+              {{- if .mode }}
+              mode: {{ .mode }}
+              {{- end }}
+          {{- end }}
+        {{- end }}
+{{- end }}

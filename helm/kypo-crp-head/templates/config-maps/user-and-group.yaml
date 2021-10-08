@@ -1,0 +1,130 @@
+{{- with .Values.userAndGroup }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-configmap
+data:
+  user-and-group.properties: |
+    ## server port for a given service, e.g., 8084
+    server.port=8084
+    ## server context path (the base url for the service), e.g., /kypo-rest-user-and-group/api/v1
+    server.servlet.context-path={{ $.Values.userAndGroup.contextPath }}
+    ## microservice name which is used for identification of this service, e.g., kypo-user-and-group
+    service.name=kypo-user-and-group
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    cors.allowed.origins={{ $.Values.kypoCrpUrl }}
+
+    # OpenID Connect OIDC configuration settings for a resource servers configuration
+    # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
+    ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server
+{{- range $index, $element := $.Values.kypoCrpOidcs }}
+    kypo.identity.providers[{{ $index }}].issuer= {{ $element.url }}
+    kypo.identity.providers[{{ $index }}].userInfoEndpoint=
+{{- end }}
+
+    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+    spring.datasource.url=jdbc:postgresql://{{ $.Values.databaseHost }}:5432/user-and-group
+    spring.datasource.username=postgres
+    spring.datasource.password=postgres
+    spring.datasource.driver-class-name=org.postgresql.Driver
+
+    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
+    spring.data.jpa.repositories.enabled=true
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.hibernate.ddl-auto=
+    spring.jpa.show-sql=true 
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+
+    # spring-cloud
+    spring.cloud.refresh.enabled = false
+    ## disables the settings in application.properties in resource folder
+    spring.jmx.enabled=false
+    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
+    spring.jackson.serialization.write_dates_as_timestamps=false 
+    ## all atributes in JSON are in SNAKE_CASE
+    spring.jackson.property-naming-strategy=SNAKE_CASE
+
+    ## the requirement for ssl, e.g., false
+    security.require-ssl=false
+    management.health.refresh.enabled=false
+
+    ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
+    logging.level.cz.muni.ics=WARN
+  initial-users.yml: |
+{{- range $.Values.kypoCrpUsers }}
+    - user:
+        sub: {{ .sub }}
+        iss: {{ .iss }}
+        fullName: {{ .fullName }}
+        givenName: {{ .givenName }}
+        familyName: {{ .familyName }}
+      roles:
+  {{- if .admin }}
+        - "ROLE_USER_AND_GROUP_ADMINISTRATOR"
+  {{- else }}
+        - "ROLE_USER_AND_GROUP_USER"
+  {{- end }}
+{{- end }}
+  user-and-groups-init.sql: |
+    INSERT INTO idm_group(name, external_id, status, description, expiration_date) 
+    VALUES ('All Mighty Users', NULL, 'VALID', 'All mighty group', NULL) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group(name, external_id, status, description, expiration_date) 
+    VALUES ('Instructor', NULL, 'VALID', 'Adaptive and Linear Training Designer and Organizer', NULL) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id) 
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_USER_AND_GROUP_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ADMIN'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+    INSERT INTO idm_group_role(role_id, idm_group_id)
+    VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+{{- range $.Values.kypoCrpUsers }}
+  {{- if .admin }}  
+    INSERT INTO user_idm_group(user_id, idm_group_id)
+    VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+  {{- else }}
+    INSERT INTO user_idm_group(user_id, idm_group_id)
+    VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='DEFAULT-GROUP')) ON CONFLICT DO NOTHING;
+  {{- end }}
+{{- end }}  
+{{- end -}}

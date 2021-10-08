@@ -1,0 +1,76 @@
+---
+- name: ensure the existence of runtime directory
+  file:
+      path: '{{ kypo_crp_runtime_dest }}'
+      state: directory
+      recurse: yes
+
+- name: copy public part of ssl keys
+  copy:
+      content: '{{ item.content | b64decode }}'
+      dest: '{{ kypo_crp_runtime_dest }}/{{ item.name }}'
+  loop:
+      - content: '{{ kypo_crp_cert }}'
+        name: '{{ kypo_crp_cert_name }}'
+      - content: '{{ kypo_crp_git.public_key }}'
+        name: '{{ kypo_crp_git.server }}.pub'
+
+- name: copy private part of ssl keys
+  copy:
+      content: '{{ item.content | b64decode }}'
+      dest: '{{ kypo_crp_runtime_dest }}/{{ item.name }}'
+      mode: 0600
+  loop:
+      - content: '{{ kypo_crp_cert_key }}'
+        name: '{{ kypo_crp_cert_key_name }}'
+      - content: '{{ kypo_crp_git.private_key }}'
+        name: 'git-ssh-key'
+      - content: '{{ kypo_crp_proxy_key }}'
+        name: '{{ kypo_crp_proxy_key_name }}'
+  no_log: True
+
+- name: get certificate info
+  openssl_certificate_info:
+      path: '{{ kypo_crp_runtime_dest }}/{{ kypo_crp_cert_name }}'
+  register: kypo_crp_cert_info
+
+- name: get certificate key info
+  openssl_privatekey_info:
+      path: '{{ kypo_crp_runtime_dest }}/{{ kypo_crp_cert_key_name }}'
+  register: kypo_crp_cert_key_info
+
+- name: check that provided certificate does match its key
+  fail:
+      msg: certificate does not match its key
+  when: kypo_crp_cert_info.public_key != kypo_crp_cert_key_info.public_key
+
+- name: check that provided certificate did not expire
+  fail:
+      msg: certificate expired
+  when: kypo_crp_cert_info.expired
+
+- name: install java for keytool and cacerts
+  apt:
+      name: '{{ kypo_crp_java_package }}'
+      update_cache: yes
+
+- name: add certificate to java cacerts
+  java_cert:
+      cert_path: '{{ kypo_crp_runtime_dest }}/{{ kypo_crp_cert_name }}'
+      cert_alias: '{{ kypo_crp_cert_name }}'
+      keystore_path: '{{ kypo_crp_java_cacerts_dest }}'
+      keystore_pass: '{{ kypo_crp_java_cacerts_pass }}'
+      keystore_type: JKS
+
+- name: ensure folder for implicitly trusted certificates exists
+  file:
+      path: /usr/local/share/ca-certificates
+      state: directory
+
+- name: copy certificate
+  copy:
+      content: '{{ kypo_crp_cert | b64decode }}'
+      dest: '/usr/local/share/ca-certificates/{{ kypo_crp_cert_name }}'
+
+- name: update CA certificates
+  command: update-ca-certificates

@@ -1,0 +1,227 @@
+{{- with .Values.logstash }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-configmap
+data:
+  logstash.yml: |
+    #
+    # When enabled, process escaped characters such as \n and \" in strings in the
+    # pipeline configuration files.
+    #
+    config.support_escapes: true
+
+  pipelines.yml: |
+    -   path.config: /usr/share/logstash/pipeline/10-kypo-logstash-portal-actions.conf
+        pipeline.id: kypo-logstash-portal-actions
+        pipeline.workers: 2
+    -   path.config: /usr/share/logstash/pipeline/20-kypo-logstash-bash-commands.conf
+        pipeline.id: kypo-logstash-bash-commands
+        pipeline.workers: 3
+    -   path.config: /usr/share/logstash/pipeline/30-kypo-logstash-msf-commands.conf
+        pipeline.id: kypo-logstash-msf-commands
+        pipeline.workers: 3
+
+  10-kypo-logstash-portal-actions.conf: |
+    input {
+      udp {
+        port => 10514
+        codec => "json"
+      }
+    }
+    filter {
+        # filter messages that do not contain KYPO_PORTAL_EVENTS_AUDIT
+        if ("KYPO_PORTAL_EVENTS_AUDIT" not in [event][message]) {drop{}}
+        # match JSON object data which represents the audit event object and save them to auditmessage field
+        grok {
+            match => { "[event][message]" => "KYPO_PORTAL_EVENTS_AUDIT %{DATA:data} --- %{GREEDYDATA:auditmessage}" }
+        }
+        json {
+            source => "auditmessage"
+            target => "message"
+        }
+        # retrieve elements from JSON to compose Elasticsearch index correctly
+        mutate {
+            add_field => { "[@metadata][eseventtype]" => "%{[message][type]}" }
+            add_field => { "[@metadata][definitionId]" => "%{[message][training_definition_id]}"}
+            add_field => { "[@metadata][instanceId]" => "%{[message][training_instance_id]}"}
+            add_field => { "[@metadata][runId]" => "%{[message][training_run_id]}"}
+            add_field => { "[@metadata][poolId]" => "%{[message][pool_id]}"}
+            add_field => { "[@metadata][sandboxId]" => "%{[message][sandbox_id]}"}
+        }
+        # an index in Elasticsearch must be lowercase, so we need to lowercase it
+        mutate {
+            lowercase => [ "[@metadata][eseventtype]" ]
+        }
+        # add all Syslog fields to Syslog object
+        mutate {
+            add_field => { "[syslog][programname]" => "%{[event][programname]}"}
+            add_field => { "[syslog][procid]" => "%{[event][procid]}"}
+            add_field => { "[syslog][host]" => "%{host}"}
+            add_field => { "[syslog][facility]" => "%{[event][facility]}"}
+            add_field => { "[syslog][type]" => "syslog"}
+            add_field => { "[syslog][@version]" => "%{@version}"}
+            add_field => { "[syslog][severity]" => "%{[event][severity]}"}
+            add_field => { "[syslog][@timestamp]" => "%{@timestamp}"}
+        }
+        # remove Syslog fields (these are included in Syslog object now)
+        mutate {
+            remove_field => [ "data", "event", "auditmessage", "host", "@version", "@timestamp" ]
+        }
+        # here, we eliminate top-level field message and set all nested fields of the message as top-level fields
+        ruby {
+            code => "
+                begin
+                    message= event.get('message')
+                    if message!= NIL
+                        message.keys.each{|key| 
+                            event.set(key, message[key]) 
+                        } 
+                        event.remove('message')
+                    end
+                end
+            "
+        }
+    }
+    output {
+        elasticsearch {
+            hosts => [ "kypo-elasticsearch:9200" ]
+            index => "kypo.%{[@metadata][eseventtype]}_evt.pool=%{[@metadata][poolId]}.sandbox=%{[@metadata][sandboxId]}.definition=%{[@metadata][definitionId]}.instance=%{[@metadata][instanceId]}.run=%{[@metadata][runId]}"    
+            codec => json
+        } 
+    }
+
+  20-kypo-logstash-bash-commands.conf: |
+    input {
+      udp {
+        port => 10515
+        codec => "json"
+      }
+    }
+    filter {
+        # retrieve elements from structured data (RFC5424) and make them top-level elements
+        mutate {
+            add_field => { "pool_id" => "%{[event][pool_id]}" }
+            add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
+            add_field => { "hostname" => "%{[event][hostname]}"}
+            add_field => { "ip" => "%{[event][ip]}"}
+            add_field => { "cmd_type" => "bash-command"}
+            add_field => { "timestamp_str" => "%{@timestamp}"}
+        }
+        # convert ids to integer field
+        mutate {
+            convert => { "[event][pool_id]" => "integer" }
+            convert => { "[event][sandbox_id]" => "integer" }
+
+            # retrieve elements from json to compose Elasticsearch index correctly
+            add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
+            add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
+            add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
+
+            # convert programname to lowercase (Elasticsearch index cannot be in upper case)
+            lowercase => [ "[@metadata][source_app_identifier]" ]
+        }
+        json {
+            source => "[event][message]"
+            target => "message"
+        }
+
+        # here, we eliminate top-level field message and set all nested fields of the message as top-level fields
+        ruby {
+            code => "
+                begin
+                    message= event.get('message')
+                    if message!= NIL
+                        message.keys.each{|key| 
+                            event.set(key, message[key]) 
+                        }
+                        event.remove('message')
+                    end
+                end
+            "
+        }
+        # remove command line trailing white spaces
+        mutate {
+            strip => ["cmd"]
+        }
+        # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
+        mutate {
+            remove_field => ["uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
+        }
+    }
+    output {
+        elasticsearch {
+            hosts => [ "kypo-elasticsearch:9200" ]
+            index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+            codec => json
+        } 
+    }
+
+  30-kypo-logstash-msf-commands.conf: |
+    input {
+      udp {
+        port => 10516
+        codec => "json"
+      }
+    }
+    filter {
+        # retrieve elements from structured data (RFC5424) and make them top-level elements
+        mutate {
+            add_field => { "pool_id" => "%{[event][pool_id]}" }
+            add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
+            add_field => { "hostname" => "%{[event][hostname]}"}
+            add_field => { "ip" => "%{[event][ip]}"}
+            add_field => { "cmd_type" => "msf-command"}
+            add_field => { "timestamp_str" => "%{@timestamp}"}
+        }
+        # convert ids to integer field
+        mutate {
+            convert => { "[event][pool_id]" => "integer" }
+            convert => { "[event][sandbox_id]" => "integer" }
+
+            # retrieve elements from json to compose Elasticsearch index correctly
+            add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
+            add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
+            add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
+            
+            # convert programname to lowercase (Elasticsearch index cannot be in upper case)
+            lowercase => [ "[@metadata][source_app_identifier]" ]    
+        }
+
+        json {
+            source => "[event][message]"
+            target => "message"
+        }
+
+        # here, we eliminate top-level field message and set all nested fields of the message as top-level fields
+        ruby {
+            code => "
+                begin
+                    message= event.get('message')
+                    if message!= NIL
+                        message.keys.each{|key| 
+                            event.set(key, message[key]) 
+                        }
+                        event.remove('message')
+                    end
+                end
+            "
+        }
+
+        # remove command line trailing white spaces
+        mutate {
+            strip => ["cmd"]
+        }
+        # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
+        mutate {
+            remove_field => ["uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
+        }
+    }
+    output {
+        elasticsearch {
+            hosts => [ "kypo-elasticsearch:9200" ]
+            index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+            codec => json
+        } 
+    } 
+{{- end -}}
