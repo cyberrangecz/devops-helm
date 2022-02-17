@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kypo-git-internal
+description: A Helm chart deploying an internal git, used by KYPO CRP deployed on Kubernetes
+type: application
+version: 0.0.1
+appVersion: "master"
+dependencies:
+  - name: common
+    version: 0.0.1
+    repository: file://../common

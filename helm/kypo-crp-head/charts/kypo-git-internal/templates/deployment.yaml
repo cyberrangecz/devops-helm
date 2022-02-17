@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicasCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      containers:
+        - name: {{ .Values.containers.gitInternalSsh.name }}
+          image: "{{ .Values.containers.gitInternalSsh.image.url }}:{{ .Values.containers.gitInternalSsh.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.containers.gitInternalSsh.externalPort.port }}
+              name: gitssh-{{ .Values.containers.gitInternalSsh.externalPort.port }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.containers.gitInternalSsh.externalPort.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            {{- range .Values.containers.gitInternalSsh.mounts }}
+            - name: {{ .name }}
+              mountPath: "{{ .mountPath }}"
+            {{- end }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - |
+                    mkdir -p /assets/keys
+                    ssh-keygen -y -f /tmp/keys/git-ssh-key > /assets/keys/git-ssh-key.pub
+                    cat /assets/keys/git-ssh-key.pub > /home/git/.ssh/authorized_keys
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/prototypes-and-examples/sandbox-definitions/small-sandbox.git /repos/prototypes-and-examples/sandbox-definitions/small-sandbox.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git /repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git /repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git /repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-user-access.git /repos/backend-python/ansible-networking-stage/kypo-user-access.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-interface.git /repos/backend-python/ansible-networking-stage/kypo-interface.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-common.git /repos/backend-python/ansible-networking-stage/kypo-common.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/useful-ansible-roles/kypo-disable-qxl.git /repos/useful-ansible-roles/kypo-disable-qxl.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/useful-ansible-roles/kypo-sandbox-logging-forward.git /repos/useful-ansible-roles/kypo-sandbox-logging-forward.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/useful-ansible-roles/kypo-sandbox-logging-msf.git /repos/useful-ansible-roles/kypo-sandbox-logging-msf.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-man-logging-forward.git /repos/backend-python/ansible-networking-stage/kypo-man-logging-forward.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/useful-ansible-roles/kypo-sandbox-logging-bash.git /repos/useful-ansible-roles/kypo-sandbox-logging-bash.git
+                    echo "All done"
+        - name: {{ .Values.containers.gitInternalRest.name }}
+          image: "{{ .Values.containers.gitInternalRest.image.url }}:{{ .Values.containers.gitInternalRest.image.tag }}"
+          ports:
+            {{- range .Values.containers.gitInternalRest.ports }}
+            - containerPort: {{ .port }}
+              name: gitrest-{{ .port }}
+            {{- end }}
+          readinessProbe:
+            {{- range .Values.containers.gitInternalRest.ports }}
+            {{- if eq .protocol "TCP" }}
+            tcpSocket:
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            {{- range .Values.containers.gitInternalRest.mounts }}
+            - name: {{ .name }}
+              mountPath: "{{ .mountPath }}"
+              readOnly: {{ .readOnly }}
+            {{- end }}
+      volumes:
+        - name: git-ssh-key
+          secret:
+            secretName: git-internal-key
+            items:
+              - key: git-ssh-key
+                path: git-ssh-key
+                mode: 0400
+        - name: repos
+          persistentVolumeClaim:
+            claimName: git-internal

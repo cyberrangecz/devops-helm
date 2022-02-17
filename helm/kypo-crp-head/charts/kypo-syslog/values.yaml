@@ -1,0 +1,52 @@
+replicasCount: 1
+
+image:
+  url: balabit/syslog-ng
+  tag: latest
+
+externalPorts:
+  - port: 515
+    protocol: TCP
+    probe: true
+
+ports:
+  - port: 514
+    protocol: UDP
+  - port: 601
+    protocol: TCP
+  - port: 6514
+    protocol: TCP
+
+mounts:
+  - name: conf-d
+    mountPath: /etc/syslog-ng/conf.d/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: kypo-syslog-ng-configmap
+    items:
+      - name: syslog-events
+        extension: .conf
+      - name: syslog-sandbox
+        extension: .conf
+  - name: syslog-ng
+    extension: .conf
+    mountPath: /etc/syslog-ng/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: kypo-syslog-ng-configmap
+
+sNgSourceSandboxIp: 0.0.0.0
+sNgSourceSandboxPort: 515
+sNgSourceSandboxProtocol: tcp
+sNgSourceSandboxMaxConnections: 300
+sNgSourceSandboxLogInitialWindowsSize: 30000
+sNgSourceEventsPort: 514
+sNgEventsDestinationPort: 10514
+sNgSourceTrainingProtocol: udp
+sNgDestinationProtocol: udp
+sNgBashDestinationPort: 10515
+sNgMsfDestinationPort: 10516

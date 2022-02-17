@@ -1,0 +1,23 @@
+replicasCount: 1
+
+image:
+  url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-answers-storage-service
+  tag: v1.0.9
+
+mounts:
+  - name: kypo-answers-storage
+    extension: .properties
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: answers-storage-configmap
+  - name: tls
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: kypo-certs

@@ -1,0 +1,1 @@
+{{- include "common.pvc" (dict "name" .Values.guacd.name "pvc" .Values.guacd.pvc) }}

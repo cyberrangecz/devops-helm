@@ -1,7 +1,0 @@
-galaxy_info:
-  role_name: syslog-ng-install
-  author: KYPO Team (Updated by Tomas Kacvinsky)
-  description: Role for setting up syslog-ng for KYPO CRP deployed in Kubernetes
-  company: Masaryk university
-  min_ansible_version: 10.5
-  galaxy_tags: []

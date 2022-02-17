@@ -1,0 +1,87 @@
+{{- with .Values.oidcIssuerLdap }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: {{ .replicasCount }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+        - name: {{ .name }}
+          image: "{{ .image.url }}:{{ .image.tag }}"
+          env:
+            - name: ADD_BASE_ENTRY
+              value: "--addBaseEntry"
+            - name: PORT
+              value: "1389"
+            - name: LDAPS_PORT
+              value: "1636"
+            - name: BASE_DN
+              value: "dc=springframework,dc=org"
+            - name: ROOT_USER_DN
+              value: "cn=Directory Manager"
+            - name: ROOT_PASSWORD
+              value: {{ .password | quote }}
+            - name: OPENDJ_SSL_OPTIONS
+              value: "--generateSelfSignedCertificate"
+            - name: OPENDJ_USER
+              value: "root"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - |
+                    /wait-for-it.sh localhost:4444 --timeout=180 --strict -- echo "[Wait-And-Bootstrap] OpenDJ is running on port 4444."
+                    /opt/opendj/bin/dsconfig \
+                     set-password-policy-prop \
+                     --port 4444 \
+                     --hostname localhost \
+                     --bindDN "cn=Directory Manager" \
+                     --bindPassword $ROOT_PASSWORD \
+                     --policy-name "Default Password Policy" \
+                     --set default-password-storage-scheme:"Bcrypt" \
+                     --trustAll \
+                     --no-prompt
+                    /opt/opendj/bin/ldapmodify \
+                     --port 1389 \
+                     --bindDN "cn=Directory Manager" \
+                     --bindPassword $ROOT_PASSWORD \
+                     --defaultAdd \
+                     --filename /opt/opendj/data/import-data.ldif
+          ports:
+            {{- range .ports }}
+            - containerPort: {{ .port }}
+              name: ldap-{{ .port }}
+            {{- end }}
+          readinessProbe:
+            {{- range .ports }}
+            {{- if and (eq .protocol "TCP") (.probe) }}
+            tcpSocket:
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            - name: import-data
+              mountPath: "/opt/opendj/data/import-data.ldif"
+              subPath: "import-data.ldif"
+      volumes:
+        - name: import-data
+          secret:
+            secretName: {{ .name }}
+            items:
+              - key: "import-data.ldif"
+                path: "import-data.ldif"
+{{- end }}

@@ -1,0 +1,81 @@
+{{- define "common.deployment.header" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: {{ .replicasCount }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  {{- if .strategy }}
+  strategy:
+    type: {{ .strategy }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+{{- end }}
+{{- define "common.deployment.containers" }}
+      containers:
+        - name: {{ .name }}
+          image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          {{- if .command }}
+          command: ["{{ .command }}"]
+          {{- end }}
+          {{- if .Values.environments }}
+          env:
+            {{- range .Values.environments }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- end }}
+          ports:
+            {{- range .ports }}
+            - containerPort: {{ .port }}
+            {{- end }}
+          readinessProbe:
+            {{- range .ports }}
+            {{- if and (eq .protocol "TCP") (.probe) }}
+            tcpSocket:
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            {{- range .Values.mounts }}
+            - name: {{ .name | replace "_" "-" }}
+              mountPath: "{{ .mountPath }}{{ if .isOneFile }}{{ if .subPath }}{{ .name }}{{ .extension }}{{ end }}{{ end }}"
+              {{- if .subPath }}
+              subPath: "{{ .name }}{{ .extension }}"
+              {{- end }}
+            {{- end }}
+{{- end }}
+{{- define "common.deployment.volumes" }}
+      volumes:
+        {{- range .Values.mounts }}
+        - name: {{ .name | replace "_" "-" }}
+          {{- toYaml .type | nindent 10 }}
+          {{- if .isOneFile }}
+            items:
+              {{- if .items }}
+              {{- range .items }}
+                - key: "{{ .name }}{{ .extension }}"
+                  path: "{{ .name }}{{ .extension }}"
+                  {{- if .mode }}
+                  mode: {{ .mode }}
+                  {{- end }}
+              {{- end }}
+              {{- else }}
+              - key: "{{ .name }}{{ .extension }}"
+                path: "{{ .name }}{{ .extension }}"
+                {{- if .mode }}
+                mode: {{ .mode }}
+                {{- end }}
+              {{- end }}
+          {{- end }}
+        {{- end }}
+{{- end }}

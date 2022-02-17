@@ -1,0 +1,33 @@
+postgresServices:
+  oidcIssuer:
+    dbName: oidc-issuer
+    dbUser: oidc-issuer
+    dbPassword: oidc-issuer
+
+oidcIssuerApp:
+  name: oidc-issuer-app
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-local-oidc-issuer
+    tag: v2.1.0
+  ports:
+    - port: 8080
+      protocol: TCP
+      probe: true
+  external_port: 443
+  serviceName: oidc-issuer-svc
+  pvc:
+    size: 100Mi
+    storageClassName: longhorn
+
+oidcIssuerLdap:
+  name: oidc-issuer-ldap
+  replicasCount: 1
+  image:
+    url: registry.gitlab.ics.muni.cz:443/cerit-public/cerit-public-artifact-repository/kypo-opendj
+    tag: v2.1.1
+  ports:
+    - port: 1389
+      protocol: TCP
+      probe: true
+  password: password

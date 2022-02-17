@@ -1,0 +1,1 @@
+{{- include "common.pvc" (dict "name" .Values.oidcIssuerApp.name "pvc" .Values.oidcIssuerApp.pvc) }}

@@ -1,0 +1,68 @@
+{{- define "common.worker.deployment" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          command: ["pipenv"]
+          args: ["run", "python3", "manage.py", "rqworker", "{{ .workerType }}"]
+          {{- if .Values.environments }}
+          env:
+            {{- range .Values.environments }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- end }}
+          volumeMounts:
+            - name: git-ssh-key
+              mountPath: "/root/.ssh/git-ssh-key"
+              subPath: "git-ssh-key"
+            {{- range .Values.mounts }}
+            - name: {{ .name | replace "_" "-" }}
+              mountPath: "{{ .mountPath }}{{ if .isOneFile }}{{ .name }}{{ .extension }}{{ end }}"
+              {{- if .isOneFile }}
+              subPath: "{{ .name }}{{ .extension }}"
+              {{- end }}
+            {{- end }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - update-ca-certificates
+      volumes:
+        - name: git-ssh-key
+          secret:
+            {{ if .Values.kypoCrpGit.privateKey }}
+            secretName: git-external-key
+            {{- else }}
+            secretName: git-internal-key
+            {{- end }}
+            items:
+              - key: "git-ssh-key"
+                path: "git-ssh-key"
+                mode: 0400
+        {{- range .Values.mounts }}
+        - name: {{ .name | replace "_" "-" }}
+          {{- .type | toYaml | nindent 10 }}
+          {{- if .isOneFile }}
+            items:
+            - key: "{{ .name }}{{ .extension }}"
+              path: "{{ .name }}{{ .extension }}"
+              {{- if .mode }}
+              mode: {{ .mode }}
+              {{- end }}
+          {{- end }}
+        {{- end }}
+{{- end }}

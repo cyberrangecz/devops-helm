@@ -1,0 +1,33 @@
+{{- if not (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost) }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: {{ .Values.global.acmeServer }}
+    email: {{ .Values.global.acmeContact }}
+    privateKeySecretRef:
+      name: {{ .Values.global.httpsSecretName }}-key
+    solvers:
+    - http01:
+       ingress:
+         class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.global.httpsSecretName }}
+spec:
+  secretName: {{ .Values.global.httpsSecretName }}
+  issuerRef:
+    name: letsencrypt-prod
+  dnsNames:
+  - {{ .Values.global.kypoCrpHost }}
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef: # Password used to encrypt the keystore
+        key: password
+        name: jks-password-secret
+{{- end }}

@@ -1,0 +1,3 @@
+{{- include "common.deployment.header" (dict "name" .Values.global.kypoSyslogServiceName "replicasCount" .Values.replicasCount) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.kypoSyslogServiceName "ports" .Values.externalPorts "Values" .Values) }}
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}

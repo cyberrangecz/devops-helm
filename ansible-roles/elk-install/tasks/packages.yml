@@ -1,8 +1,0 @@
----
-- name: install python dependencies
-  pip:
-    name:
-      - passlib
-    state: present
-    executable: pip3
-

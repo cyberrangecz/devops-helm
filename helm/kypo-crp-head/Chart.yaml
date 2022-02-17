@@ -1,20 +1,19 @@
 apiVersion: v2
 name: kypo-crp-head
-description: A Helm chart deploying a KYPO CRP deployed on Kubernetes
-
-# A chart can be either an 'application' or a 'library' chart.
-#
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
+description: A Helm umbrella chart for deploying a KYPO CRP head node services
 type: application
-
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.0
-
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
-appVersion: "1.16.0"
+version: 0.0.1
+appVersion: "21.12.2"
+dependencies:
+  - name: kypo-git-internal
+    version: 0.0.1
+    repository: file://charts/kypo-git-internal
+    condition: kypo-git-internal.enabled
+  - name: kypo-oidc
+    version: 0.0.1
+    repository: file://charts/kypo-oidc
+    condition: kypo-oidc.enabled
+  - name: kypo-guacamole
+    version: 0.0.1
+    repository: file://charts/kypo-guacamole
+    condition: kypo-guacamole.enabled

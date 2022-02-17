@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.kypoSyslogServiceName }}-lb
+spec:
+  selector:
+    app: {{ .Values.global.kypoSyslogServiceName }}
+  type: LoadBalancer
+  ports:
+    {{- range .Values.externalPorts }}
+    - protocol: {{ .protocol }}
+      port: {{ .port }}
+      targetPort: {{ .port }}
+    {{- end }}

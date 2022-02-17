@@ -1,0 +1,13 @@
+{{- include "common.deployment.header" (dict "name" .Values.global.kypoElasticsearchServiceName "strategy" "Recreate" "replicasCount" 1) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.kypoElasticsearchServiceName "ports" .Values.ports "Values" .Values) }}
+      initContainers:
+        - name: change-ownership-container
+          image: busybox
+          command: ["/bin/chown","-R","1000:1000", "/usr/share/elasticsearch/data"]
+          securityContext:
+            runAsUser: 0
+            privileged: true
+          volumeMounts:
+            - name: data-elasticsearch
+              mountPath: /usr/share/elasticsearch/data
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}

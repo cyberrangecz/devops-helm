@@ -1,0 +1,25 @@
+{{- $postgres := .Values.global.postgres -}}
+{{- $postgresServices := .Values.global.postgresServices -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: head-hook-preinstall
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+spec:
+  containers:
+    - name: pre-install-job
+      image: postgres:13-alpine
+      imagePullPolicy: IfNotPresent
+      command:
+        - "/bin/bash"
+        - "-c"
+        - | {{- range $k, $v := $postgresServices }}
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE USER "{{ $v.dbUser }}";' 2> /dev/null
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
+          {{- end }}
+          exit 0
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 0

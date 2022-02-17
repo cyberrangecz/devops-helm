@@ -1,0 +1,10 @@
+replicasCount: 1
+
+image:
+  url: redis
+  tag: 6.2.6
+
+ports:
+  - port: 6379
+    protocol: TCP
+    probe: true

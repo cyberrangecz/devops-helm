@@ -1,0 +1,29 @@
+replicasCount: 1
+
+image:
+  url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-uag-service
+  tag: v1.1.84
+
+mounts:
+  - name: configs
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: uag-service-configmap
+    items:
+      - name: user-and-group
+        extension: .properties
+      - name: initial-users
+        extension: .yml
+      - name: exported-local-oidc-users
+        extension: .yml
+  - name: tls
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: kypo-certs

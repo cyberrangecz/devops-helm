@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kypo-logstash
+description: A Helm chart deploying a Logstash, used by KYPO CRP deployed on Kubernetes
+type: application
+version: 0.0.1
+appVersion: "7.16.3"
+dependencies:
+  - name: common
+    version: 0.0.1
+    repository: file://../common

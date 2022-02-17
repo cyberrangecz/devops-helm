@@ -1,7 +1,0 @@
----
-
-- name: ensure the existence of necessary directories
-  file:
-    path: '{{ kypo_crp_config_dest }}'
-    state: directory
-    recurse: yes

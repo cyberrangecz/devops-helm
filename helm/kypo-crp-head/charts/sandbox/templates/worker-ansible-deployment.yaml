@@ -1,0 +1,1 @@
+{{- include "common.worker.deployment" (dict "name" (print .Values.global.services.sandbox.name "-worker-ansible") "replicaCount" .Values.kypoCrpDefaultWorkers  "workerType" "ansible" "Values" .Values) }}

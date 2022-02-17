@@ -1,0 +1,10 @@
+apiVersion: v2
+name: smart-assistant
+description: A Helm chart for deploying an smart-assistant service
+type: application
+version: 0.0.1
+appVersion: "v1.0.31"
+dependencies:
+  - name: common
+    version: 0.0.1
+    repository: file://../common

@@ -1,0 +1,27 @@
+replicasCount: 1
+
+image:
+  url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-training-service
+  tag: v1.1.82
+
+environments:
+  - name: SERVICE_PRECONDITION
+    value: uag-service:8084
+
+mounts:
+  - name: training
+    extension: .properties
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: training-service-configmap
+  - name: tls
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: kypo-certs

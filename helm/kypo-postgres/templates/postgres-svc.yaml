@@ -1,0 +1,19 @@
+{{- with .Values.postgres }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .name }}
+spec:
+  selector:
+    app: {{ .name }}
+  type: ClusterIP
+  ports:
+    {{- range .ports }}
+    - port: {{ .port }}
+      name: svc-{{ .port }}
+      targetPort: {{ .port }}
+      protocol: {{ .protocol }}
+    {{- end }}
+{{- end }}

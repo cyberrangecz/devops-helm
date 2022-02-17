@@ -1,0 +1,91 @@
+{{- $postgres := .Values.global.postgres -}}
+{{- $postgresServices := .Values.global.postgresServices -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: head-hook-postinstall
+  annotations:
+    "helm.sh/hook": "post-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+spec:
+  containers:
+    - name: head-post-install-job
+      image: postgres:13-alpine
+      imagePullPolicy: IfNotPresent
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |
+          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 4 ]
+          do
+              echo "Waiting for microservices to register"
+              ((c++)) && ((c==40)) && break
+              sleep 5
+          done
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} {{ $postgresServices.userAndGroup.dbName }} << SQL
+            INSERT INTO idm_group(name, external_id, status, description, expiration_date)
+            VALUES ('All Mighty Users', NULL, 'VALID', 'All mighty group', NULL) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group(name, external_id, status, description, expiration_date)
+            VALUES ('Instructor', NULL, 'VALID', 'Adaptive and Linear Training Designer and Organizer', NULL) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_USER_AND_GROUP_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ADMIN'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+        {{- $kypoCrpUsers := $.Values.global.kypoCrpUsers }}
+        {{- if (lookup "v1" "Secret" "kypo" "generated-users") }}
+        {{- $kypoCrpUsers = concat $.Values.global.kypoCrpUsers ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
+        {{- end }}
+        {{- range $kypoCrpUsers }}
+          {{- if .admin }}
+            INSERT INTO user_idm_group(user_id, idm_group_id)
+            VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+          {{- else }}
+            INSERT INTO user_idm_group(user_id, idm_group_id)
+            VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='DEFAULT-GROUP')) ON CONFLICT DO NOTHING;
+          {{- end }}
+        {{- end }}
+          SQL
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 0

@@ -1,0 +1,62 @@
+global:
+  userNum: 10
+  kypoCrpUsers:
+    - sub: kypo-admin
+      iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
+      password: password
+      email: kypo-admin@example.com
+      fullName: "Demo Admin"
+      givenName: "Demo"
+      familyName: "Admin"
+      admin: True
+    - sub: kypo-user
+      iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
+      password: password
+      email: kypo-user@example.com
+      fullName: "Demo User"
+      givenName: "Demo"
+      familyName: "User"
+      admin: False
+
+kypo-guacamole:
+  enabled: False
+
+kypo-elasticsearch:
+  pvc:
+    storageClassName: local-path
+
+kypo-git-internal:
+  pvc:
+    storageClassName: local-path
+
+kypo-oidc:
+  oidcIssuerApp:
+    pvc:
+      storageClassName: local-path
+
+postgres:
+  pvc:
+    storageClassName: local-path
+
+sandbox:
+  kypoCrpHeadIp: 172.19.0.22
+  kypoCrpInstanceName: default0
+  kypoCrpDns:
+    - 1.1.1.1
+    - 1.0.0.1
+  kypoCrpOsAuthUrl:
+  kypoCrpOsApplicationCredentialId:
+  kypoCrpOsApplicationCredentialSecret:
+  kypoCrpProxyHost:
+  kypoCrpProxyUser:
+  kypoCrpProxyKey:
+  kypoCrpGit:
+    type: INTERNAL
+    server: 172.19.0.22
+    sshPort: 30022
+    restServerUrl: http://git-internal.kypo:5000/
+    user: git
+    privateKey:
+    accessToken: no-gitlab-token
+    ansibleNetworkingUrl: git@172.19.0.22:30022/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
+    ansibleNetworkingRev: v1.0.2

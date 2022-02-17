@@ -1,0 +1,33 @@
+{{- with .Values.guacamole }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: guacamole-ingress
+  annotations:
+    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.kypoCrpHost }}
+    cert-manager.io/issuer: "selfsigned-issuer"
+    {{- else }}
+    cert-manager.io/issuer: "letsencrypt-prod"
+    {{- end }}
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - {{ $.Values.global.kypoCrpHost }}
+    secretName: {{ $.Values.global.httpsSecretName }}
+  rules:
+    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.kypoCrpHost }}
+    - http:
+    {{- else }}
+    - host: {{ $.Values.global.kypoCrpHost }}
+      http:
+    {{- end }}
+        paths:
+        - path: /guacamole/
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .name }}
+              port:
+                number: {{ (first .ports).port }}
+{{- end }}

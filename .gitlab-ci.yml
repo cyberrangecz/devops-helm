@@ -1,0 +1,31 @@
+image: curlimages/curl:latest
+
+stages:
+  - build
+  - upload
+
+build:
+  stage: build
+  image:
+    name: alpine/helm
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - helm package helm/kypo-certs/
+    - helm package helm/kypo-crp-head/
+    - helm package helm/kypo-gen-users/
+    - helm package helm/kypo-postgres/
+  artifacts:
+    paths:
+    - kypo-certs-*.tgz
+    - kypo-crp-head-*.tgz
+    - kypo-gen-users-*.tgz
+    - kypo-postgres-*.tgz
+    expire_in: 1 week
+
+upload:
+  stage: upload
+  script:
+    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-certs-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
+    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-crp-head-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
+    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-gen-users-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
+    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-postgres-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'

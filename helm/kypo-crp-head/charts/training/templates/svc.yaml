@@ -1,0 +1,2 @@
+{{- $ports := list (dict "port" .Values.global.services.training.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.svc" (dict "name" .Values.global.services.training.name "ports" $ports) }}

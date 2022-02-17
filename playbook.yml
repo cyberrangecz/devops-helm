@@ -1,9 +1,0 @@
-- hosts: localhost
-  gather_facts: yes
-  become: yes
-  roles:
-    - name: ansible-roles/helm-prepare
-    # - name: ansible-roles/kypo-crp-git-internal
-    - name: ansible-roles/elk-install
-    - name: ansible-roles/syslog-ng-install
-    - name: ansible-roles/kypo-head-install

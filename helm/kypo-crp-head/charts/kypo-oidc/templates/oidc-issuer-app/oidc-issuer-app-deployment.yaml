@@ -1,0 +1,54 @@
+{{- with .Values.oidcIssuerApp }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: {{ .replicasCount }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "{{ .image.url }}:{{ .image.tag }}"
+          env:
+            - name: POSTGRES_DBNAME
+              value: {{ $.Values.postgresServices.oidcIssuer.dbName | quote }}
+            - name: POSTGRES_USERNAME
+              value: {{ $.Values.postgresServices.oidcIssuer.dbUser | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ $.Values.postgresServices.oidcIssuer.dbPassword | quote }}
+            - name: POSTGRES_CONTAINER_NAME
+              value: {{ $.Values.global.postgres.dns | quote }}
+            - name: OPENDJ_CONTAINER_NAME
+              value: {{ $.Values.oidcIssuerLdap.name | quote }}
+          ports:
+            {{- range .ports }}
+            - containerPort: {{ .port }}
+              name: oidcapp-{{ .port }}
+            {{- end }}
+          readinessProbe:
+            {{- range .ports }}
+            tcpSocket:
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            {{- end }}
+          volumeMounts:
+            - name: {{ .name }}-config
+              mountPath: /app/etc
+            - name: {{ .name }}-data
+              mountPath: /opt/oidc-config
+      volumes:
+        - name: {{ .name }}-config
+          secret:
+            secretName: {{ .name }}
+        - name: {{ .name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .name }}
+{{- end }}

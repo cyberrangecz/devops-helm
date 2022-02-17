@@ -1,0 +1,44 @@
+name: git-internal
+
+replicasCount: 1
+
+containers:
+  gitInternalSsh:
+    name: git-internal-ssh
+    image:
+      url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ssh-git
+      tag: master
+    externalPort:
+      port: 22
+      nodePort: 30022
+      protocol: TCP
+    mounts:
+      - name: git-ssh-key
+        mountPath: /tmp/keys/
+        type:
+          secret:
+            secretName: git-internal-key
+      - name: repos
+        mountPath: /repos
+        type:
+          persistentVolumeClaim:
+            claimName: git-internal-ssh
+  gitInternalRest:
+    name: git-internal-rest
+    image:
+      url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-restfulgit
+      tag: master
+    ports:
+      - port: 5000
+        protocol: TCP
+        probe: true
+    mounts:
+      - name: repos
+        mountPath: /repos
+        type:
+          persistentVolumeClaim:
+            claimName: git-internal-ssh
+
+pvc:
+  size: 500Mi
+  storageClassName: longhorn

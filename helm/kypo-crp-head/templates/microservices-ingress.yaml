@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kypo-ingress-microservices
+  annotations:
+    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost }}
+    cert-manager.io/issuer: "selfsigned-issuer"
+    {{- else }}
+    cert-manager.io/issuer: "letsencrypt-prod"
+    {{- end }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      limit_except GET HEAD PUT DELETE MKCOL COPY MOVE OPTIONS PROPFIND PROPPATCH LOCK UNLOCK PATCH {
+          deny all;
+      }
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - {{ .Values.global.kypoCrpHost }}
+    secretName: {{ .Values.global.httpsSecretName }}
+  rules:
+    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost }}
+    - http:
+    {{- else }}
+    - host: {{ .Values.global.kypoCrpHost }}
+      http:
+    {{- end }}
+        paths:
+        - path: {{ .Values.global.services.userAndGroup.contextPath }}microservices
+          pathType: Prefix
+          backend:
+            service:
+              name: uag-service
+              port:
+                number: 8084

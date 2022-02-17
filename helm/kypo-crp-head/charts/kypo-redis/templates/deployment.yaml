@@ -1,0 +1,2 @@
+{{- include "common.deployment.header" (dict "name" .Values.global.kypoRedisServiceName "replicasCount" .Values.replicasCount) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.kypoRedisServiceName "ports" .Values.ports "Values" .Values) }}

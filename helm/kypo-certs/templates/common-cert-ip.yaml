@@ -1,0 +1,30 @@
+{{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.global.httpsSecretName }}
+spec:
+  secretName: {{ .Values.global.httpsSecretName }}
+  dnsNames:
+    - {{ .Values.global.kypoCrpHost }}
+  commonName: {{ .Values.global.kypoCrpHost }}
+  ipAddresses:
+    - {{ .Values.global.kypoCrpHost }}
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef: # Password used to encrypt the keystore
+        key: password
+        name: jks-password-secret
+{{- end }}

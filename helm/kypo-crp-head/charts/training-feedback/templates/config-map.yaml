@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.services.trainingFeedback.name }}-configmap
+data:
+  kypo-training-feedback.properties: |
+    ## server port for a given service, e.g., 8088
+    server.port={{ .Values.global.services.trainingFeedback.port }}
+    ## server context path (the base url for the service), e.g., /kypo-training-feedback/api/v1
+    server.servlet.context-path={{ .Values.global.services.trainingFeedback.contextPath }}
+    ## microservice name which is used in user management service for identification of this service, e.g. kypo-training-feedback
+    microservice.name=kypo-training-feedback
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    cors.allowed.origins=https://{{ .Values.global.kypoCrpHost }}
+
+    # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
+    user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
+    # calling kypo-elasticsearch-service, e.g., http://elastic-service:8085/kypo-elastic/api/v1
+    elasticsearch-service.uri=http://{{ .Values.global.services.elasticsearch.name }}:{{ .Values.global.services.elasticsearch.port }}{{ .Values.global.services.elasticsearch.contextPath }}
+
+    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.dns }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.trainingFeedback.dbName }}
+    spring.datasource.username={{ .Values.global.postgresServices.trainingFeedback.dbUser }}
+    spring.datasource.password={{ .Values.global.postgresServices.trainingFeedback.dbPassword }}
+    spring.datasource.driver-class-name=org.postgresql.Driver
+
+    spring.jpa.open-in-view=false
+
+    #logging
+    spring.jpa.show-sql=true
+    logging.level.cz.muni.ics.kypo.training.feedback=DEBUG

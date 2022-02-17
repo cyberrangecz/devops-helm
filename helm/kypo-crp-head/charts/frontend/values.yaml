@@ -1,0 +1,17 @@
+replicasCount: 1
+
+image:
+  url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-frontend
+  tag: '21.12'
+
+mounts:
+  - name: kypo-config
+    extension: .json
+    mountPath: /app/assets/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: angular-frontend-configmap
+
+releaseVersion: v21.12.2

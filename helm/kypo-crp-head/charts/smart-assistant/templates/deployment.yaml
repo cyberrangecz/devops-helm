@@ -1,0 +1,20 @@
+{{- $ports := list (dict "port" .Values.global.services.smartAssistant.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.smartAssistant.name "replicasCount" .Values.replicasCount) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.services.smartAssistant.name "ports" $ports "Values" .Values) }}
+            - name: cacerts
+              mountPath: "/etc/ssl/certs/kypo.crt"
+              subPath: "kypo.crt"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "/usr/local/openjdk-11/bin/keytool -importcert -alias kypo -file /etc/ssl/certs/kypo.crt -keystore /usr/local/openjdk-11/lib/security/cacerts -storepass changeit -noprompt"
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}
+        - name: cacerts
+          secret:
+            secretName: {{ .Values.global.httpsSecretName }}
+            items:
+              - key: "tls.crt"
+                path: "kypo.crt"

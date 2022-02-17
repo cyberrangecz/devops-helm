@@ -1,0 +1,104 @@
+replicasCount: 1
+
+image:
+  url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
+  tag: v0.16.1
+
+environments:
+  - name: SERVICE_PRECONDITION
+    value: uag-service:8084
+
+mounts:
+  - name: config
+    extension: .yml
+    mountPath: /app/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: sandbox-service-configmap
+  - name: tls
+    extension: .crt
+    mountPath: /usr/local/share/ca-certificates/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: kypo-certs
+  - name: settings
+    extension: .py
+    mountPath: /app/kypo/sandbox_service_project/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: sandbox-service-configmap
+  - name: stage_handlers
+    extension: .py
+    mountPath: /app/kypo/sandbox_instance_app/lib/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: sandbox-service-configmap
+  - name: kypo-crp-proxy-key
+    extension:
+    mountPath: /root/.ssh/
+    isOneFile: true
+    subPath: true
+    type:
+      secret:
+        secretName: kypo-crp-proxy-key
+  - name: ansible-runner-vol
+    extension:
+    mountPath: /var/opt/kypo/kypo-ansible-runner-volumes
+    isOneFile: false
+    type:
+      hostPath:
+        path: /var/opt/kypo/kypo-ansible-runner-volumes
+        type: Directory
+  - name: docker-socket
+    extension:
+    mountPath: /var/run/docker.sock
+    isOneFile: false
+    type:
+      hostPath:
+        path: /var/run/docker.sock
+        type: Socket
+
+kypoCrpHeadIp: 0.0.0.0
+kypoCrpInstanceName: default0
+kypoCrpDns:
+  - 1.1.1.1
+  - 1.0.0.1
+kypoCrpOsAuthUrl:
+kypoCrpOsApplicationCredentialId:
+kypoCrpOsApplicationCredentialSecret:
+kypoCrpOsConsoleType: spice-html5
+kypoCrpOpenstackWorkers: 2
+kypoCrpAnsibleWorkers: 2
+kypoCrpDefaultWorkers: 2
+kypoSandboxBuildTimeout: 7200
+kypoSandboxDeleteTimeout: 3600
+kypoSandboxAnsibleTimeout: 7200
+kypoManFlavor: csirtmu.tiny1x2
+kypoCrpProxyHost:
+kypoCrpProxyUser:
+kypoCrpProxyKey:
+ansibleDockerNetwork: bridge
+
+ansibleRunner:
+  image:
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ansible-runner
+    tag: v1.3.5
+
+kypoCrpGit:
+  type: INTERNAL
+  server: 172.19.0.22
+  sshPort: 30022
+  restServerUrl: http://git-internal.kypo:5000/
+  user: git
+  privateKey:
+  accessToken: no-gitlab-token
+  ansibleNetworkingUrl: ssh://git@172.19.0.22:30022/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
+  ansibleNetworkingRev: v1.0.2

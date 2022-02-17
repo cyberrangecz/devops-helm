@@ -1,0 +1,1 @@
+{{- include "common.svc" (dict "name" .Values.global.kypoElasticsearchServiceName "ports" .Values.ports) }}

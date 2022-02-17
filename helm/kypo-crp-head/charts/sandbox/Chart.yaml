@@ -1,0 +1,10 @@
+apiVersion: v2
+name: sandbox
+description: A Helm chart for deploying a sandbox service
+type: application
+version: 0.0.1
+appVersion: "v0.16.1"
+dependencies:
+  - name: common
+    version: 0.0.1
+    repository: file://../common

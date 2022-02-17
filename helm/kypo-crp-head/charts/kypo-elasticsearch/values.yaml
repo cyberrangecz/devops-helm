@@ -1,0 +1,32 @@
+image:
+  url: docker.elastic.co/elasticsearch/elasticsearch
+  tag: 7.8.1
+
+ports:
+  - port: 9200
+    protocol: TCP
+    probe: true
+  - port: 9300
+    protocol: TCP
+    probe: true
+
+environments:
+  - name: node.name
+    value: es01
+  - name: bootstrap.memory_lock
+    value: true
+  - name: discovery.type
+    value: single-node
+  - name: ES_JAVA_OPTS
+    value: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+
+mounts:
+  - name: data-elasticsearch
+    mountPath: /usr/share/elasticsearch/data
+    type:
+      persistentVolumeClaim:
+        claimName: kypo-elasticsearch
+
+pvc:
+  size: 500Mi
+  storageClassName: longhorn

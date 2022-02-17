@@ -1,9 +1,0 @@
----
-
-- name: git_restart
-  docker_compose:
-    project_src: "{{ kypo_crp_config_dest }}"
-    files:
-      - "{{ kypo_crp_git_internal_docker_compose_filename }}"
-    restarted: True
-  when: not git_started.changed

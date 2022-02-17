@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name }}-node-port
+  labels:
+    app: {{ .Values.name }}
+spec:
+  selector:
+    app: {{ .Values.name }}
+  type: NodePort
+  ports:
+    - port: {{ .Values.containers.gitInternalSsh.externalPort.port }}
+      name: {{ .Values.containers.gitInternalSsh.externalPort.port | quote }}
+      targetPort: {{ .Values.containers.gitInternalSsh.externalPort.port }}
+      nodePort:  {{ .Values.containers.gitInternalSsh.externalPort.nodePort }}
+      protocol: {{ .Values.containers.gitInternalSsh.externalPort.protocol }}

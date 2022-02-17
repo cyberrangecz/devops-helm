@@ -1,0 +1,45 @@
+{{- with .Values.guacd }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "{{ .image.url }}:{{ .image.tag }}"
+          ports:
+            {{- range .ports }}
+            - containerPort: {{ .port }}
+              name: guacd-{{ .port }}
+            {{- end }}
+          readinessProbe:
+            {{- range .ports }}
+            {{- if eq .protocol "TCP" }}
+            tcpSocket:
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            - name: data-{{ .name }}
+              mountPath: /drive
+              subPath: drive
+            - name: data-{{ .name }}
+              mountPath: /record
+              subPath: record
+      volumes:
+        - name: data-{{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ .name }}
+{{- end }}

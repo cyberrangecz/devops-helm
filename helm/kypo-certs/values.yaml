@@ -1,0 +1,6 @@
+global:
+  httpsSecretName: kypo-certs
+  kypoCrpHost: 172.19.0.22
+  jksPassword: changeit
+  acmeServer: https://acme-v02.api.letsencrypt.org/directory
+  acmeContact: yourname@email.com

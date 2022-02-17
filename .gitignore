@@ -1,2 +1,4 @@
-extra-vars.yml
-secrets.yml
+*.log
+.vagrant
+vagrant-oidc.yaml
+vagrant-values.yaml

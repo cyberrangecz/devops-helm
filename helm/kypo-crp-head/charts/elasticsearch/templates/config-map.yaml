@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.services.elasticsearch.name }}-configmap
+data:
+  kypo-elasticsearch-service.properties: |
+    ## server port for a given service, e.g., 8085
+    server.port={{ .Values.global.services.elasticsearch.port }}
+    ## server context path (the base url for the service), e.g., /kypo-elasticsearch-service/api/v1
+    server.servlet.context-path={{ .Values.global.services.elasticsearch.contextPath }}
+    ## microservice name which is used for identification of this service, e.g., kypo-elastic
+    microservice.name=kypo-elasticsearch-service
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    cors.allowed.origins=https://{{ .Values.global.kypoCrpHost }}
+    # OpenID Connect OIDC configuration settings for a resource servers configuration
+    # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
+    ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server
+{{- range $index, $element := .Values.global.kypoCrpOidcs }}
+    kypo.identity.providers[{{ $index }}].issuer= {{ $element.url }}
+    kypo.identity.providers[{{ $index }}].userInfoEndpoint=
+{{- end }}
+
+    # spring-cloud
+    spring.cloud.refresh.enabled = false
+    ## disables the settings in application.properties in resource folder
+    spring.jmx.enabled=false
+    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
+    spring.jackson.serialization.write_dates_as_timestamps=false
+    ## all atributes in JSON are in SNAKE_CASE
+    spring.jackson.property-naming-strategy=SNAKE_CASE
+
+    ## the requirement for ssl, e.g., false
+    security.require-ssl=false
+    management.health.refresh.enabled=false
+
+    ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
+    logging.level.cz.muni.ics=WARN
+
+    # Elasticsearch settings
+    ## communication protocol for Elasticsearch, e.g. http or https
+    elasticsearch.protocol=http
+    ## IP address where Elasticsearch is running, e.g. localhost
+    elasticsearch.host={{ .Values.global.kypoElasticsearchServiceName }}
+    ## Port on which Elasticsearch is running, e.g. 9200 is default
+    elasticsearch.port=9200
+
+    # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
+    user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
