@@ -23,6 +23,9 @@ data:
     # calling kypo-smart-assistant-service, e.g., http://smart-assistant-service:8086/kypo-adaptive-smart-assistant/api/v1
     smart-assistant-service.uri=http://{{ .Values.global.services.smartAssistant.name }}:{{ .Values.global.services.smartAssistant.port }}{{ .Values.global.services.smartAssistant.contextPath }}
 
+    # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
+    central.syslog.ip={{ .Values.global.kypoCrpHost }}
+
     # OpenID Connect OIDC configuration settings for a resource servers configuration
     # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
     ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server

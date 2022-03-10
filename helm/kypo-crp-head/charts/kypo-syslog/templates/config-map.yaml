@@ -56,7 +56,7 @@ data:
 
     # BASH and MSF4 commands common settings
     template kypo_man_console_command_syslog_template {
-        template("{\"event\":$(format-json --pair hostname=$HOST --pair ip=${.SDATA.kypo.fromhost_ip} --pair fromhost_ip=$SOURCEIP --pair programname=$PROGRAM --pair procid=$PID --pair unixtime=${UNIXTIME} --pair facility=$FACILITY --pair severity=$SEVERITY --pair timereported=${S_DATE} --pair pool_id=${.SDATA.kypo.pool_id} --pair sandbox_id=${.SDATA.kypo.sandbox_id} --pair message=$MESSAGE\n)}\n");
+        template("{\"event\":$(format-json --pair hostname=$HOST --pair ip=${.SDATA.kypo.fromhost_ip} --pair fromhost_ip=$SOURCEIP --pair programname=$PROGRAM --pair procid=$PID --pair unixtime=${UNIXTIME} --pair facility=$FACILITY --pair severity=$SEVERITY --pair timereported=${S_DATE} --pair sandbox_id=${.SDATA.kypo.sandbox_id} --pair pool_id=${.SDATA.kypo.pool_id} --pair user_id=${.SDATA.kypo.user_id} --pair access_token=${.SDATA.kypo.access_token} --pair message=$MESSAGE\n)}\n");
     };
 
     # BASH commands

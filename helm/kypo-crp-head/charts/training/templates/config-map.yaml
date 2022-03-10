@@ -25,6 +25,9 @@ data:
     # calling kypo-training-feedback, e.g., http://training-feedback-service:8088/kypo-training-feedback/api/v1
     training-feedback-service.uri=http://{{ .Values.global.services.trainingFeedback.name }}:{{ .Values.global.services.trainingFeedback.port }}{{ .Values.global.services.trainingFeedback.contextPath }}
 
+    # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
+    central.syslog.ip={{ .Values.global.kypoCrpHost }}
+
     # OpenID Connect OIDC configuration settings for a resource servers configuration
     # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
     ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server

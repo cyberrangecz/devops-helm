@@ -100,26 +100,43 @@ data:
     filter {
         # retrieve elements from structured data (RFC5424) and make them top-level elements
         mutate {
-            add_field => { "pool_id" => "%{[event][pool_id]}" }
-            add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
             add_field => { "hostname" => "%{[event][hostname]}"}
             add_field => { "ip" => "%{[event][ip]}"}
             add_field => { "cmd_type" => "bash-command"}
             add_field => { "timestamp_str" => "%{@timestamp}"}
         }
-        # convert ids to integer field
+
+        if [event][sandbox_id] {
+            mutate {
+                add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
+                add_field => { "pool_id" => "%{[event][pool_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "user_id" => "%{[event][user_id]}" }
+                add_field => { "access_token" => "%{[event][access_token]}" }
+           }
+        }
+    
+        # retrieve elements from json to compose Elasticsearch index correctly
         mutate {
-            convert => { "[event][pool_id]" => "integer" }
-            convert => { "[event][sandbox_id]" => "integer" }
-
-            # retrieve elements from json to compose Elasticsearch index correctly
-            add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
-            add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
             add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
-
             # convert programname to lowercase (Elasticsearch index cannot be in upper case)
             lowercase => [ "[@metadata][source_app_identifier]" ]
         }
+
+        if [sandbox_id] {
+            mutate {
+                add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
+                add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][userid]" => "%{[event][user_id]}" }
+                add_field => { "[@metadata][accesstoken]" => "%{[event][access_token]}" }
+            }
+        }
+
         json {
             source => "[event][message]"
             target => "message"
@@ -149,11 +166,19 @@ data:
         }
     }
     output {
-        elasticsearch {
-            hosts => [ "{{ .Values.global.kypoElasticsearchServiceName }}:9200" ]
-            index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
-            codec => json
-        }
+        if [@metadata][sandboxid] {
+		    elasticsearch {
+                hosts => [ "kypo-elasticsearch:9200" ]
+                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+                codec => json
+            }
+        } else {
+            elasticsearch {
+                hosts => [ "kypo-elasticsearch:9200" ]
+                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
+                codec => json
+           }
+        } 
     }
 
   30-kypo-logstash-msf-commands.conf: |
@@ -166,25 +191,41 @@ data:
     filter {
         # retrieve elements from structured data (RFC5424) and make them top-level elements
         mutate {
-            add_field => { "pool_id" => "%{[event][pool_id]}" }
-            add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
             add_field => { "hostname" => "%{[event][hostname]}"}
             add_field => { "ip" => "%{[event][ip]}"}
             add_field => { "cmd_type" => "msf-command"}
             add_field => { "timestamp_str" => "%{@timestamp}"}
         }
-        # convert ids to integer field
+
+        if [event][sandbox_id] {
+            mutate {
+                add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
+                add_field => { "pool_id" => "%{[event][pool_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "user_id" => "%{[event][user_id]}" }
+                add_field => { "access_token" => "%{[event][access_token]}" }
+           }
+        }
+    
+        # retrieve elements from json to compose Elasticsearch index correctly
         mutate {
-            convert => { "[event][pool_id]" => "integer" }
-            convert => { "[event][sandbox_id]" => "integer" }
-
-            # retrieve elements from json to compose Elasticsearch index correctly
-            add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
-            add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
             add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
-
             # convert programname to lowercase (Elasticsearch index cannot be in upper case)
             lowercase => [ "[@metadata][source_app_identifier]" ]
+        }
+
+        if [sandbox_id] {
+            mutate {
+                add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
+                add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][userid]" => "%{[event][user_id]}" }
+                add_field => { "[@metadata][accesstoken]" => "%{[event][access_token]}" }
+            }
         }
 
         json {
@@ -217,9 +258,17 @@ data:
         }
     }
     output {
-        elasticsearch {
-            hosts => [ "{{ .Values.global.kypoElasticsearchServiceName }}:9200" ]
-            index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
-            codec => json
+        if [@metadata][sandboxid] {
+		    elasticsearch {
+                hosts => [ "kypo-elasticsearch:9200" ]
+                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+                codec => json
+            }
+        } else {
+            elasticsearch {
+                hosts => [ "kypo-elasticsearch:9200" ]
+                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
+                codec => json
+           }
         }
     }
