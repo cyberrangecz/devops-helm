@@ -167,7 +167,7 @@ data:
     }
     output {
         if [@metadata][sandboxid] {
-		    elasticsearch {
+            elasticsearch {
                 hosts => [ "kypo-elasticsearch:9200" ]
                 index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
                 codec => json
@@ -259,7 +259,7 @@ data:
     }
     output {
         if [@metadata][sandboxid] {
-		    elasticsearch {
+            elasticsearch {
                 hosts => [ "kypo-elasticsearch:9200" ]
                 index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
                 codec => json
