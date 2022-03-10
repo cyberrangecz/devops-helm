@@ -3,7 +3,7 @@ name: adaptive-training
 description: A Helm chart for deploying an adaptive-training service
 type: application
 version: 0.0.1
-appVersion: "v1.0.46"
+appVersion: "v1.1.0"
 dependencies:
   - name: common
     version: 0.0.1

@@ -3,7 +3,7 @@ name: user-and-group
 description: A Helm chart for deploying a user-and-group service
 type: application
 version: 0.0.1
-appVersion: "v1.1.84"
+appVersion: "v1.1.87"
 dependencies:
   - name: common
     version: 0.0.1

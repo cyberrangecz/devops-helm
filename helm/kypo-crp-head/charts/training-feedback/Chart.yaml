@@ -3,7 +3,7 @@ name: training-feedback
 description: A Helm chart for deploying a training-feedback service
 type: application
 version: 0.0.1
-appVersion: "v1.0.5"
+appVersion: "v1.1.1"
 dependencies:
   - name: common
     version: 0.0.1
