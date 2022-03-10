@@ -14,14 +14,16 @@ echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
 kubectl config set-context --current --namespace=kypo
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 helm repo add jetstack https://charts.jetstack.io
+helm repo add stakater https://stakater.github.io/stakater-charts
 helm repo update
-helm install \
+helm upgrade --install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
   --version v1.7.0 \
   --set installCRDs=true \
   --wait
+helm upgrade --install reloader stakater/reloader --namespace reloader --create-namespace --wait
 helm upgrade --install kypo-certs /vagrant/helm/kypo-certs -n kypo --wait --create-namespace -n kypo
 helm upgrade --install ingress-nginx ingress-nginx\
  --repo https://kubernetes.github.io/ingress-nginx\
