@@ -106,7 +106,7 @@ data:
             add_field => { "timestamp_str" => "%{@timestamp}"}
         }
 
-        if [event][sandbox_id] {
+        if [event][sandbox_id] and [event][sandbox_id] != "" {
             mutate {
                 add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
                 add_field => { "pool_id" => "%{[event][pool_id]}" }
@@ -197,7 +197,7 @@ data:
             add_field => { "timestamp_str" => "%{@timestamp}"}
         }
 
-        if [event][sandbox_id] {
+        if [event][sandbox_id] and [event][sandbox_id] != "" {
             mutate {
                 add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
                 add_field => { "pool_id" => "%{[event][pool_id]}" }
