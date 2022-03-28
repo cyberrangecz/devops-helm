@@ -15,7 +15,7 @@ data:
     cors.allowed.origins=https://{{ .Values.global.kypoCrpHost }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.dns }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.answersStorage.dbName }}
+    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.answersStorage.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.answersStorage.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.answersStorage.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver

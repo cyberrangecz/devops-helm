@@ -15,9 +15,9 @@ spec:
         - "/bin/bash"
         - "-c"
         - | {{- range $k, $v := $.Values.postgresServices }}
-          PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.dns }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c 'CREATE USER "{{ $v.dbUser }}";' 2> /dev/null
-          PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.dns }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
-          PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.dns }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
+          PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.serviceName }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c 'CREATE USER "{{ $v.dbUser }}";' 2> /dev/null
+          PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.serviceName }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
+          PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.serviceName }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
           {{- end }}
           exit 0
   restartPolicy: Never

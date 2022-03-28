@@ -24,7 +24,7 @@ spec:
             - name: POSTGRES_PASSWORD
               value: {{ $.Values.postgresServices.oidcIssuer.dbPassword | quote }}
             - name: POSTGRES_CONTAINER_NAME
-              value: {{ $.Values.global.postgres.dns | quote }}
+              value: {{ $.Values.global.postgres.serviceName | quote }}
             - name: OPENDJ_CONTAINER_NAME
               value: {{ $.Values.oidcIssuerLdap.name | quote }}
           ports:

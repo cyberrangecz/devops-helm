@@ -37,7 +37,7 @@ data:
 {{- end }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.dns }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.training.dbName }}
+    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.training.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.training.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.training.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver

@@ -1,1 +1,1 @@
-{{- include "common.svc" (dict "name" .Values.global.kypoRedisServiceName "ports" .Values.ports) }}
+{{- include "common.svc" (dict "name" .Values.global.redis.serviceName "ports" .Values.ports) }}

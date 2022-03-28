@@ -16,13 +16,13 @@ spec:
         - "/bin/bash"
         - "-c"
         - |
-          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 4 ]
+          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 4 ]
           do
               echo "Waiting for microservices to register"
               ((c++)) && ((c==40)) && break
               sleep 5
           done
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} {{ $postgresServices.userAndGroup.dbName }} << SQL
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} {{ $postgresServices.userAndGroup.dbName }} << SQL
             INSERT INTO idm_group(name, external_id, status, description, expiration_date)
             VALUES ('All Mighty Users', NULL, 'VALID', 'All mighty group', NULL) ON CONFLICT DO NOTHING;
 

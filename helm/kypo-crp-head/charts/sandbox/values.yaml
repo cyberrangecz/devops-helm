@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: v0.16.4
+  tag: develop
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -25,22 +25,6 @@ mounts:
     type:
       secret:
         secretName: kypo-certs
-  - name: settings
-    extension: .py
-    mountPath: /app/kypo/sandbox_service_project/
-    isOneFile: true
-    subPath: true
-    type:
-      configMap:
-        name: sandbox-service-configmap
-  - name: stage_handlers
-    extension: .py
-    mountPath: /app/kypo/sandbox_instance_app/lib/
-    isOneFile: true
-    subPath: true
-    type:
-      configMap:
-        name: sandbox-service-configmap
   - name: kypo-crp-proxy-key
     extension:
     mountPath: /root/.ssh/

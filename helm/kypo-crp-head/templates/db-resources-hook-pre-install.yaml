@@ -16,9 +16,9 @@ spec:
         - "/bin/bash"
         - "-c"
         - | {{- range $k, $v := $postgresServices }}
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE USER "{{ $v.dbUser }}";' 2> /dev/null
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.dns }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE USER "{{ $v.dbUser }}";' 2> /dev/null
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
+          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
           {{- end }}
           exit 0
   restartPolicy: Never

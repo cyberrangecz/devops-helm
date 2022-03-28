@@ -4,11 +4,11 @@
             - name: git-ssh-key
               mountPath: "/root/.ssh/git-ssh-key"
               subPath: "git-ssh-key"
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - update-ca-certificates
+#          lifecycle:
+#            postStart:
+#              exec:
+#                command:
+#                  - update-ca-certificates
 {{- include "common.deployment.volumes" (dict "Values" .Values) }}
         - name: git-ssh-key
           secret:

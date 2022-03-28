@@ -10,7 +10,6 @@ global:
   kypoElasticsearchServiceName: kypo-elasticsearch
   kypoSyslogServiceName: kypo-syslog-ng
   kypoLogstashServiceName: kypo-logstash
-  kypoRedisServiceName: kypo-redis
   guacamoleUser: guac-user
   guacamoleUserPassword: guac-user
 
@@ -20,8 +19,13 @@ global:
       clientId:
       label:
 
+  redis:
+    serviceName: kypo-redis
+    port: 6379
+    db: 0
+
   postgres:
-    dns: postgres
+    serviceName: postgres
     port: 5432
     user: postgres
     password: password
