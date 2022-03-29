@@ -16,8 +16,8 @@ spec:
       containers:
         - name: {{ .name }}
           image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
-          command: ["pipenv"]
-          args: ["run", "python3", "manage.py", "rqworker", "{{ .workerType }}"]
+          command: ["python3"]
+          args: ["manage.py", "rqworker", "{{ .workerType }}"]
           {{- if .Values.environments }}
           env:
             {{- range .Values.environments }}

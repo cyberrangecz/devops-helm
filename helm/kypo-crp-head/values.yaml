@@ -79,7 +79,7 @@ global:
       contextPath: /kypo-elasticsearch-service/api/v1/
     sandbox:
       name: sandbox-service
-      port: 3000
+      port: 8000
       contextPath: /kypo-sandbox-service/api/v1/
     smartAssistant:
       name: smart-assistant

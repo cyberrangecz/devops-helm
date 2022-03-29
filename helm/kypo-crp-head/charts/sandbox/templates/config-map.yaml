@@ -169,5 +169,5 @@ data:
 
         redis:
             host: {{ .Values.global.redis.serviceName }}
-            port: {{ .Values.global.redis.ports }}
+            port: {{ .Values.global.redis.port }}
             db: {{ .Values.global.redis.db }}
