@@ -1,5 +1,8 @@
 image: curlimages/curl:latest
 
+variables:
+  ARTIFACT_REPOSITORY_ID: 2358
+
 stages:
   - build
   - upload
@@ -25,7 +28,9 @@ build:
 upload:
   stage: upload
   script:
-    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-certs-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
-    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-crp-head-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
-    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-gen-users-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
-    - 'curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@`ls kypo-postgres-*.tgz`" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/devel/charts"'
+    - if [ "$CI_COMMIT_BRANCH" = "master" ]; then export CHANNEL="stable"; else export CHANNEL="devel"; fi
+    - echo "Uploading to ${CHANNEL} channel."
+    - 'curl --request POST --user $CI_CUSTOM_REGISTRY_USER:$CI_CUSTOM_REGISTRY_PASSWORD --form "chart=@`ls kypo-certs-*.tgz`" "${CI_API_V4_URL}/projects/${ARTIFACT_REPOSITORY_ID}/packages/helm/api/${CHANNEL}/charts"'
+    - 'curl --request POST --user $CI_CUSTOM_REGISTRY_USER:$CI_CUSTOM_REGISTRY_PASSWORD --form "chart=@`ls kypo-crp-head-*.tgz`" "${CI_API_V4_URL}/projects/${ARTIFACT_REPOSITORY_ID}/packages/helm/api/${CHANNEL}/charts"'
+    - 'curl --request POST --user $CI_CUSTOM_REGISTRY_USER:$CI_CUSTOM_REGISTRY_PASSWORD --form "chart=@`ls kypo-gen-users-*.tgz`" "${CI_API_V4_URL}/projects/${ARTIFACT_REPOSITORY_ID}/packages/helm/api/${CHANNEL}/charts"'
+    - 'curl --request POST --user $CI_CUSTOM_REGISTRY_USER:$CI_CUSTOM_REGISTRY_PASSWORD --form "chart=@`ls kypo-postgres-*.tgz`" "${CI_API_V4_URL}/projects/${ARTIFACT_REPOSITORY_ID}/packages/helm/api/${CHANNEL}/charts"'
