@@ -1,7 +1,12 @@
 global:
-  kypoCrpHost:
   acmeContact:
   guacamoleUserPassword:
+  kypoCrpHost:
+  kypoCrpOidcs:
+    - url:
+      logoutUrl:
+      clientId:
+      label:
   kypoCrpUsers:
     - sub: kypo-admin
       iss:
@@ -19,11 +24,6 @@ global:
       givenName: "Demo"
       familyName: "User"
       admin: False
-  kypoCrpOidcs:
-    - url:
-      logoutUrl:
-      clientId:
-      label:
   userNum: 0
 
 kypo-guacamole:
