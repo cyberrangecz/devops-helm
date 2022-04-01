@@ -28,6 +28,14 @@ mounts:
       configMap:
         name: kypo-logstash-configmap
   - name: pipelines
+    extension: .yml
+    mountPath: /usr/share/logstash/config/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: kypo-logstash-configmap
+  - name: pipes
     mountPath: /usr/share/logstash/pipeline/
     isOneFile: true
     subPath: false
