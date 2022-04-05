@@ -3,7 +3,6 @@ name: training
 description: A Helm chart for deploying a training service
 type: application
 version: 0.0.1
-appVersion: "v1.2.0"
 dependencies:
   - name: common
     version: 0.0.1

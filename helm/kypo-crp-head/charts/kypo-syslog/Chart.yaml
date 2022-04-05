@@ -3,7 +3,6 @@ name: kypo-syslog
 description: A Helm chart deploying a Syslog-ng on Kubernetes used by KYPO CRP
 type: application
 version: 0.0.1
-appVersion: "latest"
 dependencies:
   - name: common
     version: 0.0.1

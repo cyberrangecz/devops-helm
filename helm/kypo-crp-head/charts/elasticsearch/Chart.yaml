@@ -3,7 +3,6 @@ name: elasticsearch
 description: A Helm chart for deploying a elasticsearch service
 type: application
 version: 0.0.1
-appVersion: "v1.0.35"
 dependencies:
   - name: common
     version: 0.0.1

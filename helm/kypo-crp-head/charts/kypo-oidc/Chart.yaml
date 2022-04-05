@@ -3,7 +3,6 @@ name: kypo-oidc
 description: Local OIDC issuer Helm chart for k8s
 type: application
 version: 0.0.1
-appVersion: "master"
 dependencies:
   - name: common
     version: 0.0.1

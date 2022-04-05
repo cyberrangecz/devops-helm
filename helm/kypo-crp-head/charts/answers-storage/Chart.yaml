@@ -3,7 +3,6 @@ name: answers-storage
 description: A Helm chart for deploying an answers-storage service
 type: application
 version: 0.0.1
-appVersion: "v1.0.9"
 dependencies:
   - name: common
     version: 0.0.1
