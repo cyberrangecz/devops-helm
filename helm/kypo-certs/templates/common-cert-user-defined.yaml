@@ -1,0 +1,10 @@
+{{- if and .Values.global.tlsPrivateKey .Values.global.tlsPublicKey }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.global.tlsSecretName }}
+type: Opaque
+data:
+  tls.crt: {{ .Values.global.tlsPublicKey }}
+  tls.key: {{ .Values.global.tlsPrivateKey }}
+{{- end }}

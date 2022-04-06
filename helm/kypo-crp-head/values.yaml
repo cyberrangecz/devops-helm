@@ -6,7 +6,7 @@ kypo-oidc:
 
 global:
   kypoCrpHost: 172.19.0.22
-  httpsSecretName: kypo-certs
+  tlsSecretName: kypo-certs
   kypoElasticsearchServiceName: kypo-elasticsearch
   kypoSyslogServiceName: kypo-syslog-ng
   kypoLogstashServiceName: kypo-logstash

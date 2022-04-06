@@ -24,7 +24,7 @@ helm upgrade --install \
   --set installCRDs=true \
   --wait
 helm upgrade --install reloader stakater/reloader --namespace reloader --create-namespace --wait
-helm upgrade --install kypo-certs /vagrant/helm/kypo-certs -n kypo --wait --create-namespace -n kypo
+helm upgrade --install kypo-certs /vagrant/helm/kypo-certs -f /vagrant/vagrant-values.yaml -n kypo --wait --create-namespace -n kypo
 helm upgrade --install ingress-nginx ingress-nginx\
  --repo https://kubernetes.github.io/ingress-nginx\
  --namespace ingress-nginx --create-namespace\

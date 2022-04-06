@@ -14,7 +14,7 @@
 {{- include "common.deployment.volumes" (dict "Values" .Values) }}
         - name: cacerts
           secret:
-            secretName: {{ .Values.global.httpsSecretName }}
+            secretName: {{ .Values.global.tlsSecretName }}
             items:
               - key: "tls.crt"
                 path: "kypo.crt"

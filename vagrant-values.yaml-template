@@ -17,6 +17,8 @@ global:
       givenName: "Demo"
       familyName: "User"
       admin: False
+  tlsPrivateKey:
+  tlsPublicKey:
 
 kypo-guacamole:
   enabled: False

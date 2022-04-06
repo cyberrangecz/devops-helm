@@ -1,4 +1,4 @@
-{{- if not (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost) }}
+{{- if and (not (and .Values.global.tlsPrivateKey .Values.global.tlsPublicKey)) (not (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost)) }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -8,7 +8,7 @@ spec:
     server: {{ .Values.global.acmeServer }}
     email: {{ .Values.global.acmeContact }}
     privateKeySecretRef:
-      name: {{ .Values.global.httpsSecretName }}-key
+      name: {{ .Values.global.tlsSecretName }}-key
     solvers:
     - http01:
        ingress:
@@ -17,9 +17,9 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ .Values.global.httpsSecretName }}
+  name: {{ .Values.global.tlsSecretName }}
 spec:
-  secretName: {{ .Values.global.httpsSecretName }}
+  secretName: {{ .Values.global.tlsSecretName }}
   issuerRef:
     name: letsencrypt-prod
   dnsNames:
