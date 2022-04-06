@@ -21,10 +21,4 @@ spec:
     name: selfsigned-issuer
     kind: Issuer
     group: cert-manager.io
-  keystores:
-    jks:
-      create: true
-      passwordSecretRef: # Password used to encrypt the keystore
-        key: password
-        name: jks-password-secret
 {{- end }}

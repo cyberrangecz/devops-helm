@@ -24,10 +24,4 @@ spec:
     name: letsencrypt-prod
   dnsNames:
   - {{ .Values.global.kypoCrpHost }}
-  keystores:
-    jks:
-      create: true
-      passwordSecretRef: # Password used to encrypt the keystore
-        key: password
-        name: jks-password-secret
 {{- end }}
