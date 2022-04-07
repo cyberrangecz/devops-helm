@@ -26,7 +26,7 @@ spec:
           - name: POSTGRES_PASSWORD
             value: {{ $.Values.postgresServices.guacamole.dbPassword | quote }}
           - name: POSTGRES_HOSTNAME
-            value: {{ $.Values.global.postgres.host | quote }}
+            value: {{ $.Values.global.postgres.serviceName | quote }}
           - name: POSTGRES_DATABASE
             value: {{ $.Values.postgresServices.guacamole.dbName | quote }}
           - name: POSTGRES_PORT
