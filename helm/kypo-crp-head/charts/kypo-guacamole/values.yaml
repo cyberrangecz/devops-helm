@@ -1,17 +1,8 @@
-# The FQDN or IP address of KYPO CRP.
-kypoCrpHost: 172.19.0.22
-
 postgresServices:
   guacamole:
     dbName: kypo_guacamole_db
     dbUser: kypo_guacamole_user
     dbPassword: kypo_password
-
-postgres:
-  host: postgres
-  user: postgres
-  port: 5432
-  password: password
 
 guacd:
   name: guacd

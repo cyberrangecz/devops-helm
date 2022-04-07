@@ -12,7 +12,7 @@ data:
     microservice.name=kypo-training
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
-    cors.allowed.origins=https://{{ .Values.global.kypoCrpHost }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }}
 
     # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
@@ -26,12 +26,12 @@ data:
     training-feedback-service.uri=http://{{ .Values.global.services.trainingFeedback.name }}:{{ .Values.global.services.trainingFeedback.port }}{{ .Values.global.services.trainingFeedback.contextPath }}
 
     # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
-    central.syslog.ip={{ .Values.global.kypoCrpHost }}
+    central.syslog.ip={{ .Values.global.headHost }}
 
     # OpenID Connect OIDC configuration settings for a resource servers configuration
     # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
     ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server
-{{- range $index, $element := .Values.global.kypoCrpOidcs }}
+{{- range $index, $element := .Values.global.oidcProviders }}
     kypo.identity.providers[{{ $index }}].issuer= {{ $element.url }}
     kypo.identity.providers[{{ $index }}].userInfoEndpoint=
 {{- end }}

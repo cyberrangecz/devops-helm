@@ -27,11 +27,11 @@ Vagrant Disk Plugin | https://github.com/sprotheroe/vagrant-disksize | 0.1.3+
 
         ```yaml
         # The URL of OpenStack Identity service API.
-        kypoCrpOsAuthUrl: <OS_AUTH_URL>
+        osAuthUrl: <OS_AUTH_URL>
         # The ID of application credentials to authenticate at the OpenStack cloud platform.
-        kypoCrpOsApplicationCredentialId: <OS_APPLICATION_CREDENTIAL_ID>
+        osApplicationCredentialId: <OS_APPLICATION_CREDENTIAL_ID>
         # The secret string of `kypo_crp_os_application_credential_id`.
-        kypoCrpOsApplicationCredentialSecret: <OS_APPLICATION_CREDENTIAL_SECRET>
+        osApplicationCredentialSecret: <OS_APPLICATION_CREDENTIAL_SECRET>
         ```
 
 3. Configure access to the VM of the OpenStack cloud that has direct access to the virtual network dedicated to sandboxes (i.e. `kypo-proxy-jump`).
@@ -46,21 +46,21 @@ Vagrant Disk Plugin | https://github.com/sprotheroe/vagrant-disksize | 0.1.3+
 
         ```yaml
         # The KYPO Jump host IP address or hostname.
-        kypoCrpProxyHost: <hostname>
+        proxyHost: <hostname>
         # The name of the user on the KYPO Jump host.
-        kypoCrpProxyUser: <username>
+        proxyUser: <username>
         # base64 -w0 encoded content of private SSL key used for communication with `kypo_crp_proxy_host`.
-        kypoCrpProxyKey: <single-line-base64-passwordless-ssh-key>
+        proxyKey: <single-line-base64-passwordless-ssh-key>
         ```
 
-    3. Insert the content of the public part of the key to `~/.ssh/authorized_keys` file of the user, specified in the previous step on the VM (i.e. `kypo-proxy-jump`) and put following line to sudoers, where user has value of kypoCrpProxyUser:
+    3. Insert the content of the public part of the key to `~/.ssh/authorized_keys` file of the user, specified in the previous step on the VM (i.e. `kypo-proxy-jump`) and put following line to sudoers, where user has value of proxyUser:
     `user ALL=(ALL:ALL) NOPASSWD:ALL`
 
 4. Configure DNS servers accessible from kypo-proxy-jump in **vagrant-values.yaml**
 
     ```yaml
     # The list of IP addresses to custom DNS servers.
-    kypoCrpDns:
+    dnsNameServers:
     ```
 
 5. Create and connect to the virtual machine.

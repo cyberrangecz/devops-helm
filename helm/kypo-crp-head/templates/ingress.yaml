@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: kypo-ingress
   annotations:
-    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost }}
+    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost }}
     cert-manager.io/issuer: "selfsigned-issuer"
     {{- else }}
     cert-manager.io/issuer: "letsencrypt-prod"
@@ -12,13 +12,13 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - {{ .Values.global.kypoCrpHost }}
+      - {{ .Values.global.headHost }}
     secretName: {{ .Values.global.tlsSecretName }}
   rules:
-    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost }}
+    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost }}
     - http:
     {{- else }}
-    - host: {{ .Values.global.kypoCrpHost }}
+    - host: {{ .Values.global.headHost }}
       http:
     {{- end }}
         paths:

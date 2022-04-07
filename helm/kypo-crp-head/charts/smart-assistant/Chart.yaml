@@ -1,6 +1,6 @@
 apiVersion: v2
 name: smart-assistant
-description: A Helm chart for deploying an smart-assistant service
+description: Smart-assistant service Helm chart
 type: application
 version: 0.0.1
 dependencies:

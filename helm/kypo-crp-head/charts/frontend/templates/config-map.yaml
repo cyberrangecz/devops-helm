@@ -17,63 +17,63 @@ data:
         "pollingPeriod": 5000,
         "defaultPaginationSize": 10,
         "visualizationConfig": {
-          "trainingBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.training.contextPath }}",
-          "adaptiveBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
-          "elasticSearchBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.elasticsearch.contextPath }}"
+          "trainingBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.training.contextPath }}",
+          "adaptiveBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
+          "elasticSearchBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.elasticsearch.contextPath }}"
         },
         "kypo2TopologyConfig": {
-          "topologyRestUrl": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.sandbox.contextPath }}",
+          "topologyRestUrl": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
           "decoratorsRestUrl": "",
           "defaultDecoratorRefreshPeriodInSeconds": 3,
           "useRealTime": false,
           "useDecorators": false,
           "guacamoleConfig": {
-            "url": "https://{{ .Values.global.kypoCrpHost }}/guacamole/",
+            "url": "https://{{ .Values.global.headHost }}/guacamole/",
             "username": "{{ .Values.global.guacamoleUser }}",
             "password": "{{ .Values.global.guacamoleUserPassword }}"
           }
         }
       },
       "trainingApiConfig": {
-        "trainingBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.training.contextPath }}",
-        "adaptiveBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}"
+        "trainingBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.training.contextPath }}",
+        "adaptiveBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}"
       },
       "sandboxAgendaConfig": {
         "pollingPeriod": 5000,
         "defaultPaginationSize": 10,
         "kypo2TopologyConfig": {
-          "topologyRestUrl": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.sandbox.contextPath }}",
+          "topologyRestUrl": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
           "decoratorsRestUrl": "",
           "defaultDecoratorRefreshPeriodInSeconds": 3,
           "useRealTime": false,
           "useDecorators": false,
           "guacamoleConfig": {
-            "url": "https://{{ .Values.global.kypoCrpHost }}/guacamole/",
+            "url": "https://{{ .Values.global.headHost }}/guacamole/",
             "username": "{{ .Values.global.guacamoleUser }}",
             "password": "{{ .Values.global.guacamoleUserPassword }}"
           }
         }
       },
       "sandboxApiConfig": {
-        "sandboxRestBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.sandbox.contextPath }}"
+        "sandboxRestBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}"
       },
       "userAndGroupAgendaConfig": {
         "defaultPaginationSize": 10
       },
       "userAndGroupApiConfig": {
-        "userAndGroupRestBasePath": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.userAndGroup.contextPath }}"
+        "userAndGroupRestBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.userAndGroup.contextPath }}"
       },
       "authConfig": {
         "guardMainPageRedirect": "home",
         "guardLoginPageRedirect": "login",
         "interceptorAllowedUrls": [
-          "https://{{ .Values.global.kypoCrpHost }}"
+          "https://{{ .Values.global.headHost }}"
         ],
         "authorizationStrategyConfig": {
-          "authorizationUrl": "https://{{ .Values.global.kypoCrpHost }}{{ .Values.global.services.userAndGroup.contextPath }}users/info"
+          "authorizationUrl": "https://{{ .Values.global.headHost }}{{ .Values.global.services.userAndGroup.contextPath }}users/info"
         },
         "providers": [
-{{- range $index, $element := .Values.global.kypoCrpOidcs }}{{if $index}},{{end}}
+{{- range $index, $element := .Values.global.oidcProviders }}{{if $index}},{{end}}
           {
             "label": "{{ $element.label }}",
             "textColor": "white",
@@ -82,11 +82,11 @@ data:
               "requireHttps": true,
               "issuer": "{{ $element.url }}",
               "clientId": "{{ $element.clientId }}",
-              "redirectUri": "https://{{ $.Values.global.kypoCrpHost }}",
+              "redirectUri": "https://{{ $.Values.global.headHost }}",
               "scope": "openid email profile",
               "logoutUrl": "{{ $element.logoutUrl }}",
-              "postLogoutRedirectUri": "https://{{ $.Values.global.kypoCrpHost }}/logout-confirmed",
-              "silentRefreshRedirectUri": "https://{{ $.Values.global.kypoCrpHost }}/silent-refresh.html",
+              "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/logout-confirmed",
+              "silentRefreshRedirectUri": "https://{{ $.Values.global.headHost }}/silent-refresh.html",
               "clearHashAfterLogin": true,
               "strictDiscoveryDocumentValidation": false,
               "skipIssuerCheck": true,

@@ -1,4 +1,4 @@
-{{- if and (not (and .Values.global.tlsPrivateKey .Values.global.tlsPublicKey)) (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.kypoCrpHost) }}
+{{- if and (not (and .Values.global.tlsPrivateKey .Values.global.tlsPublicKey)) (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost) }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -13,10 +13,10 @@ metadata:
 spec:
   secretName: {{ .Values.global.tlsSecretName }}
   dnsNames:
-    - {{ .Values.global.kypoCrpHost }}
-  commonName: {{ .Values.global.kypoCrpHost }}
+    - {{ .Values.global.headHost }}
+  commonName: {{ .Values.global.headHost }}
   ipAddresses:
-    - {{ .Values.global.kypoCrpHost }}
+    - {{ .Values.global.headHost }}
   issuerRef:
     name: selfsigned-issuer
     kind: Issuer

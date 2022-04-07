@@ -12,7 +12,7 @@
 {{- include "common.deployment.volumes" (dict "Values" .Values) }}
         - name: git-ssh-key
           secret:
-            {{- if .Values.kypoCrpGit.privateKey }}
+            {{- if .Values.gitConfig.privateKey }}
             secretName: git-external-key
             {{- else }}
             secretName: git-internal-key

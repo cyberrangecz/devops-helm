@@ -5,7 +5,7 @@ kypo-oidc:
   enabled: True
 
 global:
-  kypoCrpHost: 172.19.0.22
+  headHost: 172.19.0.22
   tlsSecretName: kypo-certs
   kypoElasticsearchServiceName: kypo-elasticsearch
   kypoSyslogServiceName: kypo-syslog-ng
@@ -13,7 +13,7 @@ global:
   guacamoleUser: guac-user
   guacamoleUserPassword: guac-user
 
-  kypoCrpOidcs:
+  oidcProviders:
     - url:
       logoutUrl:
       clientId:
@@ -98,7 +98,7 @@ global:
       port: 8084
       contextPath: /kypo-rest-user-and-group/api/v1/
 
-  kypoCrpUsers:
+  users:
     - sub: kypo-admin
       iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
       password: password

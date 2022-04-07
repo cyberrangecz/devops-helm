@@ -1,6 +1,6 @@
 global:
-  userNum: 10
-  kypoCrpUsers:
+  userCount: 10
+  users:
     - sub: kypo-admin
       iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
       password: password
@@ -41,18 +41,18 @@ postgres:
     storageClassName: local-path
 
 sandbox:
-  kypoCrpHeadIp: 172.19.0.22
-  kypoCrpInstanceName: default0
-  kypoCrpDns:
+  kypoHeadIp: 172.19.0.22
+  stackNamePrefix: default0
+  dnsNameServers:
     - 1.1.1.1
     - 1.0.0.1
-  kypoCrpOsAuthUrl:
-  kypoCrpOsApplicationCredentialId:
-  kypoCrpOsApplicationCredentialSecret:
-  kypoCrpProxyHost:
-  kypoCrpProxyUser:
-  kypoCrpProxyKey:
-  kypoCrpGit:
+  osAuthUrl:
+  osApplicationCredentialId:
+  osApplicationCredentialSecret:
+  proxyHost:
+  proxyUser:
+  proxyKey:
+  gitConfig:
     type: INTERNAL
     server: 172.19.0.22
     sshPort: 30022

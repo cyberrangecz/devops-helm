@@ -8,7 +8,7 @@ data:
     #microservice_name: kypo-sandbox-service
 
     # A prefix of the stack in the cloud with maximum 8 characters.
-    stack_name_prefix: {{ .Values.kypoCrpInstanceName }}
+    stack_name_prefix: {{ .Values.stackNamePrefix }}
 
     # A boolean that turns on/off debug mode.
     # SECURITY WARNING: don't run with debug turned on in production!
@@ -21,7 +21,7 @@ data:
     cors_origin_allow_all: False
 
     # A list of origins that are authorized to make cross-site HTTP requests.
-    cors_origin_whitelist: ["https://{{ .Values.global.kypoCrpHost }}"]
+    cors_origin_whitelist: ["https://{{ .Values.global.headHost }}"]
 
     authentication:
         # Whether the REST API authentication is on.
@@ -30,7 +30,7 @@ data:
 
         # List of OIDC provider host/domain names that are allowed.
         allowed_oidc_providers:
-    {{- range .Values.global.kypoCrpOidcs }}
+    {{- range .Values.global.oidcProviders }}
               - issuer: {{ trimSuffix "/" .url }}
                 userinfo_endpoint:
     {{- end }}
@@ -42,19 +42,19 @@ data:
 
     application_configuration:
         # The IP address of the KYPO head server.
-        kypo_head_ip: {{ .Values.kypoCrpHeadIp }}
+        kypo_head_ip: {{ .Values.kypoHeadIp }}
 
         # The URL of OpenStack Identity service API.
-        os_auth_url: {{ .Values.kypoCrpOsAuthUrl }}
+        os_auth_url: {{ .Values.osAuthUrl }}
 
         # The ID of application credentials to authenticate at OpenStack cloud platform.
-        os_application_credential_id: {{ .Values.kypoCrpOsApplicationCredentialId }}
+        os_application_credential_id: {{ .Values.osApplicationCredentialId }}
 
         # The secret string of APPLICATION_CREDENTIAL_ID.
-        os_application_credential_secret: {{ .Values.kypoCrpOsApplicationCredentialSecret }}
+        os_application_credential_secret: {{ .Values.osApplicationCredentialSecret }}
 
         # The OpenStack console type. One of: novnc, xvpvnc, spice-html5, rdp-html5, serial, webmks.
-        os_console_type: {{ .Values.kypoCrpOsConsoleType }}
+        os_console_type: {{ .Values.osConsoleType }}
 
         # The path to project log file.
         #log_file: kypo-sandbox-service.log
@@ -63,31 +63,31 @@ data:
         #log_level: INFO
 
         # The type of Git repositories. One of: INTERNAL, GITLAB.
-        git_type: {{ .Values.kypoCrpGit.type }}
+        git_type: {{ .Values.gitConfig.type }}
 
         # Git server hostname or IP.
-        git_server: {{ .Values.kypoCrpGit.server }}
+        git_server: {{ .Values.gitConfig.server }}
 
         # Git server ssh port
-        git_ssh_port: {{ .Values.kypoCrpGit.sshPort }}
+        git_ssh_port: {{ .Values.gitConfig.sshPort }}
 
         # The address of Git REST server with protocol (optionally port)
-        git_rest_server: {{ .Values.kypoCrpGit.restServerUrl }}
+        git_rest_server: {{ .Values.gitConfig.restServerUrl }}
 
         # The name of user used for communication with Git repository.
-        git_user: {{ .Values.kypoCrpGit.user }}
+        git_user: {{ .Values.gitConfig.user }}
 
         # The SSH private key that kypo2-django-openstack uses to communicate with Git repository.
         git_private_key: /root/.ssh/git-ssh-key
 
         # The access token for Gitlab API
-        git_access_token: {{ .Values.kypoCrpGit.accessToken }}
+        git_access_token: {{ .Values.gitConfig.accessToken }}
 
         # The URL of Ansible networking Git repository.
-        ansible_networking_url: {{ .Values.kypoCrpGit.ansibleNetworkingUrl }}
+        ansible_networking_url: {{ .Values.gitConfig.ansibleNetworkingUrl }}
 
         # The rev of Ansible networking Git repository.
-        ansible_networking_rev: {{ .Values.kypoCrpGit.ansibleNetworkingRev }}
+        ansible_networking_rev: {{ .Values.gitConfig.ansibleNetworkingRev }}
 
         # The pattern to be replaced in image names of sandbox definitions.
         image_naming_strategy:
@@ -99,18 +99,18 @@ data:
 
         # The object that represents SSH Host entry (see man page of ssh_config).
         proxy_jump_to_man:
-            Host: {{ .Values.kypoCrpProxyHost }}
-            User: {{ .Values.kypoCrpProxyUser }}
+            Host: {{ .Values.proxyHost }}
+            User: {{ .Values.proxyUser }}
             IdentityFile: /root/.ssh/kypo-crp-proxy-key
 
         # Timeout of sandbox (stack) creation in cloud in seconds.
-        sandbox_build_timeout: {{ .Values.kypoSandboxBuildTimeout }}
+        sandbox_build_timeout: {{ .Values.sandboxBuildTimeout }}
 
         # Timeout of sandbox (stack) deletion in cloud in seconds.
-        sandbox_delete_timeout: {{ .Values.kypoSandboxDeleteTimeout }}
+        sandbox_delete_timeout: {{ .Values.sandboxDeleteTimeout }}
 
         # Timeout for Ansible.
-        sandbox_ansible_timeout: {{ .Values.kypoSandboxAnsibleTimeout }}
+        sandbox_ansible_timeout: {{ .Values.sandboxAnsibleTimeout }}
 
         # The path to local temporary directory where KYPO will prepare Docker volumes.
         ansible_docker_volumes: /var/opt/kypo/kypo-ansible-runner-volumes
@@ -139,13 +139,13 @@ data:
             man_user: "debian"
 
             # The name of the flavor in OpenStack that will be used for MAN.
-            man_flavor: "{{ .Values.kypoManFlavor }}"
+            man_flavor: "{{ .Values.manFlavor }}"
 
             # The cidr notation of network between MAN and every other node in sandbox.
             #sb_man_cidr: 192.168.128.0/17
 
             # The list of IP addresses to custom DNS servers.
-            dns_name_servers: [{{ join "," .Values.kypoCrpDns }}]
+            dns_name_servers: [{{ join "," .Values.dnsNameServers }}]
 
         # Django database settings.
         database:

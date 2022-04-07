@@ -1,6 +1,6 @@
 apiVersion: v2
 name: kypo-certs
-description: Kypo certs Helm chart
+description: Helm chart for preparing Kubernetes secret with tls certificate for KYPO CRP head services
 type: application
 version: 0.0.1
 appVersion: "0.0.1"

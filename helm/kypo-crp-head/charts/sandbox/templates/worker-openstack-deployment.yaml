@@ -1,1 +1,1 @@
-{{- include "common.worker.deployment" (dict "name" (print .Values.global.services.sandbox.name "-worker-openstack") "replicaCount" .Values.kypoCrpDefaultWorkers  "workerType" "openstack" "Values" .Values) }}
+{{- include "common.worker.deployment" (dict "name" (print .Values.global.services.sandbox.name "-worker-openstack") "replicaCount" .Values.openstackWorkerCount  "workerType" "openstack" "Values" .Values) }}

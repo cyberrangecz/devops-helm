@@ -12,12 +12,12 @@ data:
     service.name=kypo-user-and-group
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
-    cors.allowed.origins=https://{{ .Values.global.kypoCrpHost }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }}
 
     # OpenID Connect OIDC configuration settings for a resource servers configuration
     # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
     ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server
-    {{- range $index, $element := .Values.global.kypoCrpOidcs }}
+    {{- range $index, $element := .Values.global.oidcProviders }}
     kypo.identity.providers[{{ $index }}].issuer= {{ $element.url }}
     kypo.identity.providers[{{ $index }}].userInfoEndpoint=
     {{- end }}
@@ -52,11 +52,11 @@ data:
     ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
     logging.level.cz.muni.ics=WARN
   initial-users.yml: |
-    {{- $kypoCrpUsers := $.Values.global.kypoCrpUsers }}
+    {{- $users := $.Values.global.users }}
     {{- if (lookup "v1" "Secret" "kypo" "generated-users") }}
-    {{- $kypoCrpUsers = concat $.Values.global.kypoCrpUsers ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
+    {{- $users = concat $.Values.global.users ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
     {{- end }}
-    {{- range $kypoCrpUsers }}
+    {{- range $users }}
     - user:
         sub: {{ .sub }}
         iss: {{ .iss }}

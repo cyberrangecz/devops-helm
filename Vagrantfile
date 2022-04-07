@@ -31,7 +31,7 @@ helm upgrade --install ingress-nginx ingress-nginx\
  --set controller.extraArgs.default-ssl-certificate=kypo/kypo-certs
 helm upgrade --install kypo-postgres /vagrant/helm/kypo-postgres -f /vagrant/vagrant-values.yaml --wait -n kypo
 echo "global:
-  kypoCrpOidcs:
+  oidcProviders:
     - url: https://172.19.0.22:443/csirtmu-dummy-issuer-server/
       logoutUrl: https://172.19.0.22:443/csirtmu-dummy-issuer-server/endsession
       clientId: `head -n 300 /dev/urandom | tr -dc 'A-Za-z' | fold -w 36 | head -n 1`

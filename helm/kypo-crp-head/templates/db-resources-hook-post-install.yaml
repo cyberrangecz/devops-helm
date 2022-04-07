@@ -73,11 +73,11 @@ spec:
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_KYPO-SANDBOX-SERVICE_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
-        {{- $kypoCrpUsers := $.Values.global.kypoCrpUsers }}
+        {{- $users := $.Values.global.users }}
         {{- if (lookup "v1" "Secret" "kypo" "generated-users") }}
-        {{- $kypoCrpUsers = concat $.Values.global.kypoCrpUsers ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
+        {{- $users = concat $.Values.global.users ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
         {{- end }}
-        {{- range $kypoCrpUsers }}
+        {{- range $users }}
           {{- if .admin }}
             INSERT INTO user_idm_group(user_id, idm_group_id)
             VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;

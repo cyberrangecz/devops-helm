@@ -26,11 +26,11 @@ spec:
           - name: POSTGRES_PASSWORD
             value: {{ $.Values.postgresServices.guacamole.dbPassword | quote }}
           - name: POSTGRES_HOSTNAME
-            value: {{ $.Values.postgres.host | quote }}
+            value: {{ $.Values.global.postgres.host | quote }}
           - name: POSTGRES_DATABASE
             value: {{ $.Values.postgresServices.guacamole.dbName | quote }}
           - name: POSTGRES_PORT
-            value: {{ $.Values.postgres.port | quote }}
+            value: {{ $.Values.global.postgres.port | quote }}
           - name: LOGBACK_LEVEL
             value: DEBUG
         ports:

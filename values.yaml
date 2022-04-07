@@ -1,13 +1,13 @@
 global:
   acmeContact:
   guacamoleUserPassword:
-  kypoCrpHost:
-  kypoCrpOidcs:
+  headHost:
+  oidcProviders:
     - url:
       logoutUrl:
       clientId:
       label:
-  kypoCrpUsers:
+  users:
     - sub: kypo-admin
       iss:
       password:
@@ -24,25 +24,25 @@ global:
       givenName: "Demo"
       familyName: "User"
       admin: False
-  userNum: 0
+  userCount: 0
 
 kypo-guacamole:
   guacamole:
     guacamoleAdminPassword:
 
 sandbox:
-  kypoCrpHeadIp:
-  kypoCrpInstanceName:
-  kypoCrpDns:
+  kypoHeadIp:
+  stackNamePrefix:
+  dnsNameServers:
     - 1.1.1.1
     - 1.0.0.1
-  kypoCrpOsAuthUrl:
-  kypoCrpOsApplicationCredentialId:
-  kypoCrpOsApplicationCredentialSecret:
-  kypoCrpProxyHost:
-  kypoCrpProxyUser:
-  kypoCrpProxyKey:
-  kypoCrpGit:
+  osAuthUrl:
+  osApplicationCredentialId:
+  osApplicationCredentialSecret:
+  proxyHost:
+  proxyUser:
+  proxyKey:
+  gitConfig:
     type: INTERNAL
     server: 172.19.0.22
     sshPort: 30022

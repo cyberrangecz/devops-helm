@@ -12,7 +12,7 @@ data:
     microservice.name=kypo-training-feedback
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
-    cors.allowed.origins=https://{{ .Values.global.kypoCrpHost }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }}
 
     # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}

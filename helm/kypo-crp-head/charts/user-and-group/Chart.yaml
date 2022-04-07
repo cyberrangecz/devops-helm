@@ -1,6 +1,6 @@
 apiVersion: v2
 name: user-and-group
-description: A Helm chart for deploying a user-and-group service
+description: User-and-group service Helm chart
 type: application
 version: 0.0.1
 dependencies:
