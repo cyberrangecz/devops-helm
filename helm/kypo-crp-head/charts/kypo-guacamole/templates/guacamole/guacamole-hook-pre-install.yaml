@@ -19,7 +19,7 @@ spec:
           PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.host }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
           PGPASSWORD={{ $.Values.global.postgres.password }} psql -h {{ $.Values.global.postgres.host }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
           {{- end }}
-          cat /srv/initdb.sql | PGPASSWORD={{ $.Values.global.postgresServices.guacamole.dbPassword }} psql -h {{ $.Values.global.postgres.host }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgresServices.guacamole.dbUser }} -d {{ $.Values.global.postgresServices.guacamole.dbName }} -f -
+          cat /srv/initdb.sql | PGPASSWORD={{ $.Values.postgresServices.guacamole.dbPassword }} psql -h {{ $.Values.global.postgres.host }} -p {{ $.Values.global.postgres.port }} -U {{ $.Values.global.postgresServices.guacamole.dbUser }} -d {{ $.Values.global.postgresServices.guacamole.dbName }} -f -
   restartPolicy: Never
   terminationGracePeriodSeconds: 0
 {{- end }}
