@@ -1,1 +1,23 @@
-{{- include "common.worker.deployment" (dict "name" (print .Values.global.services.sandbox.name "-worker-default") "replicaCount" .Values.defaultWorkerCount  "workerType" "default" "Values" .Values) }}
+{{- $ports := list (dict "port" .Values.global.services.sandbox.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.deployment.header" (dict "name" (print .Values.global.services.sandbox.name "-worker-default") "replicasCount" .Values.defaultWorkerCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.containers" (dict "name" (print .Values.global.services.sandbox.name "-worker-default") "ports" $ports "Values" .Values "command" "python3" "args" "[\"manage.py\",\"rqworker\",\"default\"]" "portsDisabled" true) }}
+            - name: git-ssh-key
+              mountPath: "/root/.ssh/git-ssh-key"
+              subPath: "git-ssh-key"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - update-ca-certificates
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}
+        - name: git-ssh-key
+          secret:
+            {{- if .Values.gitConfig.privateKey }}
+            secretName: git-external-key
+            {{- else }}
+            secretName: git-internal-key
+            {{- end }}
+            items:
+              - key: "git-ssh-key"
+                path: "git-ssh-key"
+                mode: 0400
