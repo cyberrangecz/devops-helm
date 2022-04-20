@@ -1,2 +1,2 @@
-{{- include "common.deployment.header" (dict "name" .Values.global.redis.serviceName "replicasCount" .Values.replicasCount) }}
+{{- include "common.deployment.header" (dict "name" .Values.global.redis.serviceName "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
 {{- include "common.deployment.containers" (dict "name" .Values.global.redis.serviceName "ports" .Values.ports "Values" .Values) }}

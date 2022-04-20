@@ -2,15 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.name }}
+  labels: {{- include "common.labels" (dict "name" .Values.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 spec:
   replicas: {{ .Values.replicasCount }}
   selector:
-    matchLabels:
-      app: {{ .Values.name }}
+    matchLabels: {{- include "common.matchLabels" (dict "name" .Values.name "release" .Release) | nindent 6 }}
   template:
     metadata:
-      labels:
-        app: {{ .Values.name }}
+      labels: {{- include "common.labels" (dict "name" .Values.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 8 }}
     spec:
       containers:
         - name: {{ .Values.containers.gitInternalSsh.name }}

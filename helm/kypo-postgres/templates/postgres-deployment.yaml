@@ -3,16 +3,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .name }}
+  labels: {{- include "common.labels" (dict "name" .name "chart" $.Chart "release" $.Release "extraLabels" $.extraLabels) | nindent 4 }}
 spec:
   selector:
-    matchLabels:
-      app: {{ .name }}
+    matchLabels: {{- include "common.matchLabels" (dict "name" .name "release" $.Release) | nindent 6 }}
   strategy:
     type: Recreate
   template:
     metadata:
-      labels:
-        app: {{ .name }}
+      labels: {{- include "common.labels" (dict "name" .name "chart" $.Chart "release" $.Release "extraLabels" $.extraLabels) | nindent 8 }}
     spec:
       containers:
         - name: {{ .name }}

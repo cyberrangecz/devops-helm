@@ -1,1 +1,1 @@
-{{- include "common.pvc" (dict "name" .Values.oidcIssuerApp.name "pvc" .Values.oidcIssuerApp.pvc) }}
+{{- include "common.pvc" (dict "name" .Values.oidcIssuerApp.name "pvc" .Values.oidcIssuerApp.pvc "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

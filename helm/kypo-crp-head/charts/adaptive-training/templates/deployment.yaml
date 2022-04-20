@@ -1,5 +1,5 @@
 {{- $ports := list (dict "port" .Values.global.services.adaptiveTraining.port "protocol" "TCP" "probe" true) -}}
-{{- include "common.deployment.header" (dict "name" .Values.global.services.adaptiveTraining.name "replicasCount" .Values.replicasCount) }}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.adaptiveTraining.name "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
 {{- include "common.deployment.containers" (dict "name" .Values.global.services.adaptiveTraining.name "ports" $ports "Values" .Values) }}
           lifecycle:
             postStart:

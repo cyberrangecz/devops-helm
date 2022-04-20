@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.global.services.trainingFeedback.name }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.trainingFeedback.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 data:
   kypo-training-feedback.properties: |
     ## server port for a given service, e.g., 8088

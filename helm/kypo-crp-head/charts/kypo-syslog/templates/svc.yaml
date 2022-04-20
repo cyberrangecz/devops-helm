@@ -1,1 +1,1 @@
-{{- include "common.svc" (dict "name" .Values.global.kypoSyslogServiceName "ports" .Values.ports) }}
+{{- include "common.svc" (dict "name" .Values.global.kypoSyslogServiceName "ports" .Values.ports "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

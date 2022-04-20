@@ -1,5 +1,5 @@
 {{- $ports := list (dict "port" .Values.global.services.answersStorage.port "protocol" "TCP" "probe" true) -}}
-{{- include "common.deployment.header" (dict "name" .Values.global.services.answersStorage.name "replicasCount" .Values.replicasCount) }}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.answersStorage.name "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
 {{- include "common.deployment.containers" (dict "name" .Values.global.services.answersStorage.name "ports" $ports "Values" .Values) }}
           lifecycle:
             postStart:

@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.global.kypoSyslogServiceName }}-lb
+  labels: {{- include "common.labels" (dict "name" .Values.global.kypoSyslogServiceName "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 spec:
-  selector:
-    app: {{ .Values.global.kypoSyslogServiceName }}
+  selector: {{- include "common.matchLabels" (dict "name" .Values.global.kypoSyslogServiceName "release" .Release) | nindent 4 }}
   type: LoadBalancer
   ports:
     {{- range .Values.externalPorts }}

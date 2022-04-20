@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.global.services.smartAssistant.name }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.smartAssistant.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 data:
   kypo-adaptive-smart-assistant.properties: |
     ## server port for a given service, e.g., 8086

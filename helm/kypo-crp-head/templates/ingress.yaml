@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kypo-ingress
+  labels: {{- include "common.labels" (dict "name" .Chart.Name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
   annotations:
     {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost }}
     cert-manager.io/issuer: "selfsigned-issuer"

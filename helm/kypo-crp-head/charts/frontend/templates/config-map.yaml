@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.global.services.angularFrontend.name }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.angularFrontend.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 data:
   kypo-config.json: |
     {

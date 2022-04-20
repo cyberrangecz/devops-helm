@@ -1,1 +1,1 @@
-{{- include "common.svc" (dict "name" .Values.guacamole.name "ports" .Values.guacamole.ports) }}
+{{- include "common.svc" (dict "name" .Values.guacamole.name "ports" .Values.guacamole.ports "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

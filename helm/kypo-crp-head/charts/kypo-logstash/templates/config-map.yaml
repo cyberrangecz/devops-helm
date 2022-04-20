@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.global.kypoLogstashServiceName }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.kypoLogstashServiceName "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 data:
   logstash.yml: |
     #
@@ -117,7 +118,7 @@ data:
                 add_field => { "access_token" => "%{[event][access_token]}" }
            }
         }
-    
+
         # retrieve elements from json to compose Elasticsearch index correctly
         mutate {
             add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
@@ -178,7 +179,7 @@ data:
                 index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
                 codec => json
            }
-        } 
+        }
     }
 
   30-kypo-logstash-msf-commands.conf: |
@@ -208,7 +209,7 @@ data:
                 add_field => { "access_token" => "%{[event][access_token]}" }
            }
         }
-    
+
         # retrieve elements from json to compose Elasticsearch index correctly
         mutate {
             add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }

@@ -1,4 +1,4 @@
-{{- include "common.deployment.header" (dict "name" .Values.global.kypoElasticsearchServiceName "strategy" "Recreate" "replicasCount" 1) }}
+{{- include "common.deployment.header" (dict "name" .Values.global.kypoElasticsearchServiceName "strategy" "Recreate" "replicasCount" 1 "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
 {{- include "common.deployment.containers" (dict "name" .Values.global.kypoElasticsearchServiceName "ports" .Values.ports "Values" .Values) }}
       initContainers:
         - name: change-ownership-container

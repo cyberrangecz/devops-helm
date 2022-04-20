@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.global.services.userAndGroup.name }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.userAndGroup.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 data:
   user-and-group.properties: |
     ## server port for a given service, e.g., 8084

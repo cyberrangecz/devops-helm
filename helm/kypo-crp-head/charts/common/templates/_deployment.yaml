@@ -5,19 +5,18 @@ metadata:
   name: {{ .name }}
   annotations:
     reloader.stakater.com/auto: "true"
+  labels: {{- include "common.labels" . | nindent 4 }}
 spec:
   replicas: {{ .replicasCount }}
   selector:
-    matchLabels:
-      app: {{ .name }}
+    matchLabels: {{- include "common.matchLabels" . | nindent 6 }}
   {{- if .strategy }}
   strategy:
     type: {{ .strategy }}
   {{- end }}
   template:
     metadata:
-      labels:
-        app: {{ .name }}
+      labels: {{- include "common.labels" . | nindent 8 }}
     spec:
 {{- end }}
 {{- define "common.deployment.containers" }}
