@@ -33,8 +33,8 @@ data:
     # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
     ## OIDC issuers, e.g. MUNI OIDC and another proprietary OIDC authorization server
 {{- range $index, $element := .Values.global.oidcProviders }}
-    kypo.identity.providers[{{ $index }}].issuer= {{ $element.url }}
-    kypo.identity.providers[{{ $index }}].userInfoEndpoint=
+    kypo.identity.providers[{{ $index }}].issuer={{ $element.issuerIdentifier | default $element.url }}
+    kypo.identity.providers[{{ $index }}].userInfoEndpoint={{ $element.userInfoUrl | default "" }}
 {{- end }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)

@@ -32,8 +32,8 @@ data:
         # List of OIDC provider host/domain names that are allowed.
         allowed_oidc_providers:
     {{- range .Values.global.oidcProviders }}
-              - issuer: {{ trimSuffix "/" .url }}
-                userinfo_endpoint:
+              - issuer: {{ .issuerIdentifier | default .url | trimSuffix "/" }}
+                userinfo_endpoint: {{ .userInfoUrl | default "" }}
     {{- end }}
         # User and Group roles registration endpoint URL.
         roles_registration_url: "http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}microservices"

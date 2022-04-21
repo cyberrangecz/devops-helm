@@ -18,6 +18,8 @@ global:
       logoutUrl:
       clientId:
       label:
+      issuerIdentifier:
+      userInfoUrl:
 
   redis:
     serviceName: kypo-redis
