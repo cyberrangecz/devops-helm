@@ -7,6 +7,8 @@ global:
       logoutUrl:
       clientId:
       label:
+      issuerIdentifier:
+      userInfoUrl:
   users:
     - sub: kypo-admin
       iss:
