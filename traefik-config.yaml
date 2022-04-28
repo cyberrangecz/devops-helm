@@ -1,0 +1,44 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    additionalArguments:
+      - "--log.level=INFO"
+      - "--ping"
+      - "--metrics.prometheus"
+
+    deployment:
+      kind: DaemonSet
+
+    # no load balancer
+    service:
+      enabled: false
+
+    # use host network for directly port listening
+    hostNetwork: true
+
+    ports:
+      web:
+        port: 80
+        expose: true
+        protocol: TCP
+        exposePort: 80
+        redirectTo: websecure
+      websecure:
+        port: 443
+        expose: true
+        protocol: TCP
+        exposePort: 443
+        tls:
+          enable: true
+
+    # run as root to 80 and 443 port listen permission
+    securityContext:
+      capabilities:
+        add:
+          - NET_BIND_SERVICE
+      runAsNonRoot: false
+      runAsUser: 0

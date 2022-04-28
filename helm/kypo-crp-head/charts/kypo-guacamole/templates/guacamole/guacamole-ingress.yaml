@@ -4,14 +4,7 @@ kind: Ingress
 metadata:
   name: guacamole-ingress
   labels: {{- include "common.labels" (dict "name" .name "chart" $.Chart "release" $.Release "extraLabels" .extraLabels) | nindent 4 }}
-  annotations:
-    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
-    cert-manager.io/issuer: "selfsigned-issuer"
-    {{- else }}
-    cert-manager.io/issuer: "letsencrypt-prod"
-    {{- end }}
 spec:
-  ingressClassName: nginx
   tls:
   - hosts:
       - {{ $.Values.global.headHost }}

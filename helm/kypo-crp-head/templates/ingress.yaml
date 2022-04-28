@@ -1,34 +1,48 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: kypo-ingress
   labels: {{- include "common.labels" (dict "name" .Chart.Name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
-  annotations:
-    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost }}
-    cert-manager.io/issuer: "selfsigned-issuer"
-    {{- else }}
-    cert-manager.io/issuer: "letsencrypt-prod"
-    {{- end }}
 spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-      - {{ .Values.global.headHost }}
-    secretName: {{ .Values.global.tlsSecretName }}
-  rules:
-    {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost }}
-    - http:
-    {{- else }}
-    - host: {{ .Values.global.headHost }}
-      http:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    {{- range $key, $value := .Values.global.services }}
+    {{- if not $value.staticIngress }}
+    - kind: Rule
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      match: PathPrefix(`{{ $value.contextPath }}`)
+      {{- else }}
+      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ $value.contextPath }}`)
+      {{- end }}
+      services:
+        - kind: Service
+          name: {{ $value.name }}
+          port: {{ $value.port }}
     {{- end }}
-        paths:
-        {{- range $key, $value := .Values.global.services }}
-        - path: {{ $value.contextPath }}
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ $value.name }}
-              port:
-                number: {{ $value.port }}
-        {{- end }}
+    {{- end }}
+    - kind: Rule
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      match: PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && Method(`GET`, `PUT`, `DELETE`, `PATCH`, `HEAD`)
+      {{- else }}
+      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && Method(`GET`, `PUT`, `DELETE`, `PATCH`, `HEAD`)
+      {{- end }}
+      services:
+        - kind: Service
+          name: uag-service
+          port: 8084
+    - kind: Rule
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      match: PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}`) && ! PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`)
+      {{- else }}
+      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}`) && ! PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`)
+      {{- end }}
+      services:
+        - kind: Service
+          name: uag-service
+          port: 8084
+  tls:
+    secretName: {{ .Values.global.tlsSecretName }}
+    domains:
+    - main: {{ .Values.global.headHost }}

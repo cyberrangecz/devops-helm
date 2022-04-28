@@ -99,6 +99,7 @@ global:
       name: uag-service
       port: 8084
       contextPath: /kypo-rest-user-and-group/api/v1/
+      staticIngress: True
 
   users:
     - sub: kypo-admin

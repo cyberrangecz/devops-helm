@@ -7,12 +7,13 @@ $script = <<-SCRIPT
 mkdir -p /var/opt/kypo/kypo-ansible-runner-volumes
 apt update
 apt install nfs-common docker.io -y
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--no-deploy traefik --docker" sh -s -
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--docker" sh -s -
+cp /vagrant/traefik-config.yaml /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
+kubectl apply -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
 curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
 kubectl config set-context --current --namespace=kypo
-kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 helm repo add jetstack https://charts.jetstack.io
 helm repo add stakater https://stakater.github.io/stakater-charts
 helm repo update
@@ -25,10 +26,6 @@ helm upgrade --install \
   --wait
 helm upgrade --install reloader stakater/reloader --namespace reloader --create-namespace --wait
 helm upgrade --install kypo-certs /vagrant/helm/kypo-certs -f /vagrant/vagrant-values.yaml -n kypo --wait --create-namespace -n kypo
-helm upgrade --install ingress-nginx ingress-nginx\
- --repo https://kubernetes.github.io/ingress-nginx\
- --namespace ingress-nginx --create-namespace\
- --set controller.extraArgs.default-ssl-certificate=kypo/kypo-certs
 helm upgrade --install kypo-postgres /vagrant/helm/kypo-postgres -f /vagrant/vagrant-values.yaml --wait -n kypo
 echo "global:
   oidcProviders:
