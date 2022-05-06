@@ -34,7 +34,7 @@ echo "global:
       clientId: `head -n 300 /dev/urandom | tr -dc 'A-Za-z' | fold -w 36 | head -n 1`
       label: Login with local issuer" > /vagrant/vagrant-oidc.yaml
 helm upgrade --install kypo-gen-users /vagrant/helm/kypo-gen-users -f /vagrant/vagrant-values.yaml --wait -n kypo
-helm upgrade --install kypo-crp-head /vagrant/helm/kypo-crp-head -f /vagrant/vagrant-values.yaml -f /vagrant/vagrant-oidc.yaml --wait -n kypo --timeout 15m
+helm upgrade --install kypo-crp-head /vagrant/helm/kypo-crp-head -f /vagrant/vagrant-values.yaml -f /vagrant/vagrant-oidc.yaml --atomic -n kypo --timeout 15m
 SCRIPT
 
 ##
