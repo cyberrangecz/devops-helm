@@ -15,8 +15,8 @@ mounts:
     isOneFile: true
     subPath: true
     type:
-      configMap:
-        name: sandbox-service-configmap
+      secret:
+        secretName: sandbox-service-secret
   - name: tls
     extension: .crt
     mountPath: /usr/local/share/ca-certificates/
