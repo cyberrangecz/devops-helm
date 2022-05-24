@@ -21,7 +21,7 @@ guacamole:
   name: guacamole
   replicasCount: 1
   image:
-    url: registry.gitlab.ics.muni.cz:443/cerit-public/cerit-public-artifact-repository/kypo-guacamole
+    url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-guacamole
     tag: 1.3.0
   ports:
     - port: 8080
