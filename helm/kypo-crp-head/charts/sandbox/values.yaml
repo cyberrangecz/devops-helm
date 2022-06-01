@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: v0.17.0
+  tag: v0.18.0
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -30,6 +30,7 @@ mounts:
     mountPath: /root/.ssh/
     isOneFile: true
     subPath: true
+    mode: 0600
     type:
       secret:
         secretName: kypo-crp-proxy-key
@@ -69,7 +70,7 @@ manFlavor: csirtmu.tiny1x2
 proxyHost:
 proxyUser:
 proxyKey:
-ansibleDockerNetwork: bridge
+ansibleDockerNetwork: host
 
 ansibleRunner:
   image:

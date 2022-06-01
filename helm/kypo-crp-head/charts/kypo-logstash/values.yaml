@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: docker.elastic.co/logstash/logstash
-  tag: 7.16.3
+  tag: 8.1.2
 
 ports:
   - port: 5044

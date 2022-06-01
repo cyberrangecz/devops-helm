@@ -1,0 +1,24 @@
+replicasCount: 1
+
+image:
+  url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-mitre-technique-service
+  tag: v1.1.2
+
+environments:
+  - name: SERVICE_PRECONDITION
+    value: uag-service:8084
+
+mounts:
+  - name: config
+    extension: .yml
+    mountPath: /app/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: mitre-service-configmap
+
+redis:
+  db: 1
+
+fileStorage: kypo/mitre_matrix_visualizer_app/templates/

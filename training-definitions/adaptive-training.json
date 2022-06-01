@@ -224,7 +224,9 @@
       "completed_in_time" : 0.0,
       "solution_displayed" : 0.0,
       "wrong_answers" : 0.0
-    } ]
+    } ],
+    "mitre_techniques" : [ ],
+    "expected_commands" : [ ]
   }, {
     "title" : "Finding open ports",
     "phase_type" : "TRAINING",
@@ -265,7 +267,9 @@
       "completed_in_time" : 0.0,
       "solution_displayed" : 0.0,
       "wrong_answers" : 0.0
-    } ]
+    } ],
+    "mitre_techniques" : [ ],
+    "expected_commands" : [ ]
   }, {
     "title" : "Connecting via Telnet",
     "phase_type" : "TRAINING",
@@ -322,7 +326,9 @@
       "completed_in_time" : 0.0,
       "solution_displayed" : 0.0,
       "wrong_answers" : 0.0
-    } ]
+    } ],
+    "mitre_techniques" : [ ],
+    "expected_commands" : [ ]
   }, {
     "title" : "Privilege Escalation",
     "phase_type" : "TRAINING",
@@ -377,7 +383,9 @@
       "completed_in_time" : 0.0,
       "solution_displayed" : 0.0,
       "wrong_answers" : 0.0
-    } ]
+    } ],
+    "mitre_techniques" : [ ],
+    "expected_commands" : [ ]
   }, {
     "title" : "Questionnaire example",
     "phase_type" : "QUESTIONNAIRE",

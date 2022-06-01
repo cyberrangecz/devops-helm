@@ -2,3 +2,4 @@
 .vagrant
 vagrant-oidc.yaml
 vagrant-values.yaml
+.idea

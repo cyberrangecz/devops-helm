@@ -7,5 +7,5 @@
                 command:
                   - "/bin/bash"
                   - "-c"
-                  - "/usr/local/openjdk-11/bin/keytool -importcert -alias kypo -file /srv/tls.crt -keystore /usr/local/openjdk-11/lib/security/cacerts -storepass changeit -noprompt"
+                  - "/opt/java/openjdk/bin/keytool -importcert -alias kypo -file /srv/tls.crt -cacerts -storepass changeit -noprompt"
 {{- include "common.deployment.volumes" (dict "Values" .Values) }}
