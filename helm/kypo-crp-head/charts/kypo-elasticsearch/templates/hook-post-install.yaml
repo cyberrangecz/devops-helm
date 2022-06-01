@@ -7,9 +7,13 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
 spec:
   containers:
-    - name: {{ .Values.global.kypoElasticsearchServiceName }}-post-install-job
+    - name: {{ .Values.global.kypoElasticsearchServiceName }}-post-install-job-template-settings
       image: rancher/curl
       imagePullPolicy: IfNotPresent
-      command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"template":"*","index_patterns":["kypo*"],"mappings":{"default":{"properties":{"timestamp":{"type":"date","format":"epoch_millis"},"timestamp_ms":{"type":"date","format":"epoch_millis"},"start_time":{"type":"date","format":"epoch_millis"},"end_time":{"type":"date","format":"epoch_millis"},"game_time":{"type":"date","format":"epoch_millis"}}}},"settings":{"index.refresh_interval":"5s"}}', 'http://{{ .Values.global.kypoElasticsearchServiceName }}:9200/_template/template_1?include_type_name=true']
+      command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"index_patterns":["*"], "order": 100, "settings":{ "number_of_shards": {{ .Values.numberOfShards }}, "number_of_replicas" : {{ .Values.numberOfReplicas }}, "index.max_result_window": {{ .Values.global.kypoElasticsearchServiceIndexMaxResultWindow }}, "index.refresh_interval": "{{ .Values.indexRefreshInterval }}" }}', 'http://{{ .Values.global.kypoElasticsearchServiceName }}:9200/_template/template_1']
+    - name: {{ .Values.global.kypoElasticsearchServiceName }}-post-install-job-template-mappings
+      image: rancher/curl
+      imagePullPolicy: IfNotPresent
+      command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"template":"*","index_patterns":["kypo*"],"mappings":{"default":{"properties":{"timestamp":{"type":"date","format":"epoch_millis"},"timestamp_ms":{"type":"date","format":"epoch_millis"},"start_time":{"type":"date","format":"epoch_millis"},"end_time":{"type":"date","format":"epoch_millis"},"game_time":{"type":"date","format":"epoch_millis"}}}}}', 'http://{{ .Values.global.kypoElasticsearchServiceName }}:9200/_template/template_2']
   restartPolicy: Never
   terminationGracePeriodSeconds: 0

@@ -37,7 +37,8 @@ data:
       },
       "trainingApiConfig": {
         "trainingBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.training.contextPath }}",
-        "adaptiveBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}"
+        "adaptiveBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
+        "mitreTechniqueBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.mitre.contextPath }}"
       },
       "sandboxAgendaConfig": {
         "pollingPeriod": 5000,

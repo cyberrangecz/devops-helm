@@ -45,6 +45,7 @@ data:
     elasticsearch.host={{ .Values.global.kypoElasticsearchServiceName }}
     ## Port on which Elasticsearch is running, e.g. 9200 is default
     elasticsearch.port=9200
+    elasticserach.max-result-window={{ .Values.global.kypoElasticsearchServiceIndexMaxResultWindow }}
 
     # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}

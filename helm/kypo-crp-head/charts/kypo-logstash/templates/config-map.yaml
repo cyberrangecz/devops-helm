@@ -24,35 +24,47 @@ data:
 
   10-kypo-logstash-portal-actions.conf: |
     input {
-      udp {
+       udp {
         port => 10514
         codec => "json"
       }
     }
     filter {
         # filter messages that do not contain KYPO_PORTAL_EVENTS_AUDIT
-        if ("KYPO_PORTAL_EVENTS_AUDIT" not in [event][message]) {drop{}}
+        if ("KYPO_PORTAL_EVENTS_AUDIT" not in [event][message]) {
+            drop{}
+        }
+
         # match JSON object data which represents the audit event object and save them to auditmessage field
         grok {
             match => { "[event][message]" => "KYPO_PORTAL_EVENTS_AUDIT %{DATA:data} --- %{GREEDYDATA:auditmessage}" }
         }
+
+        # parse JSON data and store them at the root (top level) of the event
         json {
             source => "auditmessage"
-            target => "message"
         }
+
         # retrieve elements from JSON to compose Elasticsearch index correctly
         mutate {
-            add_field => { "[@metadata][eseventtype]" => "%{[message][type]}" }
-            add_field => { "[@metadata][definitionId]" => "%{[message][training_definition_id]}"}
-            add_field => { "[@metadata][instanceId]" => "%{[message][training_instance_id]}"}
-            add_field => { "[@metadata][runId]" => "%{[message][training_run_id]}"}
-            add_field => { "[@metadata][poolId]" => "%{[message][pool_id]}"}
-            add_field => { "[@metadata][sandboxId]" => "%{[message][sandbox_id]}"}
+            add_field => { "[@metadata][definitionId]" => "%{[training_definition_id]}" }
+            add_field => { "[@metadata][instanceId]" => "%{[training_instance_id]}" }
+            add_field => { "[@metadata][runId]" => "%{[training_run_id]}" }
+            add_field => { "[@metadata][poolId]" => "%{[pool_id]}" }
+            add_field => { "[@metadata][sandboxId]" => "%{[sandbox_id]}" }
         }
-        # an index in Elasticsearch must be lowercase, so we need to lowercase it
-        mutate {
-            lowercase => [ "[@metadata][eseventtype]" ]
+
+        # create index prefix based on the event type (adaptive or linear)
+        if ( "adaptive" in [type]) {
+            mutate {
+                add_field => { "[@metadata][index_prefix]" => "kypo.events.adaptive.trainings" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][index_prefix]" => "kypo.events.trainings" }
+            }
         }
+        
         # add all Syslog fields to Syslog object
         mutate {
             add_field => { "[syslog][programname]" => "%{[event][programname]}"}
@@ -64,45 +76,51 @@ data:
             add_field => { "[syslog][severity]" => "%{[event][severity]}"}
             add_field => { "[syslog][@timestamp]" => "%{@timestamp}"}
         }
+
         # remove Syslog fields (these are included in Syslog object now)
         mutate {
-            remove_field => [ "data", "event", "auditmessage", "host", "@version", "@timestamp" ]
+           remove_field => [ "data", "event", "auditmessage", "host", "@version", "@timestamp" ]
         }
-        # here, we eliminate top-level field message and set all nested fields of the message as top-level fields
+
+        # creates prefix for document ID from timestamp as hexadecimal number
         ruby {
-            code => "
-                begin
-                    message= event.get('message')
-                    if message!= NIL
-                        message.keys.each{|key|
-                            event.set(key, message[key])
-                        }
-                        event.remove('message')
-                    end
-                end
-            "
-        }
+              code => "event.set('[@metadata][tsprefix]', event.get('timestamp').to_i.to_s(16))"                                                                                                                                               
+         }
+
+        # creates fingerprint used for document ID from several event fields
+        fingerprint {
+            source => ["pool_id", "sandbox_id", "training_run_id", "type"]
+            target => "[@metadata][fingerprint]"
+            concatenate_sources => true
+            method => "MD5"
+            key => "events"
+            base64encode => true
+         }
     }
     output {
         elasticsearch {
-            hosts => [ "{{ .Values.global.kypoElasticsearchServiceName }}:9200" ]
-            index => "kypo.%{[@metadata][eseventtype]}_evt.pool=%{[@metadata][poolId]}.sandbox=%{[@metadata][sandboxId]}.definition=%{[@metadata][definitionId]}.instance=%{[@metadata][instanceId]}.run=%{[@metadata][runId]}"
+            hosts => [ "kypo-elasticsearch:9200" ]
+            index => "%{[@metadata][index_prefix]}.pool=%{[@metadata][poolId]}.sandbox=%{[@metadata][sandboxId]}.definition=%{[@metadata][definitionId]}.instance=%{[@metadata][instanceId]}.run=%{[@metadata][runId]}"    
             codec => json
-        }
+            # custom document ID prevents duplicates in elasticsearch storage
+            document_id => "%{[@metadata][tsprefix]}%{[@metadata][fingerprint]}"
+        } 
     }
 
   20-kypo-logstash-bash-commands.conf: |
     input {
-      udp {
+       udp {
         port => 10515
         codec => "json"
       }
     }
     filter {
+        # filter messages that do not contain specific programname
+        if ([event][programname] != "bash.command") {drop{}}
+
         # retrieve elements from structured data (RFC5424) and make them top-level elements
         mutate {
             add_field => { "hostname" => "%{[event][hostname]}"}
-            add_field => { "ip" => "%{[event][ip]}"}
             add_field => { "cmd_type" => "bash-command"}
             add_field => { "timestamp_str" => "%{@timestamp}"}
         }
@@ -111,19 +129,14 @@ data:
             mutate {
                 add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
                 add_field => { "pool_id" => "%{[event][pool_id]}" }
+                add_field => { "ip" => "%{[event][ip]}"}
             }
         } else {
             mutate {
                 add_field => { "user_id" => "%{[event][user_id]}" }
                 add_field => { "access_token" => "%{[event][access_token]}" }
-           }
-        }
-
-        # retrieve elements from json to compose Elasticsearch index correctly
-        mutate {
-            add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
-            # convert programname to lowercase (Elasticsearch index cannot be in upper case)
-            lowercase => [ "[@metadata][source_app_identifier]" ]
+                add_field => { "ip" => "%{[event][fromhost_ip]}"}
+            }
         }
 
         if [sandbox_id] {
@@ -140,60 +153,44 @@ data:
 
         json {
             source => "[event][message]"
-            target => "message"
         }
-
-        # here, we eliminate top-level field message and set all nested fields of the message as top-level fields
-        ruby {
-            code => "
-                begin
-                    message= event.get('message')
-                    if message!= NIL
-                        message.keys.each{|key|
-                            event.set(key, message[key])
-                        }
-                        event.remove('message')
-                    end
-                end
-            "
-        }
-        # remove command line trailing white spaces
+      
         mutate {
+            # remove command line trailing white spaces
             strip => ["cmd"]
-        }
-        # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
-        mutate {
-            remove_field => ["uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
+            # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
+            remove_field => ["message", "uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
         }
     }
     output {
         if [@metadata][sandboxid] {
-            elasticsearch {
+    elasticsearch {
                 hosts => [ "kypo-elasticsearch:9200" ]
-                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+                index => "kypo.logs.console.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
                 codec => json
             }
         } else {
-            elasticsearch {
+           elasticsearch {
                 hosts => [ "kypo-elasticsearch:9200" ]
-                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
+                index => "kypo.logs.console.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
                 codec => json
-           }
+            }
         }
     }
 
   30-kypo-logstash-msf-commands.conf: |
     input {
-      udp {
+       udp {
         port => 10516
         codec => "json"
       }
     }
     filter {
+        # filter messages that do not contain specific programname
+        if ([event][programname] != "msf.command") {drop{}}
         # retrieve elements from structured data (RFC5424) and make them top-level elements
         mutate {
             add_field => { "hostname" => "%{[event][hostname]}"}
-            add_field => { "ip" => "%{[event][ip]}"}
             add_field => { "cmd_type" => "msf-command"}
             add_field => { "timestamp_str" => "%{@timestamp}"}
         }
@@ -202,19 +199,14 @@ data:
             mutate {
                 add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
                 add_field => { "pool_id" => "%{[event][pool_id]}" }
+                add_field => { "ip" => "%{[event][ip]}"}
             }
         } else {
             mutate {
                 add_field => { "user_id" => "%{[event][user_id]}" }
                 add_field => { "access_token" => "%{[event][access_token]}" }
-           }
-        }
-
-        # retrieve elements from json to compose Elasticsearch index correctly
-        mutate {
-            add_field => { "[@metadata][source_app_identifier]" => "%{[event][programname]}" }
-            # convert programname to lowercase (Elasticsearch index cannot be in upper case)
-            lowercase => [ "[@metadata][source_app_identifier]" ]
+                add_field => { "ip" => "%{[event][fromhost_ip]}"}
+            }
         }
 
         if [sandbox_id] {
@@ -231,45 +223,27 @@ data:
 
         json {
             source => "[event][message]"
-            target => "message"
         }
 
-        # here, we eliminate top-level field message and set all nested fields of the message as top-level fields
-        ruby {
-            code => "
-                begin
-                    message= event.get('message')
-                    if message!= NIL
-                        message.keys.each{|key|
-                            event.set(key, message[key])
-                        }
-                        event.remove('message')
-                    end
-                end
-            "
-        }
-
-        # remove command line trailing white spaces
         mutate {
+            # remove command line trailing white spaces
             strip => ["cmd"]
-        }
-        # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
-        mutate {
+            # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
             remove_field => ["uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
         }
     }
     output {
         if [@metadata][sandboxid] {
-            elasticsearch {
+    elasticsearch {
                 hosts => [ "kypo-elasticsearch:9200" ]
-                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+                index => "kypo.logs.console.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
                 codec => json
             }
         } else {
-            elasticsearch {
+           elasticsearch {
                 hosts => [ "kypo-elasticsearch:9200" ]
-                index => "kypo.logs.console.%{[@metadata][source_app_identifier]}.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
+                index => "kypo.logs.console.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
                 codec => json
-           }
-        }
+            }
+        } 
     }

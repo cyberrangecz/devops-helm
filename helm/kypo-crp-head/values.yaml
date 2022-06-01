@@ -7,11 +7,13 @@ kypo-oidc:
 global:
   headHost: 172.19.0.22
   tlsSecretName: kypo-certs
-  kypoElasticsearchServiceName: kypo-elasticsearch
   kypoSyslogServiceName: kypo-syslog-ng
   kypoLogstashServiceName: kypo-logstash
+  kypoElasticsearchServiceName: kypo-elasticsearch
+  kypoElasticsearchServiceIndexMaxResultWindow: 30000
   guacamoleUser: guac-user
   guacamoleUserPassword: guac-user
+  kypoTerraformBackendType: 'pg'
 
   oidcProviders:
     - url:
@@ -79,6 +81,10 @@ global:
       name: elasticsearch-service
       port: 8085
       contextPath: /kypo-elasticsearch-service/api/v1/
+    mitre:
+      name: mitre-service
+      port: 8001
+      contextPath: /kypo-mitre-technique-service/api/v1/
     sandbox:
       name: sandbox-service
       port: 8000

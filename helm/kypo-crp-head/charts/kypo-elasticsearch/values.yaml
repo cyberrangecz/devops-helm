@@ -1,6 +1,6 @@
 image:
   url: docker.elastic.co/elasticsearch/elasticsearch
-  tag: 7.8.1
+  tag: 8.1.2
 
 ports:
   - port: 9200
@@ -18,7 +18,13 @@ environments:
   - name: discovery.type
     value: single-node
   - name: ES_JAVA_OPTS
-    value: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+    value: -Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true
+  - name: cluster.max_shards_per_node
+    value: 5000
+  - name: xpack.security.enabled
+    value: false
+  - name: action.destructive_requires_name
+    value: false
 
 mounts:
   - name: data-elasticsearch
@@ -30,3 +36,7 @@ mounts:
 pvc:
   size: 500Mi
   storageClassName: longhorn
+
+numberOfShards: 1
+numberOfReplicas: 0
+indexRefreshInterval: "5s"
