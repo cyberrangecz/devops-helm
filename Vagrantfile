@@ -6,10 +6,10 @@
 $script = <<-SCRIPT
 mkdir -p /var/opt/kypo/kypo-ansible-runner-volumes
 apt update
-apt install nfs-common docker.io -y
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--docker" sh -s -
+apt install nfs-common -y
+mkdir -p /var/lib/rancher/k3s/server/manifests/
 cp /vagrant/traefik-config.yaml /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
-kubectl apply -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
+curl -sfL https://get.k3s.io | sh -s -
 curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc

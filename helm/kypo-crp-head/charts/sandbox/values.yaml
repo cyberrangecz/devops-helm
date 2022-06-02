@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: v0.18.0
+  tag: v0.18.1
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -42,14 +42,6 @@ mounts:
       hostPath:
         path: /var/opt/kypo/kypo-ansible-runner-volumes
         type: Directory
-  - name: docker-socket
-    extension:
-    mountPath: /var/run/docker.sock
-    isOneFile: false
-    type:
-      hostPath:
-        path: /var/run/docker.sock
-        type: Socket
 
 kypoHeadIp: 0.0.0.0
 stackNamePrefix: default0
