@@ -80,11 +80,11 @@ Vagrant Disk Plugin | https://github.com/sprotheroe/vagrant-disksize | 0.1.3+
 
 3. Add demo SB Definitions
     * **Linear**
-      * URL: `ssh://git@172.19.0.22:30022/repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git`
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git`
       * Revision: `v2.0.0`
 
     * **Adaptive**
-      * URL: `ssh://git@172.19.0.22:30022/repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git`
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git`
       * Revision: `v1.0.1`
 
 4. Upload demo Training Definitions that can be found in the `training-definitions/` directory.

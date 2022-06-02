@@ -2,7 +2,7 @@ apiVersion: v2
 name: kypo-git-internal
 description: Internal Git Helm chart used by KYPO CRP head services
 type: application
-version: 0.0.1
+version: 0.0.2
 dependencies:
   - name: common
     version: 0.0.1

@@ -54,11 +54,11 @@ sandbox:
   proxyKey:
   gitConfig:
     type: INTERNAL
-    server: 172.19.0.22
-    sshPort: 30022
+    server: git-internal.kypo
+    sshPort: 22
     restServerUrl: http://git-internal.kypo:5000/
     user: git
     privateKey:
     accessToken: no-gitlab-token
-    ansibleNetworkingUrl: git@172.19.0.22:30022/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
-    ansibleNetworkingRev: v1.0.2
+    ansibleNetworkingUrl: git@git-internal.kypo:/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
+    ansibleNetworkingRev: v1.0.5

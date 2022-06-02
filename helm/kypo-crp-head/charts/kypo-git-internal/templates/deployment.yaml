@@ -15,13 +15,19 @@ spec:
         - name: {{ .Values.containers.gitInternalSsh.name }}
           image: "{{ .Values.containers.gitInternalSsh.image.url }}:{{ .Values.containers.gitInternalSsh.image.tag }}"
           ports:
-            - containerPort: {{ .Values.containers.gitInternalSsh.externalPort.port }}
-              name: gitssh-{{ .Values.containers.gitInternalSsh.externalPort.port }}
+            {{- range .Values.containers.gitInternalSsh.ports }}
+            - containerPort: {{ .port }}
+              name: gitssh-{{ .port }}
+            {{- end }}
           readinessProbe:
+            {{- range .Values.containers.gitInternalSsh.ports }}
+            {{- if eq .protocol "TCP" }}
             tcpSocket:
-              port: {{ .Values.containers.gitInternalSsh.externalPort.port }}
+              port: {{ .port }}
             initialDelaySeconds: 5
             periodSeconds: 10
+            {{- end }}
+            {{- end }}
           volumeMounts:
             {{- range .Values.containers.gitInternalSsh.mounts }}
             - name: {{ .name }}

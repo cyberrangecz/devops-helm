@@ -8,10 +8,10 @@ containers:
     image:
       url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ssh-git
       tag: master
-    externalPort:
-      port: 22
-      nodePort: 30022
-      protocol: TCP
+    ports:
+      - port: 22
+        protocol: TCP
+        probe: true
     mounts:
       - name: git-ssh-key
         mountPath: /tmp/keys/
