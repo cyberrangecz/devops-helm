@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-adaptive-smart-assistant-service
-  tag: v2.0.1
+  tag: 22.06
 
 mounts:
   - name: kypo-adaptive-smart-assistant
