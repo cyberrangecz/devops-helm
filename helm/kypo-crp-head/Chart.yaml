@@ -6,14 +6,14 @@ version: 0.0.6-rc.1
 appVersion: "22.06"
 dependencies:
   - name: kypo-git-internal
-    version: 0.0.1
+    version: 1.0.0
     repository: file://charts/kypo-git-internal
     condition: kypo-git-internal.enabled
   - name: kypo-oidc
-    version: 0.0.1
+    version: 1.0.0
     repository: file://charts/kypo-oidc
     condition: kypo-oidc.enabled
   - name: kypo-guacamole
-    version: 0.0.1
+    version: 1.0.0
     repository: file://charts/kypo-guacamole
     condition: kypo-guacamole.enabled

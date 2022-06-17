@@ -2,8 +2,8 @@ apiVersion: v2
 name: training-feedback
 description: Training-feedback service Helm chart
 type: application
-version: 0.0.1
+version: 1.0.0
 dependencies:
   - name: common
-    version: 0.0.1
+    version: 1.0.0
     repository: file://../common
