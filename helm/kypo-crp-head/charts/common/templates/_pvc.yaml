@@ -6,7 +6,7 @@ metadata:
   labels: {{- include "common.labels" . | nindent 4 }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .pvc.accessMode | default "ReadWriteOnce" }}
   storageClassName: {{ .pvc.storageClassName }}
   resources:
     requests:
