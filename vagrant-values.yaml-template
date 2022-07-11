@@ -41,6 +41,9 @@ postgres:
     storageClassName: local-path
 
 sandbox:
+  pvc:
+    storageClassName: local-path
+    accessMode: ReadWriteOnce
   kypoHeadIp: 172.19.0.22
   stackNamePrefix: default0
   dnsNameServers:

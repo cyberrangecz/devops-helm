@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: 22.06
+  tag: v0.19.0
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -39,9 +39,13 @@ mounts:
     mountPath: /var/opt/kypo/kypo-ansible-runner-volumes
     isOneFile: false
     type:
-      hostPath:
-        path: /var/opt/kypo/kypo-ansible-runner-volumes
-        type: Directory
+      persistentVolumeClaim:
+        claimName: sandbox-service
+
+pvc:
+  size: 1Gi
+  storageClassName: longhorn
+  accessMode: ReadWriteMany
 
 kypoHeadIp: 0.0.0.0
 stackNamePrefix: default0
