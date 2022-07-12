@@ -44,8 +44,8 @@ mounts:
 
 pvc:
   size: 1Gi
-  storageClassName: longhorn
-  accessMode: ReadWriteMany
+  storageClassName: local-path
+  accessMode: ReadWriteOnce
 
 kypoHeadIp: 0.0.0.0
 stackNamePrefix: default0

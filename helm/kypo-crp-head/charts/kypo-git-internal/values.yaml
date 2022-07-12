@@ -41,4 +41,4 @@ containers:
 
 pvc:
   size: 500Mi
-  storageClassName: longhorn
+  storageClassName: local-path

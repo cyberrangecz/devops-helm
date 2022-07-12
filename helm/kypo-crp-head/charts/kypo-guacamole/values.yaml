@@ -15,7 +15,7 @@ guacd:
       probe: true
   pvc:
     size: 500Mi
-    storageClassName: longhorn
+    storageClassName: local-path
 
 guacamole:
   name: guacamole

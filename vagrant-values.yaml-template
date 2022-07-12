@@ -23,27 +23,7 @@ global:
 kypo-guacamole:
   enabled: False
 
-kypo-elasticsearch:
-  pvc:
-    storageClassName: local-path
-
-kypo-git-internal:
-  pvc:
-    storageClassName: local-path
-
-kypo-oidc:
-  oidcIssuerApp:
-    pvc:
-      storageClassName: local-path
-
-postgres:
-  pvc:
-    storageClassName: local-path
-
 sandbox:
-  pvc:
-    storageClassName: local-path
-    accessMode: ReadWriteOnce
   kypoHeadIp: 172.19.0.22
   stackNamePrefix: default0
   dnsNameServers:

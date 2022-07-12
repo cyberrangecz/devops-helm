@@ -18,7 +18,7 @@ oidcIssuerApp:
   serviceName: oidc-issuer-svc
   pvc:
     size: 100Mi
-    storageClassName: longhorn
+    storageClassName: local-path
 
 oidcIssuerLdap:
   name: oidc-issuer-ldap

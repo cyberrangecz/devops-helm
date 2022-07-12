@@ -10,4 +10,4 @@ postgres:
   password: password
   pvc:
     size: 500Mi
-    storageClassName: longhorn
+    storageClassName: local-path
