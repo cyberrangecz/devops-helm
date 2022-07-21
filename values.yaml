@@ -9,6 +9,7 @@ global:
       label:
       issuerIdentifier:
       userInfoUrl:
+      responseType:
   users:
     - sub: kypo-admin
       iss:
