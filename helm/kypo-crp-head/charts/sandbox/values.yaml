@@ -56,9 +56,9 @@ osAuthUrl:
 osApplicationCredentialId:
 osApplicationCredentialSecret:
 osConsoleType: spice-html5
-openstackWorkerCount: 2
-ansibleWorkerCount: 2
-defaultWorkerCount: 2
+openstackWorkerCount: 4
+ansibleWorkerCount: 4
+defaultWorkerCount: 4
 sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
