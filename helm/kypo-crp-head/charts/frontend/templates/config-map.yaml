@@ -92,6 +92,9 @@ data:
               "clearHashAfterLogin": true,
               "strictDiscoveryDocumentValidation": false,
               "skipIssuerCheck": true,
+              {{- if $element.responseType }}
+              "responseType": "{{ $element.responseType }}",
+              {{- end }}
               "oidc": true
             }
           }
