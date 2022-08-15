@@ -2,7 +2,7 @@ apiVersion: v2
 name: training
 description: Training service Helm chart
 type: application
-version: 1.0.0
+version: 1.0.1
 dependencies:
   - name: common
     version: 1.0.0
