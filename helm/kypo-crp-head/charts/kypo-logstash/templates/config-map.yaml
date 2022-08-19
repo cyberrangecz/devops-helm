@@ -64,6 +64,16 @@ data:
                 add_field => { "[@metadata][index_prefix]" => "kypo.events.trainings" }
             }
         }
+
+        if ( "RunResumed" in [type] or "WrongPasskeySubmitted" in [type] ) {
+            mutate {
+                add_field => { "[@metadata][repeatEvents]" => "%{[training_time]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][repeatEvents]" => "0" }
+            }
+        }
         
         # add all Syslog fields to Syslog object
         mutate {
@@ -82,14 +92,11 @@ data:
            remove_field => [ "data", "event", "auditmessage", "host", "@version", "@timestamp" ]
         }
 
-        # creates prefix for document ID from timestamp as hexadecimal number
-        ruby {
-              code => "event.set('[@metadata][tsprefix]', event.get('timestamp').to_i.to_s(16))"                                                                                                                                               
-         }
-
         # creates fingerprint used for document ID from several event fields
         fingerprint {
-            source => ["pool_id", "sandbox_id", "training_run_id", "type"]
+            # if a field is missing in the event, it can be ignored
+            # count is used to distinguish WrongAnswerSubmitted events
+            source => ["pool_id", "sandbox_id", "training_run_id", "type", "level", "hint_id", "count", "[@metadata][repeatEvents]"]
             target => "[@metadata][fingerprint]"
             concatenate_sources => true
             method => "MD5"
@@ -103,7 +110,9 @@ data:
             index => "%{[@metadata][index_prefix]}.pool=%{[@metadata][poolId]}.sandbox=%{[@metadata][sandboxId]}.definition=%{[@metadata][definitionId]}.instance=%{[@metadata][instanceId]}.run=%{[@metadata][runId]}"    
             codec => json
             # custom document ID prevents duplicates in elasticsearch storage
-            document_id => "%{[@metadata][tsprefix]}%{[@metadata][fingerprint]}"
+            document_id => "%{[@metadata][fingerprint]}"
+            # the default option is index, which overwrites the original document with the new one, we use create to prevent that
+            action => "create"
         } 
     }
 
