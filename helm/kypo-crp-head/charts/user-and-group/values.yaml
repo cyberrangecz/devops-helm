@@ -27,3 +27,6 @@ mounts:
     type:
       secret:
         secretName: kypo-certs
+
+connectionTimeout: 60000
+maximumPoolSize: 30
