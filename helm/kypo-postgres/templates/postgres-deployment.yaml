@@ -16,6 +16,11 @@ spec:
       containers:
         - name: {{ .name }}
           image: "{{ .image.url }}:{{ .image.tag }}"
+          args:
+            {{- range $parameters := $.Values.parameters }}
+            - "-c"
+            - {{ $parameters }}
+            {{- end }}
           env:
             - name: POSTGRES_PASSWORD
               value: {{ .password | quote }}

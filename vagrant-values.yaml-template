@@ -20,8 +20,14 @@ global:
   tlsPrivateKey:
   tlsPublicKey:
 
+adaptive-training:
+  connectionTimeout: 20000
+  maximumPoolSize: 10
+
 kypo-guacamole:
   enabled: False
+
+parameters:
 
 sandbox:
   kypoHeadIp: 172.19.0.22
@@ -45,3 +51,11 @@ sandbox:
     accessToken: no-gitlab-token
     ansibleNetworkingUrl: git@git-internal.kypo:/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
     ansibleNetworkingRev: v1.0.6
+
+training:
+  connectionTimeout: 20000
+  maximumPoolSize: 10
+
+user-and-group:
+  connectionTimeout: 20000
+  maximumPoolSize: 10
