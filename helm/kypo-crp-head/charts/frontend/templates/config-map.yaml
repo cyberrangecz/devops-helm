@@ -19,14 +19,15 @@ data:
         "defaultPaginationSize": 10,
         "visualizationConfig": {
           "trainingBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.training.contextPath }}",
-          "adaptiveBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
-          "elasticSearchBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.elasticsearch.contextPath }}"
+          "adaptiveBasePath": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}"
         },
-        "kypo2TopologyConfig": {
+        "kypoTopologyConfig": {
           "topologyRestUrl": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
           "decoratorsRestUrl": "",
           "defaultDecoratorRefreshPeriodInSeconds": 3,
           "useRealTime": false,
+          "pollingPeriod": 5000,
+          "retryAttempts": 3,
           "useDecorators": false,
           "guacamoleConfig": {
             "url": "https://{{ .Values.global.headHost }}/guacamole/",
@@ -43,9 +44,11 @@ data:
       "sandboxAgendaConfig": {
         "pollingPeriod": 5000,
         "defaultPaginationSize": 10,
-        "kypo2TopologyConfig": {
+        "kypoTopologyConfig": {
           "topologyRestUrl": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
           "decoratorsRestUrl": "",
+          "pollingPeriod": 5000,
+          "retryAttempts": 3,
           "defaultDecoratorRefreshPeriodInSeconds": 3,
           "useRealTime": false,
           "useDecorators": false,
