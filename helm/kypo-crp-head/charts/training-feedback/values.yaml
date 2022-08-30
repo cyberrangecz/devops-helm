@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-training-feedback-service
-  tag: 22.06
+  tag: v2.0.2
 
 mounts:
   - name: kypo-training-feedback
