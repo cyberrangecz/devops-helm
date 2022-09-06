@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: v0.20.0
+  tag: v0.20.1
 
 environments:
   - name: SERVICE_PRECONDITION
