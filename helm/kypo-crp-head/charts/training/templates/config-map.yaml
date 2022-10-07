@@ -42,8 +42,10 @@ data:
     spring.datasource.username={{ .Values.global.postgresServices.training.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.training.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver
+    {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
     spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
     spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
+    {{- end }}
 
     # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
     spring.data.jpa.repositories.enabled=true
