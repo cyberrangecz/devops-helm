@@ -88,5 +88,5 @@ Vagrant Disk Plugin | https://github.com/sprotheroe/vagrant-disksize | 0.1.3+
       * Revision: `master`
 
 4. Upload demo Training Definitions that can be found in the `training-definitions/` directory.
-   * **Linear**: `training.json`.
+   * **Linear**: `linear-training.json`.
    * **Adaptive**: `adaptive-training.json`.
