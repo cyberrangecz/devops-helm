@@ -9,7 +9,7 @@ apt update
 apt install nfs-common -y
 mkdir -p /var/lib/rancher/k3s/server/manifests/
 cp /vagrant/traefik-config.yaml /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
-curl -sfL https://get.k3s.io | sh -s -
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.3+k3s1 sh -s -
 curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
