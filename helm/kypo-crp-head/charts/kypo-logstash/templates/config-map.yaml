@@ -58,10 +58,12 @@ data:
         if ( "adaptive" in [type]) {
             mutate {
                 add_field => { "[@metadata][index_prefix]" => "kypo.events.adaptive.trainings" }
+                add_field => { "[@metadata][level]" => "%{[phase_id]}" }
             }
         } else {
             mutate {
                 add_field => { "[@metadata][index_prefix]" => "kypo.events.trainings" }
+                add_field => { "[@metadata][level]" => "%{[level]}" }
             }
         }
 
@@ -96,7 +98,7 @@ data:
         fingerprint {
             # if a field is missing in the event, it can be ignored
             # count is used to distinguish WrongAnswerSubmitted events
-            source => ["pool_id", "sandbox_id", "training_run_id", "type", "level", "hint_id", "count", "[@metadata][repeatEvents]"]
+            source => ["pool_id", "sandbox_id", "training_run_id", "type", "[@metadata][level]", "hint_id", "count", "[@metadata][repeatEvents]"]
             target => "[@metadata][fingerprint]"
             concatenate_sources => true
             method => "MD5"
