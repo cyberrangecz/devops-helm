@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-uag-service
-  tag: v22.12-rc.1
+  tag: 22.12
 
 mounts:
   - name: configs
