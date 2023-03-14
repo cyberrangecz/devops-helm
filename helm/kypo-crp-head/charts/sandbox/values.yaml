@@ -63,6 +63,7 @@ sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
 manFlavor: csirtmu.tiny1x2
+manImage: debian-10-man
 proxyHost:
 proxyUser:
 proxyKey:
