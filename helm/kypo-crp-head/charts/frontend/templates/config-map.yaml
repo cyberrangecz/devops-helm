@@ -88,7 +88,7 @@ data:
               "issuer": "{{ $element.url }}",
               "clientId": "{{ $element.clientId }}",
               "redirectUri": "https://{{ $.Values.global.headHost }}",
-              "scope": "openid email profile",
+              "scope": "openid email profile{{ if $element.refreshToken }} offline_access{{ end }}",
               "logoutUrl": "{{ $element.logoutUrl }}",
               "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/logout-confirmed",
               "silentRefreshRedirectUri": "https://{{ $.Values.global.headHost }}/silent-refresh.html",
