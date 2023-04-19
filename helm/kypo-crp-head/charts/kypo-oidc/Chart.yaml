@@ -2,7 +2,7 @@ apiVersion: v2
 name: kypo-oidc
 description: Local OIDC issuer Helm chart
 type: application
-version: 1.0.0
+version: 1.1.0
 dependencies:
   - name: common
     version: 1.0.0

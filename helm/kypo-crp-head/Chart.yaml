@@ -2,7 +2,7 @@ apiVersion: v2
 name: kypo-crp-head
 description: A Helm umbrella chart for deploying a KYPO CRP head services
 type: application
-version: 2.0.3
+version: 2.0.4
 appVersion: "22.12"
 dependencies:
   - name: kypo-git-internal
