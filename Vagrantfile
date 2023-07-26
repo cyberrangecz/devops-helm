@@ -41,7 +41,7 @@ SCRIPT
 #  Vagrant confiuration
 Vagrant.configure("2") do |config|
   config.vm.hostname = "k3s"
-  config.vm.box = "ubuntu/focal64"
+  config.vm.box = "ubuntu/jammy64"
   config.disksize.size = "40GB"
   config.vm.network "private_network", ip: "172.19.0.22"
   config.vm.provision "shell", inline: $script
