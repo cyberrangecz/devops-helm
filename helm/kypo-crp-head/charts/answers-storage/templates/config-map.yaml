@@ -13,7 +13,11 @@ data:
     microservice.name=kypo-answers-storage
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    {{- if .Values.global.corsWhitelist }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
+    {{- else }}
     cors.allowed.origins=https://{{ .Values.global.headHost }}
+    {{- end }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
     spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.answersStorage.dbName }}

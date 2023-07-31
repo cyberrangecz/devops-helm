@@ -19,7 +19,11 @@ data:
     cors_origin_allow_all: False
 
     # A list of origins that are authorized to make cross-site HTTP requests.
+    {{- if .Values.global.corsWhitelist }}
+    cors_origin_whitelist: ["https://{{ .Values.global.headHost }}",{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}"{{ $origin }}"{{- end }}]
+    {{- else }}
     cors_origin_whitelist: ["https://{{ .Values.global.headHost }}"]
+    {{- end }}
 
     application_configuration:
         # A path to directory of CA certificates or file of CA certificates, i.e. CA bundle.
@@ -28,13 +32,13 @@ data:
 
         # An address of java linear training endpoint
         java_linear_training_mitre_endpoint: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}visualizations/training-definitions/mitre-techniques"
-    
+
         # An address of java adaptive training endpoint
         java_adaptive_training_mitre_endpoint: "http://{{ .Values.global.services.adaptiveTraining.name }}:{{ .Values.global.services.adaptiveTraining.port }}{{ .Values.global.services.adaptiveTraining.contextPath }}visualizations/training-definitions/mitre-techniques"
 
         # The location of jinja template and the locally stored MITRE data
         file_storage_location: {{ .Values.fileStorage }}
-    
+
         redis:
             host: {{ .Values.global.redis.serviceName }}
             port: {{ .Values.global.redis.port }}

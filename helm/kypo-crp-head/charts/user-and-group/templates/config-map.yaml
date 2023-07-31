@@ -13,7 +13,11 @@ data:
     service.name=kypo-user-and-group
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    {{- if .Values.global.corsWhitelist }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
+    {{- else }}
     cors.allowed.origins=https://{{ .Values.global.headHost }}
+    {{- end }}
 
     # OpenID Connect OIDC configuration settings for a resource servers configuration
     # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.

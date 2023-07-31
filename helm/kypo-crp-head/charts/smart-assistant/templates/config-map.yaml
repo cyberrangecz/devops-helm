@@ -13,7 +13,11 @@ data:
     microservice.name=kypo-adaptive-smart-assistant
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    {{- if .Values.global.corsWhitelist }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
+    {{- else }}
     cors.allowed.origins=https://{{ .Values.global.headHost }}
+    {{- end }}
 
     # calling user-and-group project, e.g., https://localhost:8084/kypo-rest-user-and-group/api/v1
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
