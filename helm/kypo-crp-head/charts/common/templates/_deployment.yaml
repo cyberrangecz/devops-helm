@@ -18,6 +18,9 @@ spec:
     metadata:
       labels: {{- include "common.labels" . | nindent 8 }}
     spec:
+    {{- if .serviceAccountName }}
+      serviceAccountName: {{ .serviceAccountName }}
+    {{- end }}
 {{- end }}
 {{- define "common.deployment.containers" }}
       containers:

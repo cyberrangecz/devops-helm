@@ -1,0 +1,15 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: ansible-stage-job-creation-binding
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.sandbox.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: sandbox-service
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: ansible-stage-job-creation
+  apiGroup: rbac.authorization.k8s.io

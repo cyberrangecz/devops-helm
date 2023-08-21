@@ -1,5 +1,5 @@
 {{- $ports := list (dict "port" .Values.global.services.sandbox.port "protocol" "TCP" "probe" true) -}}
-{{- include "common.deployment.header" (dict "name" (print .Values.global.services.sandbox.name "-worker-ansible") "replicasCount" .Values.ansibleWorkerCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.header" (dict "name" (print .Values.global.services.sandbox.name "-worker-ansible") "replicasCount" .Values.ansibleWorkerCount "serviceAccountName" "sandbox-service" "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
 {{- include "common.deployment.containers" (dict "name" (print .Values.global.services.sandbox.name "-worker-ansible") "ports" $ports "Values" .Values "command" "python3" "args" "[\"manage.py\",\"rqworker\",\"ansible\"]" "portsDisabled" true) }}
             - name: git-ssh-key
               mountPath: "/root/.ssh/git-ssh-key"
