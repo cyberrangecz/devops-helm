@@ -4,6 +4,10 @@ kind: Ingress
 metadata:
   name: guacamole-ingress
   labels: {{- include "common.labels" (dict "name" .name "chart" $.Chart "release" $.Release "extraLabels" .extraLabels) | nindent 4 }}
+  {{- if $.Values.global.corsWhitelist }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: kypo-guacamole-header@kubernetescrd
+  {{- end }}
 spec:
   tls:
   - hosts:
