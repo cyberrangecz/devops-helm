@@ -1,8 +1,8 @@
 {
-  "title" : "KYPO Cyber Range Training Platform - Demo Content",
+  "title" : "KYPO Cyber Range Training Platform - Demo Content (terminal)",
   "description" : "The demo contains all types of levels to demonstrate the training capabilities of the KYPO Cyber Range Platform.",
   "prerequisites" : [ ],
-  "outcomes" : [ ],
+  "outcomes" : [ "Scanning ports with nmap", "Password guessing with hydra at telnet", "Privilege escalation using misconfigured sudo" ],
   "state" : "UNRELEASED",
   "show_stepper_bar" : true,
   "levels" : [ {
@@ -13,15 +13,24 @@
     "minimal_possible_solve_time" : null,
     "content" : "# Demo Summary\n\nThe demo contains all types of levels to demonstrate the training capabilities of the KYPO Cyber Range Platform.\n\n**Note**: It is recommended to use the Chrome browser. In case you run into difficulties with submitting the answer, try to Log out and Log in again. \n\n| Level | Level Name | Level Type |\n|:------:|------| ------ |\n| 1. | Info | Info |\n| 2. | Finding Open Ports | Training |\n| 3. | Connecting via Telnet | Training |\n| 4. | Privilege Escalation | Training |\n| 5. | Test Example | Assessment |\n| 6. | Assessment Example | Assessment |\n\n## Info\n\nThe level contains this information page.\n\n## Finding open ports\n\nThe level provides information on how to connect to a sandbox. In general, there are two possible options. The first option is to use the platform'a GUI to connect to the machine via Spice console. The second option is to connect through SSH with a generated config file and keys.\n\nThis level's small challenge is to scan open ports.\n\n## Connecting Via Telnet\n\nThis level's challenge is to connect to the server machine without a password and discover the secret answer.\n\n## Privilege Escalation\n\nThis demo's bigger challenge is to gain root privileges and read an answer available only to a root user. Enjoy! \n\n## Test Example\n\nThe level contains a simple example of a test. Tests can be used, for example, for additional testing of students for grading purposes.\n\n## Assessment Example\n\nThe level contains a simple example of a test. For example, the tests can be used to verify the learning outcomes or for collecting feedback.\n"
   }, {
+    "title" : "Get Access",
+    "level_type" : "ACCESS_LEVEL",
+    "order" : 1,
+    "estimated_duration" : 0,
+    "minimal_possible_solve_time" : null,
+    "passkey" : "start",
+    "cloud_content" : "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`client`** and then click on **`Open console`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.crp.kypo.muni.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
+    "local_content" : "This sandbox has not been tested for use with local sandbox."
+  }, {
     "title" : "Finding open ports",
     "level_type" : "TRAINING_LEVEL",
-    "order" : 1,
+    "order" : 2,
     "estimated_duration" : 10,
-    "minimal_possible_solve_time" : null,
-    "answer" : "2323",
-    "answer_variable_name" : null,
-    "content" : "Your goal is to get access to a **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The answer is the port number.\n\nBelow are two options how to connect to the client from which you can connect to the server.\n\n## GUI access\n1. In the topology overview, click the button in the top-right corner of the graph, then **`Expand All`**, **`client`** and **`Generate console URL`**. After a few moments, **`Open link`** next to the **`Generate console URL`** should appear.\n\n2. Login using username **`kypo`** and password **`kypo`**.\n\n## SSH from local machine\n1. Use the **`Get SSH Access`** button to download **`ssh-access.zip`**.\n\n2. Extract the **`ssh-access.zip`** file to your **`~/.ssh/`** directory.\n\n    `$ unzip ssh-access.zip -d ~/.ssh/`\n\n3. Execute the extracted source script in the current shell using the **`source`** command with the path to the KYPO proxy SSH private key. The source script that will set the **`ssh`** command and the **KYPO proxy SSH private key**, which is available from instance operator.\n\n    `$ source ~/.ssh/pool-id-<pool_ID>-sandbox-id-<sbx_ID>-user-source.sh PATH_TO_KYPO_PROXY_PRIVATE_KEY`\n\n4. Connect to the client to **`kypo`** user. \n\n    `$ ssh kypo@client`",
-    "solution" : "1. Connect to the client using either of the options.\n\n2. Look for open ports using the command **`nmap server`**. You can see **ssh** running on port **22** and some other service running on port **2323**. This has to be the **telnet** service.\n\n3. Enter **`2323`** as the answer.",
+    "minimal_possible_solve_time" : 1,
+    "answer" : null,
+    "answer_variable_name" : "telnet_port",
+    "content" : "Your goal is to get access to the **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The answer is the port number.\n",
+    "solution" : "1. Look for open ports using the command **`nmap -p- 192.168.20.5`**. You can see **ssh** running on port **22** and some other service running on port **${ANSWER}**. This has to be the **telnet** service.\n\n2. Enter **`${ANSWER}`** as the answer.",
     "solution_penalized" : true,
     "hints" : [ {
       "title" : "Tool to find open ports",
@@ -32,24 +41,29 @@
     "incorrect_answer_limit" : 10,
     "attachments" : [ ],
     "max_score" : 50,
-    "variant_answers" : false,
+    "variant_answers" : true,
     "reference_solution" : [ ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
+    "mitre_techniques" : [ {
+      "technique_key" : "TA0007.T1046"
+    }, {
+      "technique_key" : "TA0043.T1595"
+    } ],
+    "expected_commands" : [ "ls", "nmap" ],
+    "commands_required" : true
   }, {
     "title" : "Connecting via Telnet",
     "level_type" : "TRAINING_LEVEL",
-    "order" : 2,
+    "order" : 3,
     "estimated_duration" : 10,
-    "minimal_possible_solve_time" : null,
-    "answer" : "Top_Secret_Flag",
-    "answer_variable_name" : null,
+    "minimal_possible_solve_time" : 1,
+    "answer" : null,
+    "answer_variable_name" : "alice_flag",
     "content" : "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The answer is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\n",
-    "solution" : "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://server:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet server 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the answer you can use **`cat flag.txt`**. The answer is **`Top_Secret_Flag`**.\n",
+    "solution" : "Replace **${telnet_port}** with the port number from the previous level:\n\n1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:${telnet_port}`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 ${telnet_port}`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the answer you can use **`cat flag.txt`**. The answer is **`${ANSWER}`**\n",
     "solution_penalized" : true,
     "hints" : [ {
       "title" : "Connecting using telnet",
-      "content" : "The command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet server 2323`**. You will be prompted to enter an username and password.",
+      "content" : "The command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet 192.168.20.5 ${telnet_port}`**. You will be prompted to enter an username and password.",
       "hint_penalty" : 10,
       "order" : 1
     }, {
@@ -61,20 +75,23 @@
     "incorrect_answer_limit" : 10,
     "attachments" : [ ],
     "max_score" : 100,
-    "variant_answers" : false,
+    "variant_answers" : true,
     "reference_solution" : [ ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
+    "mitre_techniques" : [ {
+      "technique_key" : "TA0006.T1110"
+    } ],
+    "expected_commands" : [ "hydra", "telnet", "cat" ],
+    "commands_required" : true
   }, {
     "title" : "Privilege Escalation",
     "level_type" : "TRAINING_LEVEL",
-    "order" : 3,
+    "order" : 4,
     "estimated_duration" : 15,
-    "minimal_possible_solve_time" : null,
-    "answer" : "Cant_Guess_This",
-    "answer_variable_name" : null,
+    "minimal_possible_solve_time" : 1,
+    "answer" : null,
+    "answer_variable_name" : "root_flag",
     "content" : "Great, you managed to login to the server as **alice** but there is not much you can do as **alice**. Can you find a way to become **root**? The answer is in the root directory.\n\nOne of common privilege escalation attack vectors is badly configured **sudo**. To see what you can use sudo for, use the **`sudo --list`** command.\n",
-    "solution" : "1. You can see that the only command you can use sudo on is **`less /home/alice/flag.txt`**. There is not much to see in the flag, but you can run this as **root**. Is there a way to get a shell?\n\n2. There is, all you have to do is enter **`!sh`** while running the **`sudo less /home/alice/flag.txt`** to get a root shell.\n\n3. To get the answer, use **`cd`** to enter the root directory and **`cat flag.txt`** to read the answer. The answer is **`Cant_Guess_This`**.",
+    "solution" : "1. You can see that the only command you can use sudo on is **`less /home/alice/flag.txt`**. There is not much to see in the flag, but you can run this as **root**. Is there a way to get a shell?\n\n2. There is, all you have to do is enter **`!sh`** while running the **`sudo less /home/alice/flag.txt`** to get a root shell.\n\n3. To get the answer, use **`cd`** to enter the root directory and **`cat flag.txt`** to read the answer. The answer is **`${ANSWER}`**",
     "solution_penalized" : true,
     "hints" : [ {
       "title" : "Using the privilege escalation",
@@ -85,14 +102,19 @@
     "incorrect_answer_limit" : 10,
     "attachments" : [ ],
     "max_score" : 100,
-    "variant_answers" : false,
+    "variant_answers" : true,
     "reference_solution" : [ ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
+    "mitre_techniques" : [ {
+      "technique_key" : "TA0004.T1068"
+    }, {
+      "technique_key" : "TA0043.T1592"
+    } ],
+    "expected_commands" : [ "cat", "ls", "sudo" ],
+    "commands_required" : true
   }, {
     "title" : "Test Example",
     "level_type" : "ASSESSMENT_LEVEL",
-    "order" : 4,
+    "order" : 5,
     "estimated_duration" : 5,
     "minimal_possible_solve_time" : null,
     "questions" : [ {
@@ -166,7 +188,7 @@
   }, {
     "title" : "Assessment Example",
     "level_type" : "ASSESSMENT_LEVEL",
-    "order" : 5,
+    "order" : 6,
     "estimated_duration" : 5,
     "minimal_possible_solve_time" : null,
     "questions" : [ {

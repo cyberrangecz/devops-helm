@@ -78,15 +78,31 @@ Vagrant Disk Plugin | https://github.com/sprotheroe/vagrant-disksize | 0.1.3+
     * **Regular users:** [kypo-user, john.doe, jane.doe]
     * **Password for all of them:** password
 
-3. Add demo SB Definitions
-    * **Linear**
-      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git`
+2. Add SB Definitions
+    * **demo-training**
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-library-demo-training.git`
       * Revision: `master`
 
-    * **Adaptive**
-      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git`
+    * **demo-training-adaptive**
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-library-demo-training-adaptive.git`
       * Revision: `master`
 
-4. Upload demo Training Definitions that can be found in the `training-definitions/` directory.
+    * **junior-hacker**
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-library-junior-hacker.git`
+      * Revision: `master`
+
+    * **junior-hacker-adaptive**
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-library-junior-hacker-adaptive.git`
+      * Revision: `master`
+
+    * **locust-3302**
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-library-locust-3302.git`
+      * Revision: `master`
+
+    * **secret-laboratory**
+      * URL: `git@git-internal.kypo:/repos/prototypes-and-examples/sandbox-definitions/kypo-library-secret-laboratory.git`
+      * Revision: `master`
+
+3. Upload demo Training Definitions that can be found in the `training-definitions/` directory.
    * **Linear**: `linear-training.json`.
    * **Adaptive**: `adaptive-training.json`.

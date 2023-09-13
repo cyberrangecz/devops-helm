@@ -43,9 +43,12 @@ spec:
                     mkdir -p /assets/keys
                     ssh-keygen -y -f /tmp/keys/git-ssh-key > /assets/keys/git-ssh-key.pub
                     cat /assets/keys/git-ssh-key.pub > /home/git/.ssh/authorized_keys
-                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/prototypes-and-examples/sandbox-definitions/small-sandbox.git /repos/prototypes-and-examples/sandbox-definitions/small-sandbox.git
-                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git /repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training.git
-                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git /repos/prototypes-and-examples/sandbox-definitions/kypo-crp-demo-training-adaptive.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/kypo-library/content/kypo-library-demo-training.git /repos/prototypes-and-examples/sandbox-definitions/kypo-library-demo-training.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/kypo-library/content/kypo-library-demo-training-adaptive.git /repos/prototypes-and-examples/sandbox-definitions/kypo-library-demo-training-adaptive.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/kypo-library/content/kypo-library-junior-hacker.git /repos/prototypes-and-examples/sandbox-definitions/kypo-library-junior-hacker.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/kypo-library/content/kypo-library-junior-hacker-adaptive.git /repos/prototypes-and-examples/sandbox-definitions/kypo-library-junior-hacker-adaptive.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/kypo-library/content/kypo-library-locust-3302.git /repos/prototypes-and-examples/sandbox-definitions/kypo-library-locust-3302.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/kypo-library/content/kypo-library-secret-laboratory.git /repos/prototypes-and-examples/sandbox-definitions/kypo-library-secret-laboratory.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git /repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-user-access.git /repos/backend-python/ansible-networking-stage/kypo-user-access.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-interface.git /repos/backend-python/ansible-networking-stage/kypo-interface.git
