@@ -107,21 +107,3 @@ global:
       port: 8084
       contextPath: /kypo-rest-user-and-group/api/v1/
       staticIngress: True
-
-  users:
-    - sub: kypo-admin
-      iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
-      password: password
-      email: kypo-admin@example.com
-      fullName: "Demo Admin"
-      givenName: "Demo"
-      familyName: "Admin"
-      admin: True
-    - sub: kypo-user
-      iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
-      password: password
-      email: kypo-user@example.com
-      fullName: "Demo User"
-      givenName: "Demo"
-      familyName: "User"
-      admin: False

@@ -1,8 +1,10 @@
 global:
+  headHost: 172.19.0.22
+  tlsSecretName: kypo-certs
   userCount: 10
   users:
     - sub: kypo-admin
-      iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
+      iss: 'https://172.19.0.22/keycloak/realms/KYPO'
       password: password
       email: kypo-admin@example.com
       fullName: "Demo Admin"
@@ -10,7 +12,7 @@ global:
       familyName: "Admin"
       admin: True
     - sub: kypo-user
-      iss: 'https://172.19.0.22:443/csirtmu-dummy-issuer-server/'
+      iss: 'https://172.19.0.22/keycloak/realms/KYPO'
       password: password
       email: kypo-user@example.com
       fullName: "Demo User"
@@ -19,6 +21,19 @@ global:
       admin: False
   tlsPrivateKey:
   tlsPublicKey:
+  oidcProviders:
+    - url: https://172.19.0.22/keycloak/realms/KYPO
+      logoutUrl: https://172.19.0.22/keycloak/realms/KYPO/protocol/openid-connect/logout
+      clientId: KYPO-client
+      label: Login with local Keycloack
+  postgres:
+    serviceName: postgres
+    port: 5432
+    user: postgres
+    password: password
+
+kypo-keycloak:
+  keycloakPassword: password
 
 kypo-guacamole:
   enabled: False

@@ -1,0 +1,31 @@
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: grafana-client
+  labels:
+    app: external-sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: external-sso
+  client:
+    attributes:
+      pkce.code.challenge.method: S256
+      post.logout.redirect.uris: "https://{{ $.Values.global.headHost }}/logout-confirmed"
+    clientId: Grafana-Client
+    clientAuthenticatorType: client-secret
+    defaultClientScopes:
+      - email
+      - profile
+      - openid
+    directAccessGrantsEnabled: false
+    implicitFlowEnabled: false
+    name: "Grafana-Client"
+    optionalClientScopes:
+      - offline_access
+    protocol: openid-connect
+    publicClient: false
+    redirectUris:
+      - "https://{{ $.Values.global.headHost }}/grafana"
+      - "https://{{ $.Values.global.headHost }}/grafana/login/generic_oauth"
+    standardFlowEnabled: true

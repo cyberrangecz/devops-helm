@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.name }}-hook-preinstall
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+spec:
+  containers:
+    - name: {{ .Values.name }}-pre-install-job
+      image: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/psql-db-init:v1.0.0
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: HOST
+          value: {{ $.Values.global.postgres.serviceName }}
+        - name: PORT
+          value: "{{ $.Values.global.postgres.port }}"
+        - name: ADMIN_USER
+          value: {{ $.Values.global.postgres.user }}
+        - name: ADMIN_PASSWORD
+          value: {{ $.Values.global.postgres.password }}
+        - name: DBNAME
+          value: {{ .Values.db.database }}
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-secrets
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-secrets
+              key: password
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 0
+

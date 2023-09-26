@@ -1,9 +1,8 @@
-{{- with .Values.oidcIssuerApp }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .name }}
-  labels: {{- include "common.labels" (dict "name" .name "chart" $.Chart "release" $.Release "extraLabels" .extraLabels) | nindent 4 }}
+  name: {{ .Values.name }}-ingress
+  labels: {{- include "common.labels" (dict "name" .Values.name "chart" $.Chart "release" $.Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 spec:
   tls:
   - hosts:
@@ -17,11 +16,10 @@ spec:
       http:
     {{- end }}
         paths:
-        - path: /csirtmu-dummy-issuer-server
+        - path: /keycloak
           pathType: Prefix
           backend:
             service:
-              name: {{ .name }}
+              name: keycloak-service
               port:
-                number: {{ (first .ports).port }}
-{{- end }}
+                number: 8080
