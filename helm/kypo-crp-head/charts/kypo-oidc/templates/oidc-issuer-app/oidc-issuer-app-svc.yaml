@@ -1,1 +1,0 @@
-{{- include "common.svc" (dict "name" .Values.oidcIssuerApp.name "ports" .Values.oidcIssuerApp.ports "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

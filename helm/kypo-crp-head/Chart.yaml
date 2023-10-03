@@ -9,10 +9,6 @@ dependencies:
     version: 1.0.0
     repository: file://charts/kypo-git-internal
     condition: kypo-git-internal.enabled
-  - name: kypo-oidc
-    version: 1.0.0
-    repository: file://charts/kypo-oidc
-    condition: kypo-oidc.enabled
   - name: kypo-guacamole
     version: 1.0.0
     repository: file://charts/kypo-guacamole

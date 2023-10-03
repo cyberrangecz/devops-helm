@@ -1,0 +1,18 @@
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: ExternalKeycloak
+metadata:
+  name: external-keycloak
+  labels:
+    app: external-sso
+spec:
+  url: http://keycloak-service:8080
+  contextRoot: /keycloak/
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: credential-external-keycloak
+type: Opaque
+stringData:
+  ADMIN_USERNAME: {{ .Values.keycloakAdmin }}
+  ADMIN_PASSWORD: {{ .Values.keycloakPassword }}

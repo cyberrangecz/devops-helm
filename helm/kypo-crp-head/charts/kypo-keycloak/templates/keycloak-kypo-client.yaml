@@ -1,0 +1,32 @@
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: kypo-client
+  labels:
+    app: external-sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: external-sso
+  client:
+    attributes:
+      pkce.code.challenge.method: S256
+      post.logout.redirect.uris: "https://{{ $.Values.global.headHost }}/logout-confirmed"
+    clientId: {{ range $.Values.global.oidcProviders }}{{- if contains "keycloak" .url }}{{ .clientId }}{{- end }}{{- end }}
+    clientAuthenticatorType: client-secret
+    defaultClientScopes:
+      - email
+      - profile
+      - openid
+    directAccessGrantsEnabled: true
+    implicitFlowEnabled: false
+    name: "KYPO-Client"
+    optionalClientScopes:
+      - offline_access
+    protocol: openid-connect
+    publicClient: true
+    redirectUris:
+      - "https://{{ $.Values.global.headHost }}"
+      - "https://{{ $.Values.global.headHost }}/index.html"
+      - "https://{{ $.Values.global.headHost }}/silent-refresh.html"
+    standardFlowEnabled: true

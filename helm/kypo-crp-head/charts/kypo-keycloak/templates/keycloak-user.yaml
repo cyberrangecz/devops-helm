@@ -1,0 +1,32 @@
+{{- $users := $.Values.global.users }}
+{{- if (lookup "v1" "Secret" "kypo" "generated-users") }}
+{{- $users = concat $.Values.global.users ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
+{{- end }}
+{{- range $users }}
+{{- if .password }}
+---
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: {{ .sub }}
+  labels:
+    app: external-sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: external-sso
+  user:
+    username: {{ .sub }}
+    firstName: {{ .givenName }}
+    lastName: {{ .familyName }}
+    email: {{ .email }}
+    enabled: True
+    emailVerified: False
+    id: {{ .sub }}
+    credentials:
+      - type: "password"
+        value: {{ .password }}
+    realmRoles:
+      - offline_access
+{{- end }}
+{{- end }}

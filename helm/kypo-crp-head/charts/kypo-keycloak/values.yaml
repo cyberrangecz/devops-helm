@@ -1,0 +1,8 @@
+name: keycloak
+
+db:
+  database: keycloak
+  username: keycloak
+
+keycloakAdmin: admin
+keycloakPassword:
