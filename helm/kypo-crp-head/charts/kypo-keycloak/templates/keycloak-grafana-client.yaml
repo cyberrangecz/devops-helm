@@ -28,4 +28,7 @@ spec:
     redirectUris:
       - "https://{{ $.Values.global.headHost }}/grafana"
       - "https://{{ $.Values.global.headHost }}/grafana/login/generic_oauth"
+    {{- if .Values.grafanaClientSecret }}
+    secret: {{ .Values.grafanaClientSecret }}
+    {{- end }}
     standardFlowEnabled: true

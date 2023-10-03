@@ -34,6 +34,7 @@ global:
 
 kypo-keycloak:
   keycloakPassword: password
+  grafanaClientSecret: secret
 
 kypo-guacamole:
   enabled: False

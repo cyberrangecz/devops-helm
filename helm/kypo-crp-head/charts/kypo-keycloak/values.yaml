@@ -4,5 +4,7 @@ db:
   database: keycloak
   username: keycloak
 
+grafanaClientSecret:
+
 keycloakAdmin: admin
 keycloakPassword:
