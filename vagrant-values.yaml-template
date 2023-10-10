@@ -26,6 +26,8 @@ global:
       logoutUrl: https://172.19.0.22/keycloak/realms/KYPO/protocol/openid-connect/logout
       clientId: KYPO-client
       label: Login with local Keycloack
+      responseType: code
+      refreshToken: true
   postgres:
     serviceName: postgres
     port: 5432
