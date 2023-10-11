@@ -52,6 +52,7 @@ spec:
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git /repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-user-access.git /repos/backend-python/ansible-networking-stage/kypo-user-access.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-interface.git /repos/backend-python/ansible-networking-stage/kypo-interface.git
+                    git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/guacamole.git /repos/backend-python/ansible-networking-stage/guacamole.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-common.git /repos/backend-python/ansible-networking-stage/kypo-common.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/useful-ansible-roles/kypo-disable-qxl.git /repos/useful-ansible-roles/kypo-disable-qxl.git
                     git clone -q --bare https://gitlab.ics.muni.cz/muni-kypo-crp/useful-ansible-roles/kypo-sandbox-logging-forward.git /repos/useful-ansible-roles/kypo-sandbox-logging-forward.git

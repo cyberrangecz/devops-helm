@@ -83,4 +83,4 @@ gitConfig:
   privateKey:
   accessToken: no-gitlab-token
   ansibleNetworkingUrl: git@git-internal.kypo:/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
-  ansibleNetworkingRev: v1.0.12
+  ansibleNetworkingRev: v1.0.13
