@@ -13,7 +13,7 @@ global:
   kypoElasticsearchServiceIndexMaxResultWindow: 30000
   guacamoleUser: guac-user
   guacamoleUserPassword: guac-user
-  kypoTerraformBackendType: 'pg'
+  kypoTerraformBackendType: 'kubernetes'
   corsWhitelist:
 
   oidcProviders:
