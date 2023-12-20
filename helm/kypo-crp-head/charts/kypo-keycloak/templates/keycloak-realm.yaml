@@ -54,7 +54,7 @@ spec:
             protocol: openid-connect
             protocolMapper: oidc-usermodel-property-mapper
             config:
-              user.attribute: username
+              user.attribute: email
               claim.name: sub
               jsonType.label: String
               id.token.claim: 'true'
