@@ -8,7 +8,7 @@
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: {{ .sub | replace "@" "_" }}
+  name: {{ .sub | replace "@" "-" }}
   labels:
     app: external-sso
 spec:
