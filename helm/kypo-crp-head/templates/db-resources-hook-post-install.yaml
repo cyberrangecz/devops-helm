@@ -80,10 +80,10 @@ spec:
         {{- range $users }}
           {{- if .admin }}
             INSERT INTO user_idm_group(user_id, idm_group_id)
-            VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            VALUES ((SELECT id FROM users WHERE sub='{{ .email }}'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
           {{- else }}
             INSERT INTO user_idm_group(user_id, idm_group_id)
-            VALUES ((SELECT id FROM users WHERE sub='{{ .sub }}'), (SELECT id FROM idm_group WHERE name='DEFAULT-GROUP')) ON CONFLICT DO NOTHING;
+            VALUES ((SELECT id FROM users WHERE sub='{{ .email }}'), (SELECT id FROM idm_group WHERE name='DEFAULT-GROUP')) ON CONFLICT DO NOTHING;
           {{- end }}
         {{- end }}
           SQL

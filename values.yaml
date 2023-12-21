@@ -11,22 +11,22 @@ global:
       userInfoUrl:
       responseType:
   users:
-    - sub: kypo-admin
+    - email: kypo-admin@example.com
       iss:
-      password:
-      email: kypo-admin@example.com
       fullName: "Demo Admin"
       givenName: "Demo"
       familyName: "Admin"
       admin: True
-    - sub: kypo-user
+      keycloakUsername:
+      keycloakPassword:
+    - email: kypo-user@example.com
       iss:
-      password:
-      email: kypo-user@example.com
       fullName: "Demo User"
       givenName: "Demo"
       familyName: "User"
       admin: False
+      keycloakUsername:
+      keycloakPassword:
   userCount: 0
 
 kypo-guacamole:

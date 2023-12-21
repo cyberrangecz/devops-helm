@@ -67,7 +67,7 @@ data:
     {{- end }}
     {{- range $users }}
     - user:
-        sub: {{ .sub }}
+        sub: {{ .email }}
         iss: {{ .iss }}
         fullName: {{ .fullName }}
         givenName: {{ .givenName }}
@@ -82,7 +82,7 @@ data:
   exported-local-oidc-users.yml: |
     {{- if (lookup "v1" "Secret" "kypo" "generated-users") }}
     {{- range ((lookup "v1" "Secret" "kypo" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
-    - name: {{ .sub }}
-      password: {{ .password }}
+    - name: {{ .keycloakUsername }}
+      password: {{ .keycloakPassword }}
     {{- end }}
     {{- end }}
