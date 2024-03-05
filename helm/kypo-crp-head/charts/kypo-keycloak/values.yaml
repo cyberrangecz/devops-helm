@@ -8,3 +8,5 @@ grafanaClientSecret:
 
 keycloakAdmin: admin
 keycloakPassword:
+
+development: false

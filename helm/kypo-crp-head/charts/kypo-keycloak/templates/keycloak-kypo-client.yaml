@@ -19,7 +19,11 @@ spec:
       - profile
       - openid
     directAccessGrantsEnabled: true
+    {{- if .Values.development }}
+    implicitFlowEnabled: true
+    {{- else }}
     implicitFlowEnabled: false
+    {{- end }}
     name: "KYPO-Client"
     optionalClientScopes:
       - offline_access
@@ -29,4 +33,7 @@ spec:
       - "https://{{ $.Values.global.headHost }}"
       - "https://{{ $.Values.global.headHost }}/index.html"
       - "https://{{ $.Values.global.headHost }}/silent-refresh.html"
+      {{- if .Values.development }}
+      - "https://localhost:4200"
+      {{- end }}
     standardFlowEnabled: true
