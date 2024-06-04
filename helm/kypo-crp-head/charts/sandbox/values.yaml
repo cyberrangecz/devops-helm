@@ -68,6 +68,10 @@ proxyHost:
 proxyUser:
 proxyKey:
 ansibleDockerNetwork: host
+smtpServer:
+smtpPort: 25
+senderEmail: "sandbox.service@kypo.cz"
+senderEmailPassword:
 
 ansibleRunner:
   image:
