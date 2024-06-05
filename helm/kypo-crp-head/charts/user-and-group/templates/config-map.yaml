@@ -76,7 +76,7 @@ data:
         {{- if .admin }}
         - "ROLE_USER_AND_GROUP_ADMINISTRATOR"
         {{- else }}
-        - "ROLE_USER_AND_GROUP_USER"
+        - "ROLE_USER_AND_GROUP_POWER_USER"
         {{- end }}
     {{- end }}
   exported-local-oidc-users.yml: |

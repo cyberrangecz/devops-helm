@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-adaptive-training-service
-  tag: 23.12
+  tag: v2.2.8
 
 environments:
   - name: SERVICE_PRECONDITION
