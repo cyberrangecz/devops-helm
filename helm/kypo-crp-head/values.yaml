@@ -1,6 +1,3 @@
-kypo-git-internal:
-  enabled: True
-
 kypo-oidc:
   enabled: True
 
