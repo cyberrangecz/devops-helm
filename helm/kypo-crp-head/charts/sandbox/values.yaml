@@ -73,6 +73,11 @@ smtpPort: 25
 senderEmail: "sandbox.service@kypo.cz"
 senderEmailPassword:
 
+redis:
+  defaultCacheTimeout: 86400
+  uagCacheTimeout: 86400
+  topologyCacheTimeout: 86400
+
 ansibleRunner:
   image:
     url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ansible-runner
