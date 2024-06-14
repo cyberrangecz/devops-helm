@@ -68,7 +68,7 @@ proxyHost:
 proxyUser:
 proxyKey:
 ansibleDockerNetwork: host
-smtpServer: "relay.muni.cz"
+smtpServer:
 smtpPort: 25
 senderEmail: "sandbox.service@kypo.cz"
 senderEmailPassword:
@@ -85,7 +85,7 @@ ansibleRunner:
 
 gitConfig:
   providers: {}
-  #providers: {"https://gitlab.ics.muni.cz/": "TOKEN"}
+  #providers: {"https://gitlab.com/": "TOKEN"}
   user: git
   ansibleNetworkingUrl: https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
   ansibleNetworkingRev: v1.0.18
