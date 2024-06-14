@@ -1,1 +1,0 @@
-{{- include "common.svc" (dict "name" .Values.name "ports" (concat .Values.containers.gitInternalRest.ports .Values.containers.gitInternalSsh.ports) "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

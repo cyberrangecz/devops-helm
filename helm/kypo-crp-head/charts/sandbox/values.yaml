@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: 23.12
+  tag: 24.06
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -68,19 +68,24 @@ proxyHost:
 proxyUser:
 proxyKey:
 ansibleDockerNetwork: host
+smtpServer:
+smtpPort: 25
+senderEmail: "sandbox.service@kypo.cz"
+senderEmailPassword:
+
+redis:
+  defaultCacheTimeout: 86400
+  uagCacheTimeout: 86400
+  topologyCacheTimeout: 86400
 
 ansibleRunner:
   image:
     url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ansible-runner
-    tag: 23.04
+    tag: 24.06
 
 gitConfig:
-  type: INTERNAL
-  server: git-internal.kypo
-  sshPort: 22
-  restServerUrl: http://git-internal.kypo:5000/
+  providers: {}
+  #providers: {"https://gitlab.com/": "TOKEN"}
   user: git
-  privateKey:
-  accessToken: no-gitlab-token
-  ansibleNetworkingUrl: git@git-internal.kypo:/repos/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
-  ansibleNetworkingRev: v1.0.14
+  ansibleNetworkingUrl: https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
+  ansibleNetworkingRev: v1.0.18
