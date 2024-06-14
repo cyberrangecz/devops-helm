@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-frontend
-  tag: develop
+  tag: 24.06
 
 mounts:
   - name: kypo-config

@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: develop
+  tag: 24.06
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -81,7 +81,7 @@ redis:
 ansibleRunner:
   image:
     url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-ansible-runner
-    tag: multiple-gitlabs
+    tag: 24.06
 
 gitConfig:
   providers: {}
