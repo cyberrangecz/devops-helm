@@ -28,9 +28,9 @@ helm upgrade --install reloader stakater/reloader --namespace reloader --create-
 helm upgrade --install kypo-certs /vagrant/helm/kypo-certs -f /vagrant/vagrant-values.yaml -n kypo --wait --create-namespace -n kypo
 helm upgrade --install kypo-postgres /vagrant/helm/kypo-postgres -f /vagrant/vagrant-values.yaml --wait -n kypo
 helm upgrade --install kypo-gen-users /vagrant/helm/kypo-gen-users -f /vagrant/vagrant-values.yaml --wait -n kypo
-kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/22.0.3/kubernetes/keycloaks.k8s.keycloak.org-v1.yml
-kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/22.0.3/kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml
-kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/22.0.3/kubernetes/kubernetes.yml
+kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/keycloaks.k8s.keycloak.org-v1.yml
+kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml
+kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/kubernetes.yml
 kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_externalkeycloaks_crd.yaml
 kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_keycloakclients_crd.yaml
 kubectl apply -n kypo -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_keycloakrealms_crd.yaml
