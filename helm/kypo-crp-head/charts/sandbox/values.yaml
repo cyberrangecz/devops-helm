@@ -62,7 +62,7 @@ defaultWorkerCount: 4
 sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
-manFlavor: csirtmu.tiny1x2
+manFlavor: standard.small
 manImage: debian-11-man-0.1.0
 proxyHost:
 proxyUser:
