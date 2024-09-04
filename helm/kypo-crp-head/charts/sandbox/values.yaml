@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: registry.gitlab.ics.muni.cz:443/muni-kypo-crp/kypo-crp-artifact-repository/kypo-sandbox-service
-  tag: 24.06
+  tag: 24.08
 
 environments:
   - name: SERVICE_PRECONDITION
@@ -68,10 +68,12 @@ proxyHost:
 proxyUser:
 proxyKey:
 ansibleDockerNetwork: host
+
 smtpServer:
 smtpPort: 25
 senderEmail: "sandbox.service@kypo.cz"
 senderEmailPassword:
+smtpEncryption:
 
 redis:
   defaultCacheTimeout: 86400
