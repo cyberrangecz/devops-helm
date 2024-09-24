@@ -67,10 +67,12 @@ global:
       name: angular-frontend
       port: 8000
       contextPath: /
+      ingressAutoexpose: true
     adaptiveTraining:
       name: adaptive-training-service
       port: 8082
       contextPath: /kypo-adaptive-training/api/v1/
+      ingressAutoexpose: true
     answersStorage:
       name: answers-storage
       port: 8087
@@ -83,10 +85,12 @@ global:
       name: mitre-service
       port: 8001
       contextPath: /kypo-mitre-technique-service/api/v1/
+      ingressAutoexpose: true
     sandbox:
       name: sandbox-service
       port: 8000
       contextPath: /kypo-sandbox-service/api/v1/
+      ingressAutoexpose: true
     smartAssistant:
       name: smart-assistant
       port: 8086
@@ -95,6 +99,7 @@ global:
       name: training-service
       port: 8083
       contextPath: /kypo-rest-training/api/v1/
+      ingressAutoexpose: true
     trainingFeedback:
       name: training-feedback-service
       port: 8088
@@ -103,4 +108,3 @@ global:
       name: uag-service
       port: 8084
       contextPath: /kypo-rest-user-and-group/api/v1/
-      staticIngress: True
