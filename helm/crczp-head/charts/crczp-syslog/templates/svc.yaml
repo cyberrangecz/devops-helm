@@ -1,0 +1,1 @@
+{{- include "common.svc" (dict "name" .Values.global.crczpSyslogServiceName "ports" .Values.ports "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

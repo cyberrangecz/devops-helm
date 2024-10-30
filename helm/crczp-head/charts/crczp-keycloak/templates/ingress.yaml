@@ -1,0 +1,24 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Values.name }}-ingressroute
+  labels: {{- include "common.labels" (dict "name" .name "chart" $.Chart "release" $.Release "extraLabels" .extraLabels) | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      match: PathPrefix(`/keycloak`)
+      {{- else }}
+      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`/keycloak`)
+      {{- end }}
+      services:
+        - kind: Service
+          name: keycloak-service
+          port: 8080
+  tls:
+    secretName: {{ $.Values.global.tlsSecretName }}
+    domains:
+    - main: {{ $.Values.global.headHost }}

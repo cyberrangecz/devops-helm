@@ -1,9 +1,0 @@
-{{- $ports := list (dict "port" .Values.global.services.sandbox.port "protocol" "TCP" "probe" true) -}}
-{{- include "common.deployment.header" (dict "name" (print .Values.global.services.sandbox.name "-worker-default") "replicasCount" .Values.defaultWorkerCount "serviceAccountName" "sandbox-service" "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
-{{- include "common.deployment.containers" (dict "name" (print .Values.global.services.sandbox.name "-worker-default") "ports" $ports "Values" .Values "command" "python3" "args" "[\"manage.py\",\"rqworker\",\"default\"]" "portsDisabled" true) }}
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - update-ca-certificates
-{{- include "common.deployment.volumes" (dict "Values" .Values) }}

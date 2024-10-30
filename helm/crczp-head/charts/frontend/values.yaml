@@ -1,0 +1,17 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cyberrangecz/frontend-training-portal/training-portal
+  tag: v1.0.0
+
+mounts:
+  - name: config
+    extension: .json
+    mountPath: /app/assets/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: angular-frontend-configmap
+
+releaseVersion: v2025.03

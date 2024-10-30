@@ -1,0 +1,13 @@
+{{- $ports := list (dict "port" .Values.global.services.sandbox.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.deployment.header" (dict "name" (print .Values.global.services.sandbox.name "-worker-openstack") "replicasCount" .Values.openstackWorkerCount "serviceAccountName" "sandbox-service" "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.containers" (dict "name" (print .Values.global.services.sandbox.name "-worker-openstack") "ports" $ports "Values" .Values "command" "python3" "args" "[\"manage.py\",\"rqworker\",\"openstack\"]" "portsDisabled" true) }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - update-ca-certificates
+      {{- if .Values.global.imageCredentials.username }}
+      imagePullSecrets:
+        - name: github-auth-secret
+      {{- end }}
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}

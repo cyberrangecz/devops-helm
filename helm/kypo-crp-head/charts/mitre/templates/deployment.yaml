@@ -1,5 +1,0 @@
-{{- $ports := list (dict "port" .Values.global.services.mitre.port "protocol" "TCP" "probe" true) -}}
-{{- include "common.deployment.header" (dict "name" .Values.global.services.mitre.name "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
-{{- include "common.deployment.containers" (dict "name" .Values.global.services.mitre.name "ports" $ports "Values" .Values) }}
-{{- include "common.deployment.volumes" (dict "Values" .Values) }}
-

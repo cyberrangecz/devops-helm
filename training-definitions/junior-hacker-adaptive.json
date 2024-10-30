@@ -1,679 +1,837 @@
 {
-  "title" : "Junior hacker training",
-  "description" : null,
-  "prerequisites" : [ ],
-  "outcomes" : [ ],
-  "state" : "UNRELEASED",
-  "show_stepper_bar" : true,
-  "phases" : [ {
-    "title" : "Introductory info",
-    "phase_type" : "INFO",
-    "order" : 0,
-    "content" : "Welcome! You are a junior hacker, who only recently entered the top-secret school of a legendary master hacker, preceded by incredible legends. Today is your first day of field training, and the master will take you to one of his favorite workplaces -- a crowded urban settlement. What makes such a common place really special? A lot of people without the knowledge of information security basics, with dozens of unsecured routers and default passwords, which invite you to visit their local networks.\nYou are in a car at the urban settlement parking lot. The master brought his laptop with Kali Linux that, together with his advice, you can use in today's outdoor training. The main goal of today's training is simple: to steal anything that can be valuable."
-  }, {
-    "title" : "Pre-game assessment",
-    "phase_type" : "QUESTIONNAIRE",
-    "order" : 1,
-    "questions" : [ {
-      "order" : 7,
-      "text" : "What is your level of skill in using basic Linux commands?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 6,
-      "text" : "What is your level of skill in looking for opened ports?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 5,
-      "text" : "What is your level of skill in connection to the server securely?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 0,
-      "text" : "What is your level of skill in using the msfconsole interface?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 1,
-      "text" : "What is your level of skill in using WinSCP?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 2,
-      "text" : "What is your level of skill in building Java projects using Maven?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 3,
-      "text" : "What is your level of skill in zip and unzip files in CLI?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    }, {
-      "order" : 4,
-      "text" : "What is your level of skill in downloading and transferring files into the server?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "None",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "Low",
-        "correct" : false,
-        "order" : 1
-      }, {
-        "text" : "Medium",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "High",
-        "correct" : true,
-        "order" : 3
-      } ]
-    } ],
-    "questionnaire_type" : "ADAPTIVE",
-    "phase_relations" : [ {
-      "order" : 0,
-      "question_orders" : [ 7 ],
-      "phase_order" : 3,
-      "success_rate" : 100
-    }, {
-      "order" : 1,
-      "question_orders" : [ 6 ],
-      "phase_order" : 4,
-      "success_rate" : 100
-    }, {
-      "order" : 2,
-      "question_orders" : [ 5 ],
-      "phase_order" : 5,
-      "success_rate" : 100
-    }, {
-      "order" : 3,
-      "question_orders" : [ 5 ],
-      "phase_order" : 6,
-      "success_rate" : 100
-    }, {
-      "order" : 4,
-      "question_orders" : [ 7 ],
-      "phase_order" : 7,
-      "success_rate" : 100
-    } ]
-  }, {
-    "title" : "Get Access",
-    "phase_type" : "ACCESS",
-    "order" : 2,
-    "passkey" : "start",
-    "cloud_content" : "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`attacker`** and then click on **`Open GUI`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.crp.kypo.muni.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
-    "local_content" : "This sandbox has not been tested for use with local sandbox."
-  }, {
-    "title" : "Getting to know the environment",
-    "phase_type" : "TRAINING",
-    "order" : 3,
-    "estimated_duration" : 3,
-    "allowed_commands" : 10,
-    "allowed_wrong_answers" : 5,
-    "tasks" : [ {
-      "title" : "Getting to know the environment",
-      "order" : 0,
-      "content" : "The master handed you a laptop, saying to you:\n*\"You studied hard in the past weeks. Now, you are ready for real-world hacking training, but you need the right equipment. In today's lecture, I will teach you using Kali Linux and show you some of its basic functionality, which will make hacking easier.\"*\n\nFirst, get acquainted with the **command line** at your **Kali Linux**, the most popular Linux distribution for penetration testing. Or hacking? :-)\n\nLook around your home directory `/home/user`. You will need this skill when you hack into another Linux machine.\nThe answer for this task is the **name of the single file** stored in a non-empty directory in your home directory.",
-      "answer" : "wordlist.txt",
-      "solution" : "```\nuser@attacker:~# ls /home/user/hacking\nwordlist.txt\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Getting to know the environment",
-      "order" : 1,
-      "content" : "The master handed you a laptop, saying to you:\n*\"You studied hard in the past weeks. Now, you are ready for real-world hacking training, but you need the right equipment. In today's lecture, I will teach you using Kali Linux and show you some of its basic functionality, which will make hacking easier.\"*\n\nFirst, get acquainted with the **command line** at your **Kali Linux**, the most popular Linux distribution for penetration testing. Or hacking? :-)\n\nLook around your home directory `/home/user`. You will need this skill when you hack into another Linux machine.\nThe answer for this task is the **name of the single file** stored in a non-empty directory in your home directory.\n\nUse `ls`. If you want to change the directory, use `cd`. Your home folder is located in `/home/user` directory.",
-      "answer" : "wordlist.txt",
-      "solution" : "```\nuser@attacker:~# ls /home/user/hacking\nwordlist.txt\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Getting to know the environment",
-      "order" : 2,
-      "content" : "The master handed you a laptop, saying to you:\n*\"You studied hard in the past weeks. Now, you are ready for real-world hacking training, but you need the right equipment. In today's lecture, I will teach you using Kali Linux and show you some of its basic functionality, which will make hacking easier.\"*\n\nFirst, get acquainted with the **command line** at your **Kali Linux**, the most popular Linux distribution for penetration testing. Or hacking? :-)\n\nLook around your home directory `/home/user`. You will need this skill when you hack into another Linux machine.\nThe answer for this task is the **name of the single file** stored in a non-empty directory in your home directory.\n\nUse `ls`. If you want to change the directory, use `cd`. Your home folder is located in `/home/user` directory.",
-      "answer" : "wordlist.txt",
-      "solution" : "```\nuser@attacker:~# ls /home/user/hacking\nwordlist.txt\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    } ],
-    "decision_matrix" : [ {
-      "order" : 0,
-      "questionnaire_answered" : 1.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 0.0,
-      "wrong_answers" : 0.0
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
-  }, {
-    "title" : "Looking for server’s IP address",
-    "phase_type" : "TRAINING",
-    "order" : 4,
-    "estimated_duration" : 5,
-    "allowed_commands" : 10,
-    "allowed_wrong_answers" : 5,
-    "tasks" : [ {
-      "title" : "Looking for server’s IP address",
-      "order" : 0,
-      "content" : "You already managed to guess the password on a Wi-Fi router with the master's help (**12345678**, really?!), so now you are already connected to the local network of one household.\n\nThe address space of your local network is **10.1.26.0/24**. \n\nThe master told you that your goal is to gain access to the server. **Scan the network** and recognize the server's **IP address**. You can recognize the server by its **running services**.\n\nThe server you are searching for has **more open ports** than other machines in the network.\n\nThe answer is the **port number** on which the **file sharing service** is running on the server's machine.",
-      "answer" : "2049",
-      "solution" : "```\nuser@attacker:~# nmap 10.1.26.0/24\n\n2049/tcp open  nfs\n\n2049\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Looking for server’s IP address",
-      "order" : 1,
-      "content" : "You already managed to guess the password on a Wi-Fi router with the master's help (**12345678**, really?!), so now you are already connected to the local network of one household.\n\nThe address space of your local network is **10.1.26.0/24**. \n\nThe master told you that your goal is to gain access to the server. **Scan the network** and recognize the server's **IP address**. You can recognize the server by its **running services**.\n\nThe server you are searching for has **more open ports** than other machines in the network.\n\nThe answer is the **port number** on which the **file sharing service** is running on the server's machine.\n\nUse the command-line tool `nmap`. If you can't figure out how to use the tool, call it with the suffix `--help` to get detailed instructions, consult its manual page `man nmap`, or use your favourite search engine.\n\n",
-      "answer" : "2049",
-      "solution" : "```\nuser@attacker:~# nmap 10.1.26.0/24\n\n2049/tcp open  nfs\n\n2049\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Looking for server’s IP address",
-      "order" : 2,
-      "content" : "You already managed to guess the password on a Wi-Fi router with the master's help (**12345678**, really?!), so now you are already connected to the local network of one household.\n\nThe address space of your local network is **10.1.26.0/24**. \n\nThe master told you that your goal is to gain access to the server. **Scan the network** and recognize the server's **IP address**. You can recognize the server by its **running services**.\n\nThe server you are searching for has **more open ports** than other machines in the network.\n\nThe answer is the **port number** on which the **file sharing service** is running on the server's machine.\n\nUse the command-line tool `nmap`. If you can't figure out how to use the tool, call it with the suffix `--help` to get detailed instructions, consult its manual page `man nmap`, or use your favourite search engine.\n\nRun `nmap 10.1.26.0/24` and see open ports in its output. Nmap scan report for `10.1.26.9` shows the most running services.",
-      "answer" : "2049",
-      "solution" : "```\nuser@attacker:~# nmap 10.1.26.0/24\n\n2049/tcp open  nfs\n\n2049\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    } ],
-    "decision_matrix" : [ {
-      "order" : 0,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 1.0,
-      "completed_in_time" : 1.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 1,
-      "questionnaire_answered" : 1.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 0.0,
-      "wrong_answers" : 0.0
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
-  }, {
-    "title" : "Connect to the server",
-    "phase_type" : "TRAINING",
-    "order" : 5,
-    "estimated_duration" : 5,
-    "allowed_commands" : 10,
-    "allowed_wrong_answers" : 5,
-    "tasks" : [ {
-      "title" : "Connect to the server",
-      "order" : 0,
-      "content" : "You know the IP address of the server. It was easy, right?\n\nNow comes the more interesting part of how to use this knowledge to your **advantage**. Connect **remotely** to the server and use **legitimate credentials**. The master told you that the login details will most likely one of these: **admin/password**, **admin/123456** or **admin/admin**. It's worth trying, isn't it?\n\nThe answer is the **entire command** for logging into the server.",
-      "answer" : "ssh admin@10.1.26.9",
-      "solution" : "```\nuser@attacker:~# ssh admin@10.1.26.9\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nadmin@10.1.26.9's password: admin\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Connect to the server",
-      "order" : 1,
-      "content" : "You know the IP address of the server. It was easy, right?\n\nNow comes the more interesting part of how to use this knowledge to your **advantage**. Connect **remotely** to the server and use **legitimate credentials**. The master told you that the login details will most likely one of these: **admin/password**, **admin/123456** or **admin/admin**. It's worth trying, isn't it?\n\nThe answer is the **entire command** for logging into the server.\n\nUse the command-line tool `ssh`.\n\nThe syntax is `ssh username@hostname_or_ip`, where the part after @ is the `hostname` or IP address of the device you want to connect to.\n\n",
-      "answer" : "ssh admin@10.1.26.9",
-      "solution" : "```\nuser@attacker:~# ssh admin@10.1.26.9\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nadmin@10.1.26.9's password: admin\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Connect to the server",
-      "order" : 2,
-      "content" : "You know the IP address of the server. It was easy, right?\n\nNow comes the more interesting part of how to use this knowledge to your **advantage**. Connect **remotely** to the server and use **legitimate credentials**. The master told you that the login details will most likely one of these: **admin/password**, **admin/123456** or **admin/admin**. It's worth trying, isn't it?\n\nThe answer is the **entire command** for logging into the server.\n\nUse the command-line tool `ssh`.\n\nThe syntax is `ssh username@hostname_or_ip`, where the part after @ is the `hostname` or IP address of the device you want to connect to.\n\nTry one of the master's recommendations.",
-      "answer" : "ssh admin@10.1.26.9",
-      "solution" : "```\nuser@attacker:~# ssh admin@10.1.26.9\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nadmin@10.1.26.9's password: admin\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    } ],
-    "decision_matrix" : [ {
-      "order" : 0,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 1.0,
-      "completed_in_time" : 1.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 1,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 2,
-      "questionnaire_answered" : 1.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 0.0,
-      "wrong_answers" : 0.0
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
-  }, {
-    "title" : "Find interesting files",
-    "phase_type" : "TRAINING",
-    "order" : 6,
-    "estimated_duration" : 5,
-    "allowed_commands" : 10,
-    "allowed_wrong_answers" : 5,
-    "tasks" : [ {
-      "title" : "Find interesting files",
-      "order" : 0,
-      "content" : "You are already logged in to the server. Now is the time to find something **exciting** and ideally **compromising**, but we don't know exactly what we are looking for. However... do you still remember the **list of services** running on the server based on the **Nmap scan**? You already discovered that the server runs the **NFS** service. **NFS** protocol is used for **file sharing** and **remote access** to files over a computer network. Maybe this server is used to back up data. Try to look whether the admin's home directory stores any files. Then, copy a useful file to your attacker machine.\n\nThe answer is the **name** of the **only ZIP file** (including the extension) located somewhere in the home directory.",
-      "answer" : ".invoices2019.zip",
-      "solution" : "```\nuser@attacker:/home# scp admin@10.1.26.9:~/personal/.invoices2019.zip .\nadmin@10.1.26.9's password: admin\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Find interesting files",
-      "order" : 1,
-      "content" : "You are already logged in to the server. Now is the time to find something **exciting** and ideally **compromising**, but we don't know exactly what we are looking for. However... do you still remember the **list of services** running on the server based on the **Nmap scan**? You already discovered that the server runs the **NFS** service. **NFS** protocol is used for **file sharing** and **remote access** to files over a computer network. Maybe this server is used to back up data. Try to look whether the admin's home directory stores any files. Then, copy a useful file to your attacker machine.\n\nThe answer is the **name** of the **only ZIP file** (including the extension) located somewhere in the home directory.\n\nUse **scp** tool to copy the file.\n\nUse this syntax for copying from remote to local machine:\n`scp @: /`",
-      "answer" : ".invoices2019.zip",
-      "solution" : "```\nuser@attacker:/home# scp admin@10.1.26.9:~/personal/.invoices2019.zip .\nadmin@10.1.26.9's password: admin\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Find interesting files",
-      "order" : 2,
-      "content" : "You are already logged in to the server. Now is the time to find something **exciting** and ideally **compromising**, but we don't know exactly what we are looking for. However... do you still remember the **list of services** running on the server based on the **Nmap scan**? You already discovered that the server runs the **NFS** service. **NFS** protocol is used for **file sharing** and **remote access** to files over a computer network. Maybe this server is used to back up data. Try to look whether the admin's home directory stores any files. Then, copy a useful file to your attacker machine.\n\nThe answer is the **name** of the **only ZIP file** (including the extension) located somewhere in the home directory.\n\nUse **scp** tool to copy the file.\n\nUse this syntax for copying from remote to local machine:\n`scp @: /`\n\nList directories and files including the hidden ones in the admin's `$HOME` directory (/home/admin).",
-      "answer" : ".invoices2019.zip",
-      "solution" : "```\nuser@attacker:/home# scp admin@10.1.26.9:~/personal/.invoices2019.zip .\nadmin@10.1.26.9's password: admin\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    } ],
-    "decision_matrix" : [ {
-      "order" : 0,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 1.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 1,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 1.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 2,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 1.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 1.0
-    }, {
-      "order" : 3,
-      "questionnaire_answered" : 1.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 0.0,
-      "wrong_answers" : 0.0
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
-  }, {
-    "title" : "Crack the password to the zip",
-    "phase_type" : "TRAINING",
-    "order" : 7,
-    "estimated_duration" : 10,
-    "allowed_commands" : 10,
-    "allowed_wrong_answers" : 5,
-    "tasks" : [ {
-      "title" : "Crack the password to the zip",
-      "order" : 0,
-      "content" : "You have found out that some **accounting** company's files have been uploaded to this server. And you have a ZIP file with a promising name in **your** hands, but unfortunately, it is **password-protected**!\nThe master advised you that a password cracking tool called **fcrackzip** was installed on his Kali machine. Find out how you could break the password and reveal the content of the ZIP. Use `man fcrackzip` rather than `fcrackzip -h` for **instructions** on the tool usage.\n\nThe answer is the **password** to the ZIP.\n\n",
-      "answer" : "IhateMyJob",
-      "solution" : "```\nuser@attacker:~# fcrackzip -D -u -p /home/user/hacking/wordlist.txt .invoices2019.zip\n\nPASSWORD FOUND!!!!: pw == IhateMyJob\n\nuser@attacker:/home# unzip .invoices2019.zip\n\nArchive:  .invoices2019.zip\n   creating: .invoices2019/\n[.invoices2019.zip] invoices2019/TAX15796252.txt password: IhateMyJob\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Crack the password to the zip",
-      "order" : 1,
-      "content" : "You have found out that some **accounting** company's files have been uploaded to this server. And you have a ZIP file with a promising name in **your** hands, but unfortunately, it is **password-protected**!\nThe master advised you that a password cracking tool called **fcrackzip** was installed on his Kali machine. Find out how you could break the password and reveal the content of the ZIP. Use `man fcrackzip` rather than `fcrackzip -h` for **instructions** on the tool usage.\n\nThe answer is the **password** to the ZIP.\n\nYou can perform a dictionary attack by using `-D` option of the `fcrackzip` command, but be aware that you have to use a **wordlist**. One is stored somewhere at your attacker machine.\n",
-      "answer" : "IhateMyJob",
-      "solution" : "```\nuser@attacker:~# fcrackzip -D -u -p /home/user/hacking/wordlist.txt .invoices2019.zip\n\nPASSWORD FOUND!!!!: pw == IhateMyJob\n\nuser@attacker:/home# unzip .invoices2019.zip\n\nArchive:  .invoices2019.zip\n   creating: .invoices2019/\n[.invoices2019.zip] invoices2019/TAX15796252.txt password: IhateMyJob\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    }, {
-      "title" : "Crack the password to the zip",
-      "order" : 2,
-      "content" : "You have found out that some **accounting** company's files have been uploaded to this server. And you have a ZIP file with a promising name in **your** hands, but unfortunately, it is **password-protected**!\nThe master advised you that a password cracking tool called **fcrackzip** was installed on his Kali machine. Find out how you could break the password and reveal the content of the ZIP. Use `man fcrackzip` rather than `fcrackzip -h` for **instructions** on the tool usage.\n\nThe answer is the **password** to the ZIP.\n\nYou can perform a dictionary attack by using `-D` option of the `fcrackzip` command, but be aware that you have to use a **wordlist**. One is stored somewhere at your attacker machine.\n\nIn hacking directory at your Kali, where you have already discovered it.",
-      "answer" : "IhateMyJob",
-      "solution" : "```\nuser@attacker:~# fcrackzip -D -u -p /home/user/hacking/wordlist.txt .invoices2019.zip\n\nPASSWORD FOUND!!!!: pw == IhateMyJob\n\nuser@attacker:/home# unzip .invoices2019.zip\n\nArchive:  .invoices2019.zip\n   creating: .invoices2019/\n[.invoices2019.zip] invoices2019/TAX15796252.txt password: IhateMyJob\n```",
-      "incorrect_answer_limit" : 5,
-      "modify_sandbox" : false,
-      "sandbox_change_expected_duration" : 0
-    } ],
-    "decision_matrix" : [ {
-      "order" : 0,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 1.0,
-      "completed_in_time" : 1.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 1.0
-    }, {
-      "order" : 1,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 2,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 3,
-      "questionnaire_answered" : 0.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 1.0,
-      "wrong_answers" : 0.0
-    }, {
-      "order" : 4,
-      "questionnaire_answered" : 1.0,
-      "keyword_used" : 0.0,
-      "completed_in_time" : 0.0,
-      "solution_displayed" : 0.0,
-      "wrong_answers" : 0.0
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ]
-  }, {
-    "title" : "Post-game questionnaire",
-    "phase_type" : "QUESTIONNAIRE",
-    "order" : 8,
-    "questions" : [ {
-      "order" : 0,
-      "text" : "Did you feel the tasks were designed so that you can complete the training in a timely manner?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "Not at all ",
-        "correct" : true,
-        "order" : 0
-      }, {
-        "text" : "Slightly",
-        "correct" : true,
-        "order" : 1
-      }, {
-        "text" : "Moderately",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "Much",
-        "correct" : true,
-        "order" : 3
-      }, {
-        "text" : "Very much",
-        "correct" : true,
-        "order" : 4
-      } ]
-    }, {
-      "order" : 1,
-      "text" : "Did you feel you got stuck at some point during the training?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "Not at all",
-        "correct" : true,
-        "order" : 0
-      }, {
-        "text" : "Slightly",
-        "correct" : true,
-        "order" : 1
-      }, {
-        "text" : "Moderately",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "Much",
-        "correct" : true,
-        "order" : 3
-      }, {
-        "text" : "Very much",
-        "correct" : true,
-        "order" : 4
-      } ]
-    }, {
-      "order" : 2,
-      "text" : "How much did you enjoy the training?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "Not at all",
-        "correct" : true,
-        "order" : 0
-      }, {
-        "text" : "Slightly",
-        "correct" : true,
-        "order" : 1
-      }, {
-        "text" : "Moderately",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "Much",
-        "correct" : true,
-        "order" : 3
-      }, {
-        "text" : "Very much",
-        "correct" : true,
-        "order" : 4
-      } ]
-    }, {
-      "order" : 3,
-      "text" : "Did you feel the training should be more difficult for you?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "Not at all ",
-        "correct" : true,
-        "order" : 0
-      }, {
-        "text" : "Slightly",
-        "correct" : true,
-        "order" : 1
-      }, {
-        "text" : "Moderately",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "Much",
-        "correct" : true,
-        "order" : 3
-      }, {
-        "text" : "Very much",
-        "correct" : true,
-        "order" : 4
-      } ]
-    }, {
-      "order" : 4,
-      "text" : "Did you feel you would like the training to be longer with additional tasks to solve?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "Not at all ",
-        "correct" : true,
-        "order" : 0
-      }, {
-        "text" : "Slightly",
-        "correct" : true,
-        "order" : 1
-      }, {
-        "text" : "Moderately",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "Much",
-        "correct" : true,
-        "order" : 3
-      }, {
-        "text" : "Very much",
-        "correct" : true,
-        "order" : 4
-      } ]
-    }, {
-      "order" : 5,
-      "text" : "Would you like to play more cybersecurity training sessions like this one?",
-      "question_type" : "RFQ",
-      "choices" : [ {
-        "text" : "Not at all",
-        "correct" : true,
-        "order" : 0
-      }, {
-        "text" : "Slightly",
-        "correct" : true,
-        "order" : 1
-      }, {
-        "text" : "Moderately",
-        "correct" : true,
-        "order" : 2
-      }, {
-        "text" : "Much",
-        "correct" : true,
-        "order" : 3
-      }, {
-        "text" : "Very much",
-        "correct" : true,
-        "order" : 4
-      } ]
-    }, {
-      "order" : 6,
-      "text" : "Do you have other comments or notes from the training?",
-      "question_type" : "FFQ",
-      "choices" : [ ]
-    } ],
-    "questionnaire_type" : "GENERAL",
-    "phase_relations" : [ ]
-  } ],
-  "estimated_duration" : 28
+  "title": "Junior hacker training",
+  "description": null,
+  "prerequisites": [],
+  "outcomes": [],
+  "state": "UNRELEASED",
+  "phases": [
+    {
+      "title": "Introductory info",
+      "phase_type": "INFO",
+      "order": 0,
+      "content": "Welcome! You are a junior hacker, who only recently entered the top-secret school of a legendary master hacker, preceded by incredible legends. Today is your first day of field training, and the master will take you to one of his favorite workplaces -- a crowded urban settlement. What makes such a common place really special? A lot of people without the knowledge of information security basics, with dozens of unsecured routers and default passwords, which invite you to visit their local networks.\nYou are in a car at the urban settlement parking lot. The master brought his laptop with Kali Linux that, together with his advice, you can use in today's outdoor training. The main goal of today's training is simple: to steal anything that can be valuable."
+    },
+    {
+      "title": "Pre-game assessment",
+      "phase_type": "QUESTIONNAIRE",
+      "order": 1,
+      "questions": [
+        {
+          "order": 7,
+          "text": "What is your level of skill in using basic Linux commands?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 6,
+          "text": "What is your level of skill in looking for opened ports?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "text": "What is your level of skill in connection to the server securely?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 0,
+          "text": "What is your level of skill in using the msfconsole interface?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "text": "What is your level of skill in using WinSCP?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "text": "What is your level of skill in building Java projects using Maven?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "text": "What is your level of skill in zip and unzip files in CLI?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "text": "What is your level of skill in downloading and transferring files into the server?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "None",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Low",
+              "correct": false,
+              "order": 1
+            },
+            {
+              "text": "Medium",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "High",
+              "correct": true,
+              "order": 3
+            }
+          ]
+        }
+      ],
+      "questionnaire_type": "ADAPTIVE",
+      "phase_relations": [
+        {
+          "order": 0,
+          "question_orders": [
+            7
+          ],
+          "phase_order": 3,
+          "success_rate": 100
+        },
+        {
+          "order": 1,
+          "question_orders": [
+            6
+          ],
+          "phase_order": 4,
+          "success_rate": 100
+        },
+        {
+          "order": 2,
+          "question_orders": [
+            5
+          ],
+          "phase_order": 5,
+          "success_rate": 100
+        },
+        {
+          "order": 3,
+          "question_orders": [
+            5
+          ],
+          "phase_order": 6,
+          "success_rate": 100
+        },
+        {
+          "order": 4,
+          "question_orders": [
+            7
+          ],
+          "phase_order": 7,
+          "success_rate": 100
+        }
+      ]
+    },
+    {
+      "title": "Get Access",
+      "phase_type": "ACCESS",
+      "order": 2,
+      "passkey": "start",
+      "cloud_content": "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`attacker`** and then click on **`Open GUI`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.platform.cyberrange.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
+      "local_content": "This sandbox has not been tested for use with local sandbox."
+    },
+    {
+      "title": "Getting to know the environment",
+      "phase_type": "TRAINING",
+      "order": 3,
+      "estimated_duration": 3,
+      "allowed_commands": 10,
+      "allowed_wrong_answers": 5,
+      "tasks": [
+        {
+          "title": "Getting to know the environment",
+          "order": 0,
+          "content": "The master handed you a laptop, saying to you:\n*\"You studied hard in the past weeks. Now, you are ready for real-world hacking training, but you need the right equipment. In today's lecture, I will teach you using Kali Linux and show you some of its basic functionality, which will make hacking easier.\"*\n\nFirst, get acquainted with the **command line** at your **Kali Linux**, the most popular Linux distribution for penetration testing. Or hacking? :-)\n\nLook around your home directory `/home/user`. You will need this skill when you hack into another Linux machine.\nThe answer for this task is the **name of the single file** stored in a non-empty directory in your home directory.",
+          "answer": "wordlist.txt",
+          "solution": "```\nuser@attacker:~# ls /home/user/hacking\nwordlist.txt\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Getting to know the environment",
+          "order": 1,
+          "content": "The master handed you a laptop, saying to you:\n*\"You studied hard in the past weeks. Now, you are ready for real-world hacking training, but you need the right equipment. In today's lecture, I will teach you using Kali Linux and show you some of its basic functionality, which will make hacking easier.\"*\n\nFirst, get acquainted with the **command line** at your **Kali Linux**, the most popular Linux distribution for penetration testing. Or hacking? :-)\n\nLook around your home directory `/home/user`. You will need this skill when you hack into another Linux machine.\nThe answer for this task is the **name of the single file** stored in a non-empty directory in your home directory.\n\nUse `ls`. If you want to change the directory, use `cd`. Your home folder is located in `/home/user` directory.",
+          "answer": "wordlist.txt",
+          "solution": "```\nuser@attacker:~# ls /home/user/hacking\nwordlist.txt\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Getting to know the environment",
+          "order": 2,
+          "content": "The master handed you a laptop, saying to you:\n*\"You studied hard in the past weeks. Now, you are ready for real-world hacking training, but you need the right equipment. In today's lecture, I will teach you using Kali Linux and show you some of its basic functionality, which will make hacking easier.\"*\n\nFirst, get acquainted with the **command line** at your **Kali Linux**, the most popular Linux distribution for penetration testing. Or hacking? :-)\n\nLook around your home directory `/home/user`. You will need this skill when you hack into another Linux machine.\nThe answer for this task is the **name of the single file** stored in a non-empty directory in your home directory.\n\nUse `ls`. If you want to change the directory, use `cd`. Your home folder is located in `/home/user` directory.",
+          "answer": "wordlist.txt",
+          "solution": "```\nuser@attacker:~# ls /home/user/hacking\nwordlist.txt\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        }
+      ],
+      "decision_matrix": [
+        {
+          "order": 0,
+          "questionnaire_answered": 1.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 0.0,
+          "wrong_answers": 0.0
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": []
+    },
+    {
+      "title": "Looking for server’s IP address",
+      "phase_type": "TRAINING",
+      "order": 4,
+      "estimated_duration": 5,
+      "allowed_commands": 10,
+      "allowed_wrong_answers": 5,
+      "tasks": [
+        {
+          "title": "Looking for server’s IP address",
+          "order": 0,
+          "content": "You already managed to guess the password on a Wi-Fi router with the master's help (**12345678**, really?!), so now you are already connected to the local network of one household.\n\nThe address space of your local network is **10.1.26.0/24**. \n\nThe master told you that your goal is to gain access to the server. **Scan the network** and recognize the server's **IP address**. You can recognize the server by its **running services**.\n\nThe server you are searching for has **more open ports** than other machines in the network.\n\nThe answer is the **port number** on which the **file sharing service** is running on the server's machine.",
+          "answer": "2049",
+          "solution": "```\nuser@attacker:~# nmap 10.1.26.0/24\n\n2049/tcp open  nfs\n\n2049\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Looking for server’s IP address",
+          "order": 1,
+          "content": "You already managed to guess the password on a Wi-Fi router with the master's help (**12345678**, really?!), so now you are already connected to the local network of one household.\n\nThe address space of your local network is **10.1.26.0/24**. \n\nThe master told you that your goal is to gain access to the server. **Scan the network** and recognize the server's **IP address**. You can recognize the server by its **running services**.\n\nThe server you are searching for has **more open ports** than other machines in the network.\n\nThe answer is the **port number** on which the **file sharing service** is running on the server's machine.\n\nUse the command-line tool `nmap`. If you can't figure out how to use the tool, call it with the suffix `--help` to get detailed instructions, consult its manual page `man nmap`, or use your favourite search engine.\n\n",
+          "answer": "2049",
+          "solution": "```\nuser@attacker:~# nmap 10.1.26.0/24\n\n2049/tcp open  nfs\n\n2049\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Looking for server’s IP address",
+          "order": 2,
+          "content": "You already managed to guess the password on a Wi-Fi router with the master's help (**12345678**, really?!), so now you are already connected to the local network of one household.\n\nThe address space of your local network is **10.1.26.0/24**. \n\nThe master told you that your goal is to gain access to the server. **Scan the network** and recognize the server's **IP address**. You can recognize the server by its **running services**.\n\nThe server you are searching for has **more open ports** than other machines in the network.\n\nThe answer is the **port number** on which the **file sharing service** is running on the server's machine.\n\nUse the command-line tool `nmap`. If you can't figure out how to use the tool, call it with the suffix `--help` to get detailed instructions, consult its manual page `man nmap`, or use your favourite search engine.\n\nRun `nmap 10.1.26.0/24` and see open ports in its output. Nmap scan report for `10.1.26.9` shows the most running services.",
+          "answer": "2049",
+          "solution": "```\nuser@attacker:~# nmap 10.1.26.0/24\n\n2049/tcp open  nfs\n\n2049\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        }
+      ],
+      "decision_matrix": [
+        {
+          "order": 0,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 1.0,
+          "completed_in_time": 1.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 1,
+          "questionnaire_answered": 1.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 0.0,
+          "wrong_answers": 0.0
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": []
+    },
+    {
+      "title": "Connect to the server",
+      "phase_type": "TRAINING",
+      "order": 5,
+      "estimated_duration": 5,
+      "allowed_commands": 10,
+      "allowed_wrong_answers": 5,
+      "tasks": [
+        {
+          "title": "Connect to the server",
+          "order": 0,
+          "content": "You know the IP address of the server. It was easy, right?\n\nNow comes the more interesting part of how to use this knowledge to your **advantage**. Connect **remotely** to the server and use **legitimate credentials**. The master told you that the login details will most likely one of these: **admin/password**, **admin/123456** or **admin/admin**. It's worth trying, isn't it?\n\nThe answer is the **entire command** for logging into the server.",
+          "answer": "ssh admin@10.1.26.9",
+          "solution": "```\nuser@attacker:~# ssh admin@10.1.26.9\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nadmin@10.1.26.9's password: admin\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Connect to the server",
+          "order": 1,
+          "content": "You know the IP address of the server. It was easy, right?\n\nNow comes the more interesting part of how to use this knowledge to your **advantage**. Connect **remotely** to the server and use **legitimate credentials**. The master told you that the login details will most likely one of these: **admin/password**, **admin/123456** or **admin/admin**. It's worth trying, isn't it?\n\nThe answer is the **entire command** for logging into the server.\n\nUse the command-line tool `ssh`.\n\nThe syntax is `ssh username@hostname_or_ip`, where the part after @ is the `hostname` or IP address of the device you want to connect to.\n\n",
+          "answer": "ssh admin@10.1.26.9",
+          "solution": "```\nuser@attacker:~# ssh admin@10.1.26.9\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nadmin@10.1.26.9's password: admin\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Connect to the server",
+          "order": 2,
+          "content": "You know the IP address of the server. It was easy, right?\n\nNow comes the more interesting part of how to use this knowledge to your **advantage**. Connect **remotely** to the server and use **legitimate credentials**. The master told you that the login details will most likely one of these: **admin/password**, **admin/123456** or **admin/admin**. It's worth trying, isn't it?\n\nThe answer is the **entire command** for logging into the server.\n\nUse the command-line tool `ssh`.\n\nThe syntax is `ssh username@hostname_or_ip`, where the part after @ is the `hostname` or IP address of the device you want to connect to.\n\nTry one of the master's recommendations.",
+          "answer": "ssh admin@10.1.26.9",
+          "solution": "```\nuser@attacker:~# ssh admin@10.1.26.9\nAre you sure you want to continue connecting (yes/no/[fingerprint])? yes\nadmin@10.1.26.9's password: admin\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        }
+      ],
+      "decision_matrix": [
+        {
+          "order": 0,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 1.0,
+          "completed_in_time": 1.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 1,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 2,
+          "questionnaire_answered": 1.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 0.0,
+          "wrong_answers": 0.0
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": []
+    },
+    {
+      "title": "Find interesting files",
+      "phase_type": "TRAINING",
+      "order": 6,
+      "estimated_duration": 5,
+      "allowed_commands": 10,
+      "allowed_wrong_answers": 5,
+      "tasks": [
+        {
+          "title": "Find interesting files",
+          "order": 0,
+          "content": "You are already logged in to the server. Now is the time to find something **exciting** and ideally **compromising**, but we don't know exactly what we are looking for. However... do you still remember the **list of services** running on the server based on the **Nmap scan**? You already discovered that the server runs the **NFS** service. **NFS** protocol is used for **file sharing** and **remote access** to files over a computer network. Maybe this server is used to back up data. Try to look whether the admin's home directory stores any files. Then, copy a useful file to your attacker machine.\n\nThe answer is the **name** of the **only ZIP file** (including the extension) located somewhere in the home directory.",
+          "answer": ".invoices2019.zip",
+          "solution": "```\nuser@attacker:/home# scp admin@10.1.26.9:~/personal/.invoices2019.zip .\nadmin@10.1.26.9's password: admin\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Find interesting files",
+          "order": 1,
+          "content": "You are already logged in to the server. Now is the time to find something **exciting** and ideally **compromising**, but we don't know exactly what we are looking for. However... do you still remember the **list of services** running on the server based on the **Nmap scan**? You already discovered that the server runs the **NFS** service. **NFS** protocol is used for **file sharing** and **remote access** to files over a computer network. Maybe this server is used to back up data. Try to look whether the admin's home directory stores any files. Then, copy a useful file to your attacker machine.\n\nThe answer is the **name** of the **only ZIP file** (including the extension) located somewhere in the home directory.\n\nUse **scp** tool to copy the file.\n\nUse this syntax for copying from remote to local machine:\n`scp @: /`",
+          "answer": ".invoices2019.zip",
+          "solution": "```\nuser@attacker:/home# scp admin@10.1.26.9:~/personal/.invoices2019.zip .\nadmin@10.1.26.9's password: admin\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Find interesting files",
+          "order": 2,
+          "content": "You are already logged in to the server. Now is the time to find something **exciting** and ideally **compromising**, but we don't know exactly what we are looking for. However... do you still remember the **list of services** running on the server based on the **Nmap scan**? You already discovered that the server runs the **NFS** service. **NFS** protocol is used for **file sharing** and **remote access** to files over a computer network. Maybe this server is used to back up data. Try to look whether the admin's home directory stores any files. Then, copy a useful file to your attacker machine.\n\nThe answer is the **name** of the **only ZIP file** (including the extension) located somewhere in the home directory.\n\nUse **scp** tool to copy the file.\n\nUse this syntax for copying from remote to local machine:\n`scp @: /`\n\nList directories and files including the hidden ones in the admin's `$HOME` directory (/home/admin).",
+          "answer": ".invoices2019.zip",
+          "solution": "```\nuser@attacker:/home# scp admin@10.1.26.9:~/personal/.invoices2019.zip .\nadmin@10.1.26.9's password: admin\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        }
+      ],
+      "decision_matrix": [
+        {
+          "order": 0,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 1.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 1,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 1.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 2,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 1.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 1.0
+        },
+        {
+          "order": 3,
+          "questionnaire_answered": 1.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 0.0,
+          "wrong_answers": 0.0
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": []
+    },
+    {
+      "title": "Crack the password to the zip",
+      "phase_type": "TRAINING",
+      "order": 7,
+      "estimated_duration": 10,
+      "allowed_commands": 10,
+      "allowed_wrong_answers": 5,
+      "tasks": [
+        {
+          "title": "Crack the password to the zip",
+          "order": 0,
+          "content": "You have found out that some **accounting** company's files have been uploaded to this server. And you have a ZIP file with a promising name in **your** hands, but unfortunately, it is **password-protected**!\nThe master advised you that a password cracking tool called **fcrackzip** was installed on his Kali machine. Find out how you could break the password and reveal the content of the ZIP. Use `man fcrackzip` rather than `fcrackzip -h` for **instructions** on the tool usage.\n\nThe answer is the **password** to the ZIP.\n\n",
+          "answer": "IhateMyJob",
+          "solution": "```\nuser@attacker:~# fcrackzip -D -u -p /home/user/hacking/wordlist.txt .invoices2019.zip\n\nPASSWORD FOUND!!!!: pw == IhateMyJob\n\nuser@attacker:/home# unzip .invoices2019.zip\n\nArchive:  .invoices2019.zip\n   creating: .invoices2019/\n[.invoices2019.zip] invoices2019/TAX15796252.txt password: IhateMyJob\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Crack the password to the zip",
+          "order": 1,
+          "content": "You have found out that some **accounting** company's files have been uploaded to this server. And you have a ZIP file with a promising name in **your** hands, but unfortunately, it is **password-protected**!\nThe master advised you that a password cracking tool called **fcrackzip** was installed on his Kali machine. Find out how you could break the password and reveal the content of the ZIP. Use `man fcrackzip` rather than `fcrackzip -h` for **instructions** on the tool usage.\n\nThe answer is the **password** to the ZIP.\n\nYou can perform a dictionary attack by using `-D` option of the `fcrackzip` command, but be aware that you have to use a **wordlist**. One is stored somewhere at your attacker machine.\n",
+          "answer": "IhateMyJob",
+          "solution": "```\nuser@attacker:~# fcrackzip -D -u -p /home/user/hacking/wordlist.txt .invoices2019.zip\n\nPASSWORD FOUND!!!!: pw == IhateMyJob\n\nuser@attacker:/home# unzip .invoices2019.zip\n\nArchive:  .invoices2019.zip\n   creating: .invoices2019/\n[.invoices2019.zip] invoices2019/TAX15796252.txt password: IhateMyJob\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        },
+        {
+          "title": "Crack the password to the zip",
+          "order": 2,
+          "content": "You have found out that some **accounting** company's files have been uploaded to this server. And you have a ZIP file with a promising name in **your** hands, but unfortunately, it is **password-protected**!\nThe master advised you that a password cracking tool called **fcrackzip** was installed on his Kali machine. Find out how you could break the password and reveal the content of the ZIP. Use `man fcrackzip` rather than `fcrackzip -h` for **instructions** on the tool usage.\n\nThe answer is the **password** to the ZIP.\n\nYou can perform a dictionary attack by using `-D` option of the `fcrackzip` command, but be aware that you have to use a **wordlist**. One is stored somewhere at your attacker machine.\n\nIn hacking directory at your Kali, where you have already discovered it.",
+          "answer": "IhateMyJob",
+          "solution": "```\nuser@attacker:~# fcrackzip -D -u -p /home/user/hacking/wordlist.txt .invoices2019.zip\n\nPASSWORD FOUND!!!!: pw == IhateMyJob\n\nuser@attacker:/home# unzip .invoices2019.zip\n\nArchive:  .invoices2019.zip\n   creating: .invoices2019/\n[.invoices2019.zip] invoices2019/TAX15796252.txt password: IhateMyJob\n```",
+          "incorrect_answer_limit": 5,
+          "modify_sandbox": false,
+          "sandbox_change_expected_duration": 0
+        }
+      ],
+      "decision_matrix": [
+        {
+          "order": 0,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 1.0,
+          "completed_in_time": 1.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 1.0
+        },
+        {
+          "order": 1,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 2,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 3,
+          "questionnaire_answered": 0.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 1.0,
+          "wrong_answers": 0.0
+        },
+        {
+          "order": 4,
+          "questionnaire_answered": 1.0,
+          "keyword_used": 0.0,
+          "completed_in_time": 0.0,
+          "solution_displayed": 0.0,
+          "wrong_answers": 0.0
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": []
+    },
+    {
+      "title": "Post-game questionnaire",
+      "phase_type": "QUESTIONNAIRE",
+      "order": 8,
+      "questions": [
+        {
+          "order": 0,
+          "text": "Did you feel the tasks were designed so that you can complete the training in a timely manner?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "Not at all ",
+              "correct": true,
+              "order": 0
+            },
+            {
+              "text": "Slightly",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Moderately",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "Much",
+              "correct": true,
+              "order": 3
+            },
+            {
+              "text": "Very much",
+              "correct": true,
+              "order": 4
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "text": "Did you feel you got stuck at some point during the training?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "Not at all",
+              "correct": true,
+              "order": 0
+            },
+            {
+              "text": "Slightly",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Moderately",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "Much",
+              "correct": true,
+              "order": 3
+            },
+            {
+              "text": "Very much",
+              "correct": true,
+              "order": 4
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "text": "How much did you enjoy the training?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "Not at all",
+              "correct": true,
+              "order": 0
+            },
+            {
+              "text": "Slightly",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Moderately",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "Much",
+              "correct": true,
+              "order": 3
+            },
+            {
+              "text": "Very much",
+              "correct": true,
+              "order": 4
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "text": "Did you feel the training should be more difficult for you?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "Not at all ",
+              "correct": true,
+              "order": 0
+            },
+            {
+              "text": "Slightly",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Moderately",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "Much",
+              "correct": true,
+              "order": 3
+            },
+            {
+              "text": "Very much",
+              "correct": true,
+              "order": 4
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "text": "Did you feel you would like the training to be longer with additional tasks to solve?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "Not at all ",
+              "correct": true,
+              "order": 0
+            },
+            {
+              "text": "Slightly",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Moderately",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "Much",
+              "correct": true,
+              "order": 3
+            },
+            {
+              "text": "Very much",
+              "correct": true,
+              "order": 4
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "text": "Would you like to play more cybersecurity training sessions like this one?",
+          "question_type": "RFQ",
+          "choices": [
+            {
+              "text": "Not at all",
+              "correct": true,
+              "order": 0
+            },
+            {
+              "text": "Slightly",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Moderately",
+              "correct": true,
+              "order": 2
+            },
+            {
+              "text": "Much",
+              "correct": true,
+              "order": 3
+            },
+            {
+              "text": "Very much",
+              "correct": true,
+              "order": 4
+            }
+          ]
+        },
+        {
+          "order": 6,
+          "text": "Do you have other comments or notes from the training?",
+          "question_type": "FFQ",
+          "choices": []
+        }
+      ],
+      "questionnaire_type": "GENERAL",
+      "phase_relations": []
+    }
+  ],
+  "estimated_duration": 28
 }

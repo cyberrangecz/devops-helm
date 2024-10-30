@@ -1,7 +1,0 @@
-global:
-  tlsSecretName: kypo-certs
-  tlsPrivateKey:
-  tlsPublicKey:
-  headHost: 172.19.0.22
-  acmeServer: https://acme-v02.api.letsencrypt.org/directory
-  acmeContact: yourname@email.com

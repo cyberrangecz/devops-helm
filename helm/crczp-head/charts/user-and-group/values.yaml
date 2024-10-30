@@ -1,0 +1,32 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cyberrangecz/backend-user-and-group/user-and-group-service
+  tag: v1.0.0
+
+mounts:
+  - name: configs
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: uag-service-configmap
+    items:
+      - name: user-and-group
+        extension: .properties
+      - name: initial-users
+        extension: .yml
+      - name: exported-local-oidc-users
+        extension: .yml
+  - name: tls
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: crczp-certs
+
+connectionTimeout:
+maximumPoolSize:

@@ -1,0 +1,30 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cyberrangecz/backend-training/training-service
+  tag: v1.0.0
+
+environments:
+  - name: SERVICE_PRECONDITION
+    value: uag-service:8084
+
+mounts:
+  - name: training
+    extension: .properties
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: training-service-configmap
+  - name: tls
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: crczp-certs
+
+connectionTimeout:
+maximumPoolSize:

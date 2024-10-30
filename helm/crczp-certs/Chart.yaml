@@ -1,0 +1,5 @@
+apiVersion: v2
+name: crczp-certs
+description: Helm chart for preparing Kubernetes secret with tls certificate for head services
+type: application
+version: 1.0.0

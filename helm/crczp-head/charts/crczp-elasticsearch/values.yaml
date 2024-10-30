@@ -1,0 +1,41 @@
+image:
+  url: docker.elastic.co/elasticsearch/elasticsearch
+  tag: 8.1.2
+
+ports:
+  - port: 9200
+    protocol: TCP
+    probe: true
+  - port: 9300
+    protocol: TCP
+    probe: true
+
+environments:
+  - name: node.name
+    value: es01
+  - name: bootstrap.memory_lock
+    value: true
+  - name: discovery.type
+    value: single-node
+  - name: ES_JAVA_OPTS
+    value: -Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true
+  - name: cluster.max_shards_per_node
+    value: 5000
+  - name: xpack.security.enabled
+    value: false
+  - name: action.destructive_requires_name
+    value: false
+
+mounts:
+  - name: data-elasticsearch
+    mountPath: /usr/share/elasticsearch/data
+    type:
+      persistentVolumeClaim:
+        claimName: crczp-elasticsearch
+
+pvc:
+  size: 500Mi
+
+numberOfShards: 1
+numberOfReplicas: 0
+indexRefreshInterval: "5s"

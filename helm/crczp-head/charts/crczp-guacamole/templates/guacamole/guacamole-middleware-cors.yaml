@@ -1,0 +1,20 @@
+{{- if .Values.global.corsWhitelist }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: guacamole-header
+  namespace: crczp
+spec:
+  headers:
+    accessControlAllowMethods:
+      - GET
+      - OPTIONS
+      - PUT
+      - POST
+    accessControlAllowOriginList:
+      {{- range .Values.global.corsWhitelist }}
+      - {{ . }}
+      {{- end }}
+    accessControlMaxAge: 100
+    addVaryHeader: true
+{{- end }}

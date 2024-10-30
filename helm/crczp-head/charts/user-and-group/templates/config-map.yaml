@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.services.userAndGroup.name }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.userAndGroup.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+data:
+  user-and-group.properties: |
+    ## server port for a given service, e.g., 8084
+    server.port={{ .Values.global.services.userAndGroup.port }}
+    ## server context path (the base url for the service), e.g., /user-and-group/api/v1
+    server.servlet.context-path={{ .Values.global.services.userAndGroup.contextPath }}
+    ## microservice name which is used for identification of this service, e.g., user-and-group
+    service.name=user-and-group
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    {{- if .Values.global.corsWhitelist }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
+    {{- else }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }}
+    {{- end }}
+
+    # OpenID Connect OIDC configuration settings for a resource servers configuration
+    # Add configuration values for your OIDC providers. If you want to run the application properly, make sure that all values have a proper index.
+    ## OIDC issuers, e.g. Azure OIDC and another proprietary OIDC authorization server
+    {{- range $index, $element := .Values.global.oidcProviders }}
+    crczp.identity.providers[{{ $index }}].issuer={{ $element.issuerIdentifier | default $element.url }}
+    crczp.identity.providers[{{ $index }}].userInfoEndpoint={{ $element.userInfoUrl | default "" }}
+    {{- end }}
+
+    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.userAndGroup.dbName }}
+    spring.datasource.username={{ .Values.global.postgresServices.userAndGroup.dbUser }}
+    spring.datasource.password={{ .Values.global.postgresServices.userAndGroup.dbPassword }}
+    spring.datasource.driver-class-name=org.postgresql.Driver
+    {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
+    spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
+    spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
+    {{- end }}
+
+    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
+    spring.data.jpa.repositories.enabled=true
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.hibernate.ddl-auto=
+    spring.jpa.show-sql=true
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+
+    # spring-cloud
+    spring.cloud.refresh.enabled = false
+    ## disables the settings in application.properties in resource folder
+    spring.jmx.enabled=false
+    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
+    spring.jackson.serialization.write_dates_as_timestamps=false
+    ## all atributes in JSON are in SNAKE_CASE
+    spring.jackson.property-naming-strategy=SNAKE_CASE
+
+    ## the requirement for ssl, e.g., false
+    security.require-ssl=false
+    management.health.refresh.enabled=false
+
+    ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
+    logging.level.cz.cyberrange.platform=WARN
+  initial-users.yml: |
+    {{- $users := $.Values.global.users }}
+    {{- if (lookup "v1" "Secret" "crczp" "generated-users") }}
+    {{- $users = concat $.Values.global.users ((lookup "v1" "Secret" "crczp" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
+    {{- end }}
+    {{- range $users }}
+    - user:
+        sub: {{ .email }}
+        iss: {{ .iss }}
+        fullName: {{ .fullName }}
+        givenName: {{ .givenName }}
+        familyName: {{ .familyName }}
+      roles:
+        {{- if .admin }}
+        - "ROLE_USER_AND_GROUP_ADMINISTRATOR"
+        {{- else }}
+        - "ROLE_USER_AND_GROUP_POWER_USER"
+        {{- end }}
+    {{- end }}
+  exported-local-oidc-users.yml: |
+    {{- if (lookup "v1" "Secret" "crczp" "generated-users") }}
+    {{- range ((lookup "v1" "Secret" "crczp" "generated-users").data.generatedUsers | b64dec | fromYamlArray) }}
+    - name: {{ .keycloakUsername }}
+      password: {{ .keycloakPassword }}
+    {{- end }}
+    {{- end }}

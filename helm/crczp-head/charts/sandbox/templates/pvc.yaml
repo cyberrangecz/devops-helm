@@ -1,0 +1,3 @@
+{{- if .Values.pvc.enabled }}
+{{- include "common.pvc" (dict "name" .Values.global.services.sandbox.name "pvc" .Values.pvc "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- end }}
