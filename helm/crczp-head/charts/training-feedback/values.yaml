@@ -1,0 +1,23 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cyberrangecz/backend-training-feedback/training-feedback-service
+  tag: v0.0.1
+
+mounts:
+  - name: training-feedback
+    extension: .properties
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: training-feedback-service-configmap
+  - name: tls
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: crczp-certs

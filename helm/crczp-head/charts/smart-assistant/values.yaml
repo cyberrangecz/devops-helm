@@ -1,0 +1,15 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cyberrangecz/backend-adaptive-smart-assistant/adaptive-smart-assistant-service
+  tag: v0.0.1
+
+mounts:
+  - name: adaptive-smart-assistant
+    extension: .properties
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: smart-assistant-configmap

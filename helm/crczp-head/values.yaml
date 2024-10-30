@@ -1,0 +1,113 @@
+global:
+  headHost: 172.19.0.22
+  tlsSecretName: crczp-certs
+  crczpSyslogServiceName: crczp-syslog-ng
+  crczpLogstashServiceName: crczp-logstash
+  crczpElasticsearchServiceName: crczp-elasticsearch
+  crczpElasticsearchServiceIndexMaxResultWindow: 30000
+  guacamoleUser: guac-user
+  guacamoleUserPassword: guac-user
+  crczpTerraformBackendType: 'kubernetes'
+  corsWhitelist:
+  imageCredentials:
+    registry: ghcr.io
+    username:
+    password:
+
+
+  oidcProviders:
+    - url:
+      logoutUrl:
+      clientId:
+      label:
+      issuerIdentifier:
+      userInfoUrl:
+
+
+  redis:
+    serviceName: crczp-redis
+    port: 6379
+    db: 0
+
+  postgres:
+    serviceName: postgres
+    port: 5432
+    user: postgres
+    password: password
+
+  postgresServices:
+    adaptiveTraining:
+      dbName: crczp-adaptive-training
+      dbUser: crczp-adaptive-training
+      dbPassword: crczp-adaptive-training
+    answersStorage:
+      dbName: crczp-answers-storage
+      dbUser: crczp-answers-storage
+      dbPassword: crczp-answers-storage
+    sandbox:
+      dbName: sandbox-service
+      dbUser: sandbox-service
+      dbPassword: sandbox-service
+    smartAssistant:
+      dbName: crczp-adaptive-smart-assistant
+      dbUser: crczp-adaptive-smart-assistant
+      dbPassword: crczp-adaptive-smart-assistant
+    training:
+      dbName: training
+      dbUser: training
+      dbPassword: training
+    trainingFeedback:
+      dbName: crczp-training-feedback
+      dbUser: crczp-training-feedback
+      dbPassword: crczp-training-feedback
+    userAndGroup:
+      dbName: user-and-group
+      dbUser: user-and-group
+      dbPassword: user-and-group
+
+  services:
+    angularFrontend:
+      name: angular-frontend
+      port: 8000
+      contextPath: /
+      ingressAutoexpose: true
+    adaptiveTraining:
+      name: adaptive-training-service
+      port: 8082
+      contextPath: /adaptive-training/api/v1/
+      ingressAutoexpose: true
+    answersStorage:
+      name: answers-storage
+      port: 8087
+      contextPath: /answers-storage/api/v1/
+    elasticsearch:
+      name: elasticsearch-service
+      port: 8085
+      contextPath: /elasticsearch-service/api/v1/
+    mitre:
+      name: mitre-service
+      port: 8001
+      contextPath: /mitre-technique-service/api/v1/
+      ingressAutoexpose: true
+    sandbox:
+      name: sandbox-service
+      port: 8000
+      contextPath: /sandbox-service/api/v1/
+      ingressAutoexpose: true
+    smartAssistant:
+      name: smart-assistant
+      port: 8086
+      contextPath: /adaptive-smart-assistant/api/v1/
+    training:
+      name: training-service
+      port: 8083
+      contextPath: /training/api/v1/
+      ingressAutoexpose: true
+    trainingFeedback:
+      name: training-feedback-service
+      port: 8088
+      contextPath: /training-feedback/api/v1/
+    userAndGroup:
+      name: uag-service
+      port: 8084
+      contextPath: /user-and-group/api/v1/

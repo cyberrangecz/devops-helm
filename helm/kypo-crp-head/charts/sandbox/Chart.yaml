@@ -1,9 +1,0 @@
-apiVersion: v2
-name: sandbox
-description: Sandbox service Helm chart
-type: application
-version: 2.0.0
-dependencies:
-  - name: common
-    version: 1.0.0
-    repository: file://../common

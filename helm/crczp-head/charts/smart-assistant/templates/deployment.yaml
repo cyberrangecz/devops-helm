@@ -1,0 +1,24 @@
+{{- $ports := list (dict "port" .Values.global.services.smartAssistant.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.smartAssistant.name "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.services.smartAssistant.name "ports" $ports "Values" .Values) }}
+            - name: cacerts
+              mountPath: "/etc/ssl/certs/tls.crt"
+              subPath: "tls.crt"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "/opt/java/openjdk/bin/keytool -importcert -alias crczp -file /etc/ssl/certs/tls.crt -cacerts -storepass changeit -noprompt"
+      {{- if .Values.global.imageCredentials.username }}
+      imagePullSecrets:
+        - name: github-auth-secret
+      {{- end }}
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}
+        - name: cacerts
+          secret:
+            secretName: {{ .Values.global.tlsSecretName }}
+            items:
+              - key: "tls.crt"
+                path: "tls.crt"

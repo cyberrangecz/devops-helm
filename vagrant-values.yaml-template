@@ -1,31 +1,31 @@
 global:
   headHost: 172.19.0.22
-  tlsSecretName: kypo-certs
+  tlsSecretName: crczp-certs
   userCount: 10
   users:
-    - email: kypo-admin@example.com
-      iss: 'https://172.19.0.22/keycloak/realms/KYPO'
+    - email: crczp-admin@example.com
+      iss: 'https://172.19.0.22/keycloak/realms/CRCZP'
       fullName: "Demo Admin"
       givenName: "Demo"
       familyName: "Admin"
       admin: True
-      keycloakUsername: kypo-admin
+      keycloakUsername: crczp-admin
       keycloakPassword: password
-    - email: kypo-user@example.com
-      iss: 'https://172.19.0.22/keycloak/realms/KYPO'
+    - email: crczp-user@example.com
+      iss: 'https://172.19.0.22/keycloak/realms/CRCZP'
       fullName: "Demo User"
       givenName: "Demo"
       familyName: "User"
       admin: False
-      keycloakUsername: kypo-user
+      keycloakUsername: crczp-user
       keycloakPassword: password
   tlsPrivateKey:
   tlsPublicKey:
   oidcProviders:
-    - url: https://172.19.0.22/keycloak/realms/KYPO
-      logoutUrl: https://172.19.0.22/keycloak/realms/KYPO/protocol/openid-connect/logout
-      clientId: KYPO-client
-      label: Login with local Keycloack
+    - url: https://172.19.0.22/keycloak/realms/CRCZP
+      logoutUrl: https://172.19.0.22/keycloak/realms/CRCZP/protocol/openid-connect/logout
+      clientId: CRCZP-client
+      label: Login with local Keycloak
       responseType: code
       refreshToken: true
   postgres:
@@ -34,15 +34,16 @@ global:
     user: postgres
     password: password
 
-kypo-keycloak:
+crczp-keycloak:
   keycloakPassword: password
   grafanaClientSecret: secret
 
-kypo-guacamole:
+crczp-guacamole:
   enabled: False
 
 sandbox:
-  kypoHeadIp: 172.19.0.22
+  djangoSecretKey:
+  headHost: 172.19.0.22
   stackNamePrefix: default0
   dnsNameServers:
     - 1.1.1.1
@@ -55,7 +56,7 @@ sandbox:
   proxyKey:
   gitConfig:
     providers: {}
-    #providers: {"https://gitlab.com/": "TOKEN"}
+    #providers: {"https://github.com/": "TOKEN"}
     user: git
-    ansibleNetworkingUrl: https://gitlab.ics.muni.cz/muni-kypo-crp/backend-python/ansible-networking-stage/kypo-ansible-stage-one.git
-    ansibleNetworkingRev: v1.0.14
+    ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
+    ansibleNetworkingRev: v1.0.18

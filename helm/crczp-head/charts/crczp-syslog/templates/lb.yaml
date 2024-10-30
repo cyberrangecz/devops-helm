@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.crczpSyslogServiceName }}-lb
+  labels: {{- include "common.labels" (dict "name" .Values.global.crczpSyslogServiceName "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+  {{- if .Values.awsSgId }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: "{{ .Values.awsSgId }}"
+  {{- end }}
+spec:
+  selector: {{- include "common.matchLabels" (dict "name" .Values.global.crczpSyslogServiceName "release" .Release) | nindent 4 }}
+  type: LoadBalancer
+  ports:
+    {{- range .Values.externalPorts }}
+    - protocol: {{ .protocol }}
+      port: {{ .port }}
+      targetPort: {{ .port }}
+    {{- end }}

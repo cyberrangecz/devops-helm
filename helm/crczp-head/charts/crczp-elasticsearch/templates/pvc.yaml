@@ -1,0 +1,1 @@
+{{- include "common.pvc" (dict "name" .Values.global.crczpElasticsearchServiceName "pvc" .Values.pvc "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

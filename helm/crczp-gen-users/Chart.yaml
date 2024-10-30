@@ -1,0 +1,5 @@
+apiVersion: v2
+name: crczp-gen-users
+description: Chart for generating local OIDC issuer users
+type: application
+version: 0.9.0

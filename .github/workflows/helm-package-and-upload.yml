@@ -1,0 +1,74 @@
+name: Helm Package and Upload
+
+on:
+  push:  # Runs on every push, regardless of branch
+    branches:
+      - "**"  # Matches all branches
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Package Helm Charts
+        run: |
+          helm package helm/crczp-certs/
+          helm package helm/crczp-head/
+          helm package helm/crczp-gen-users/
+          helm package helm/crczp-postgres/
+        shell: bash
+
+      - name: Upload Helm Chart Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-charts
+          path: |
+            crczp-certs-*.tgz
+            crczp-head-*.tgz
+            crczp-gen-users-*.tgz
+            crczp-postgres-*.tgz
+          retention-days: 7
+
+  upload:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      OWNER: ${{ github.repository_owner }}
+      GH_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Set up Channel
+        id: set-channel
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "CHANNEL=stable" >> $GITHUB_ENV  # Set stable channel for master
+          else
+            echo "CHANNEL=devel" >> $GITHUB_ENV  # Set devel channel for other branches
+          fi
+        shell: bash
+
+      - name: Download artifact # We published it in the previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-charts
+          path: .
+
+      # Turn on special mode so Helm can save and push charts to a container registry like GHCR.
+      - name: Set up Helm with OCI support
+        run: export HELM_EXPERIMENTAL_OCI=1
+
+      - name: Authenticate to the registry
+        run: echo $GH_REGISTRY_TOKEN | helm registry login ghcr.io/$OWNER --username $OWNER --password-stdin
+
+      - name: Push to Github OCI Repository
+        run: |
+          helm push ./crczp-certs-*.tgz     oci://ghcr.io/$OWNER/$CHANNEL #todo: How to set the channel up?
+          helm push ./crczp-head-*.tgz  oci://ghcr.io/$OWNER/$CHANNEL #todo: How to set the channel up?
+          helm push ./crczp-gen-users-*.tgz oci://ghcr.io/$OWNER/$CHANNEL #todo: How to set the channel up?
+          helm push ./crczp-postgres-*.tgz  oci://ghcr.io/$OWNER/$CHANNEL #todo: How to set the channel up?
+        shell: bash
+

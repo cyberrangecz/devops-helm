@@ -1,0 +1,13 @@
+{{- $ports := list (dict "port" .Values.global.services.sandbox.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.sandbox.name "replicasCount" .Values.replicasCount "serviceAccountName" "sandbox-service" "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.services.sandbox.name "ports" $ports "Values" .Values "command" "/app/bin/run-sandbox-service.sh") }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - update-ca-certificates
+      {{- if .Values.global.imageCredentials.username }}
+      imagePullSecrets:
+        - name: github-auth-secret
+      {{- end }}
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}

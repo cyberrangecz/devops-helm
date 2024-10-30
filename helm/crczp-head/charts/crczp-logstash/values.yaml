@@ -1,0 +1,51 @@
+replicasCount: 1
+
+image:
+  url: docker.elastic.co/logstash/logstash
+  tag: 8.1.2
+
+ports:
+  - port: 5044
+    protocol: TCP
+    probe: false
+  - port: 9600
+    protocol: TCP
+    probe: false
+  - port: 10514
+    protocol: UDP
+  - port: 10515
+    protocol: UDP
+  - port: 10516
+    protocol: UDP
+
+mounts:
+  - name: logstash
+    extension: .yml
+    mountPath: /usr/share/logstash/config/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: crczp-logstash-configmap
+  - name: pipelines
+    extension: .yml
+    mountPath: /usr/share/logstash/config/
+    isOneFile: true
+    subPath: true
+    type:
+      configMap:
+        name: crczp-logstash-configmap
+  - name: pipes
+    mountPath: /usr/share/logstash/pipeline/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: crczp-logstash-configmap
+    items:
+      - name: 10-crczp-logstash-portal-actions
+        extension: .conf
+      - name: 20-crczp-logstash-bash-commands
+        extension: .conf
+      - name: 30-crczp-logstash-msf-commands
+        extension: .conf

@@ -1,0 +1,260 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.crczpLogstashServiceName }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.crczpLogstashServiceName "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+data:
+  logstash.yml: |
+    #
+    # When enabled, process escaped characters such as \n and \" in strings in the
+    # pipeline configuration files.
+    #
+    config.support_escapes: true
+
+  pipelines.yml: |
+    -   path.config: /usr/share/logstash/pipeline/10-crczp-logstash-portal-actions.conf
+        pipeline.id: crczp-logstash-portal-actions
+        pipeline.workers: 2
+    -   path.config: /usr/share/logstash/pipeline/20-crczp-logstash-bash-commands.conf
+        pipeline.id: crczp-logstash-bash-commands
+        pipeline.workers: 3
+    -   path.config: /usr/share/logstash/pipeline/30-crczp-logstash-msf-commands.conf
+        pipeline.id: crczp-logstash-msf-commands
+        pipeline.workers: 3
+
+  10-crczp-logstash-portal-actions.conf: |
+    input {
+       udp {
+        port => 10514
+        codec => "json"
+      }
+    }
+    filter {
+        # filter messages that do not contain CRCZP_PORTAL_EVENTS_AUDIT
+        if ("CRCZP_PORTAL_EVENTS_AUDIT" not in [event][message]) {
+            drop{}
+        }
+
+        # match JSON object data which represents the audit event object and save them to auditmessage field
+        grok {
+            match => { "[event][message]" => "CRCZP_PORTAL_EVENTS_AUDIT %{DATA:data} --- %{GREEDYDATA:auditmessage}" }
+        }
+
+        # parse JSON data and store them at the root (top level) of the event
+        json {
+            source => "auditmessage"
+        }
+
+        # retrieve elements from JSON to compose Elasticsearch index correctly
+        mutate {
+            add_field => { "[@metadata][definitionId]" => "%{[training_definition_id]}" }
+            add_field => { "[@metadata][instanceId]" => "%{[training_instance_id]}" }
+            add_field => { "[@metadata][runId]" => "%{[training_run_id]}" }
+            add_field => { "[@metadata][poolId]" => "%{[pool_id]}" }
+            add_field => { "[@metadata][sandboxId]" => "%{[sandbox_id]}" }
+        }
+
+        # create index prefix based on the event type (adaptive or linear)
+        if ( "adaptive" in [type]) {
+            mutate {
+                add_field => { "[@metadata][index_prefix]" => "crczp.events.adaptive.trainings" }
+                add_field => { "[@metadata][level]" => "%{[phase_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][index_prefix]" => "crczp.events.trainings" }
+                add_field => { "[@metadata][level]" => "%{[level]}" }
+            }
+        }
+
+        if ( "RunResumed" in [type] or "WrongPasskeySubmitted" in [type] ) {
+            mutate {
+                add_field => { "[@metadata][repeatEvents]" => "%{[training_time]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][repeatEvents]" => "0" }
+            }
+        }
+
+        # add all Syslog fields to Syslog object
+        mutate {
+            add_field => { "[syslog][programname]" => "%{[event][programname]}"}
+            add_field => { "[syslog][procid]" => "%{[event][procid]}"}
+            add_field => { "[syslog][host]" => "%{host}"}
+            add_field => { "[syslog][facility]" => "%{[event][facility]}"}
+            add_field => { "[syslog][type]" => "syslog"}
+            add_field => { "[syslog][@version]" => "%{@version}"}
+            add_field => { "[syslog][severity]" => "%{[event][severity]}"}
+            add_field => { "[syslog][@timestamp]" => "%{@timestamp}"}
+        }
+
+        # remove Syslog fields (these are included in Syslog object now)
+        mutate {
+           remove_field => [ "data", "event", "auditmessage", "host", "@version", "@timestamp" ]
+        }
+
+        # creates fingerprint used for document ID from several event fields
+        fingerprint {
+            # if a field is missing in the event, it can be ignored
+            # count is used to distinguish WrongAnswerSubmitted events
+            source => ["pool_id", "sandbox_id", "training_run_id", "type", "[@metadata][level]", "hint_id", "count", "[@metadata][repeatEvents]"]
+            target => "[@metadata][fingerprint]"
+            concatenate_sources => true
+            method => "MD5"
+            key => "events"
+            base64encode => true
+         }
+    }
+    output {
+        elasticsearch {
+            hosts => [ "crczp-elasticsearch:9200" ]
+            index => "%{[@metadata][index_prefix]}.pool=%{[@metadata][poolId]}.sandbox=%{[@metadata][sandboxId]}.definition=%{[@metadata][definitionId]}.instance=%{[@metadata][instanceId]}.run=%{[@metadata][runId]}"
+            codec => json
+            # custom document ID prevents duplicates in elasticsearch storage
+            document_id => "%{[@metadata][fingerprint]}"
+            # the default option is index, which overwrites the original document with the new one, we use create to prevent that
+            action => "create"
+        }
+    }
+
+  20-crczp-logstash-bash-commands.conf: |
+    input {
+       udp {
+        port => 10515
+        codec => "json"
+      }
+    }
+    filter {
+        # filter messages that do not contain specific programname
+        if ([event][programname] != "bash.command") {drop{}}
+
+        # retrieve elements from structured data (RFC5424) and make them top-level elements
+        mutate {
+            add_field => { "hostname" => "%{[event][hostname]}"}
+            add_field => { "cmd_type" => "bash-command"}
+            add_field => { "timestamp_str" => "%{@timestamp}"}
+        }
+
+        if [event][sandbox_id] and [event][sandbox_id] != "" {
+            mutate {
+                add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
+                add_field => { "pool_id" => "%{[event][pool_id]}" }
+                add_field => { "ip" => "%{[event][ip]}"}
+            }
+        } else {
+            mutate {
+                add_field => { "user_id" => "%{[event][user_id]}" }
+                add_field => { "access_token" => "%{[event][access_token]}" }
+                add_field => { "ip" => "%{[event][fromhost_ip]}"}
+            }
+        }
+
+        if [sandbox_id] {
+            mutate {
+                add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
+                add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][userid]" => "%{[event][user_id]}" }
+                add_field => { "[@metadata][accesstoken]" => "%{[event][access_token]}" }
+            }
+        }
+
+        json {
+            source => "[event][message]"
+        }
+
+        mutate {
+            # remove command line trailing white spaces
+            strip => ["cmd"]
+            # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
+            remove_field => ["message", "uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
+        }
+    }
+    output {
+        if [@metadata][sandboxid] {
+    elasticsearch {
+                hosts => [ "crczp-elasticsearch:9200" ]
+                index => "crczp.logs.console.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+                codec => json
+            }
+        } else {
+           elasticsearch {
+                hosts => [ "crczp-elasticsearch:9200" ]
+                index => "crczp.logs.console.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
+                codec => json
+            }
+        }
+    }
+
+  30-crczp-logstash-msf-commands.conf: |
+    input {
+       udp {
+        port => 10516
+        codec => "json"
+      }
+    }
+    filter {
+        # filter messages that do not contain specific programname
+        if ([event][programname] != "msf.command") {drop{}}
+        # retrieve elements from structured data (RFC5424) and make them top-level elements
+        mutate {
+            add_field => { "hostname" => "%{[event][hostname]}"}
+            add_field => { "cmd_type" => "msf-command"}
+            add_field => { "timestamp_str" => "%{@timestamp}"}
+        }
+
+        if [event][sandbox_id] and [event][sandbox_id] != "" {
+            mutate {
+                add_field => { "sandbox_id" => "%{[event][sandbox_id]}" }
+                add_field => { "pool_id" => "%{[event][pool_id]}" }
+                add_field => { "ip" => "%{[event][ip]}"}
+            }
+        } else {
+            mutate {
+                add_field => { "user_id" => "%{[event][user_id]}" }
+                add_field => { "access_token" => "%{[event][access_token]}" }
+                add_field => { "ip" => "%{[event][fromhost_ip]}"}
+            }
+        }
+
+        if [sandbox_id] {
+            mutate {
+                add_field => { "[@metadata][sandboxid]" => "%{[event][sandbox_id]}" }
+                add_field => { "[@metadata][poolid]" => "%{[event][pool_id]}" }
+            }
+        } else {
+            mutate {
+                add_field => { "[@metadata][userid]" => "%{[event][user_id]}" }
+                add_field => { "[@metadata][accesstoken]" => "%{[event][access_token]}" }
+            }
+        }
+
+        json {
+            source => "[event][message]"
+        }
+
+        mutate {
+            # remove command line trailing white spaces
+            strip => ["cmd"]
+            # remove unnecessary fields (temp-field is wrongly parsed by kv plugin since it contains ] character)
+            remove_field => ["uid", "event", "host", "facility", "severity", "@version", "@timestamp"]
+        }
+    }
+    output {
+        if [@metadata][sandboxid] {
+    elasticsearch {
+                hosts => [ "crczp-elasticsearch:9200" ]
+                index => "crczp.logs.console.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
+                codec => json
+            }
+        } else {
+           elasticsearch {
+                hosts => [ "crczp-elasticsearch:9200" ]
+                index => "crczp.logs.console.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
+                codec => json
+            }
+        }
+    }

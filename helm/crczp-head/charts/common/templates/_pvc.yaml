@@ -1,0 +1,16 @@
+{{- define "common.pvc" -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  labels: {{- include "common.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .pvc.accessMode | default "ReadWriteOnce" }}
+  {{- if .pvc.storageClassName }}
+  storageClassName: {{ .pvc.storageClassName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .pvc.size }}
+{{- end }}

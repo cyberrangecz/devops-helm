@@ -1,0 +1,14 @@
+name: keycloak
+
+db:
+  database: keycloak
+  username: keycloak
+
+grafanaClientSecret:
+
+keycloakAdmin: admin
+keycloakPassword:
+
+development: false
+
+realm: CRCZP

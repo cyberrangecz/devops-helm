@@ -1,9 +1,0 @@
-apiVersion: v2
-name: frontend
-description: Frontend service Helm chart
-type: application
-version: 1.1.5
-dependencies:
-  - name: common
-    version: 1.0.0
-    repository: file://../common

@@ -1,6 +1,0 @@
-apiVersion: v2
-name: kypo-postgres
-description: PostgreSQL Helm chart
-type: application
-version: 2.1.0
-appVersion: "13-alpine"

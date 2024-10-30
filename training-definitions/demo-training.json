@@ -1,253 +1,325 @@
 {
-  "title" : "KYPO Cyber Range Training Platform - Demo Content (terminal)",
-  "description" : "The demo contains all types of levels to demonstrate the training capabilities of the KYPO Cyber Range Platform.",
-  "prerequisites" : [ ],
-  "outcomes" : [ "Scanning ports with nmap", "Password guessing with hydra at telnet", "Privilege escalation using misconfigured sudo" ],
-  "state" : "UNRELEASED",
-  "show_stepper_bar" : true,
-  "levels" : [ {
-    "title" : "Info",
-    "level_type" : "INFO_LEVEL",
-    "order" : 0,
-    "estimated_duration" : 0,
-    "minimal_possible_solve_time" : null,
-    "content" : "# Demo Summary\n\nThe demo contains all types of levels to demonstrate the training capabilities of the KYPO Cyber Range Platform.\n\n**Note**: It is recommended to use the Chrome browser. In case you run into difficulties with submitting the answer, try to Log out and Log in again. \n\n| Level | Level Name | Level Type |\n|:------:|------| ------ |\n| 1. | Info | Info |\n| 2. | Finding Open Ports | Training |\n| 3. | Connecting via Telnet | Training |\n| 4. | Privilege Escalation | Training |\n| 5. | Test Example | Assessment |\n| 6. | Assessment Example | Assessment |\n\n## Info\n\nThe level contains this information page.\n\n## Finding open ports\n\nThe level provides information on how to connect to a sandbox. In general, there are two possible options. The first option is to use the platform'a GUI to connect to the machine via Spice console. The second option is to connect through SSH with a generated config file and keys.\n\nThis level's small challenge is to scan open ports.\n\n## Connecting Via Telnet\n\nThis level's challenge is to connect to the server machine without a password and discover the secret answer.\n\n## Privilege Escalation\n\nThis demo's bigger challenge is to gain root privileges and read an answer available only to a root user. Enjoy! \n\n## Test Example\n\nThe level contains a simple example of a test. Tests can be used, for example, for additional testing of students for grading purposes.\n\n## Assessment Example\n\nThe level contains a simple example of a test. For example, the tests can be used to verify the learning outcomes or for collecting feedback.\n"
-  }, {
-    "title" : "Get Access",
-    "level_type" : "ACCESS_LEVEL",
-    "order" : 1,
-    "estimated_duration" : 0,
-    "minimal_possible_solve_time" : null,
-    "passkey" : "start",
-    "cloud_content" : "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`client`** and then click on **`Open console`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.crp.kypo.muni.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
-    "local_content" : "This sandbox has not been tested for use with local sandbox."
-  }, {
-    "title" : "Finding open ports",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 2,
-    "estimated_duration" : 10,
-    "minimal_possible_solve_time" : 1,
-    "answer" : null,
-    "answer_variable_name" : "telnet_port",
-    "content" : "Your goal is to get access to the **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The answer is the port number.\n",
-    "solution" : "1. Look for open ports using the command **`nmap -p- 192.168.20.5`**. You can see **ssh** running on port **22** and some other service running on port **${ANSWER}**. This has to be the **telnet** service.\n\n2. Enter **`${ANSWER}`** as the answer.",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "Tool to find open ports",
-      "content" : "A common tool to find open ports is **nmap**. You can learn how to use nmap using **`nmap --help`** or by searching online.",
-      "hint_penalty" : 20,
-      "order" : 0
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 50,
-    "variant_answers" : true,
-    "reference_solution" : [ ],
-    "mitre_techniques" : [ {
-      "technique_key" : "TA0007.T1046"
-    }, {
-      "technique_key" : "TA0043.T1595"
-    } ],
-    "expected_commands" : [ "ls", "nmap" ],
-    "commands_required" : true
-  }, {
-    "title" : "Connecting via Telnet",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 3,
-    "estimated_duration" : 10,
-    "minimal_possible_solve_time" : 1,
-    "answer" : null,
-    "answer_variable_name" : "alice_flag",
-    "content" : "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The answer is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\n",
-    "solution" : "Replace **${telnet_port}** with the port number from the previous level:\n\n1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:${telnet_port}`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 ${telnet_port}`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the answer you can use **`cat flag.txt`**. The answer is **`${ANSWER}`**\n",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "Connecting using telnet",
-      "content" : "The command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet 192.168.20.5 ${telnet_port}`**. You will be prompted to enter an username and password.",
-      "hint_penalty" : 10,
-      "order" : 1
-    }, {
-      "title" : "Tool for password attacks",
-      "content" : "Common tools for password attacks are **hydra** and **medusa**. Consult their help commands or man pages to find appropriate options to perform the attack. You can use the list of common passwords stored in your home directory. Use **`ls`** to list files.",
-      "hint_penalty" : 20,
-      "order" : 0
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 100,
-    "variant_answers" : true,
-    "reference_solution" : [ ],
-    "mitre_techniques" : [ {
-      "technique_key" : "TA0006.T1110"
-    } ],
-    "expected_commands" : [ "hydra", "telnet", "cat" ],
-    "commands_required" : true
-  }, {
-    "title" : "Privilege Escalation",
-    "level_type" : "TRAINING_LEVEL",
-    "order" : 4,
-    "estimated_duration" : 15,
-    "minimal_possible_solve_time" : 1,
-    "answer" : null,
-    "answer_variable_name" : "root_flag",
-    "content" : "Great, you managed to login to the server as **alice** but there is not much you can do as **alice**. Can you find a way to become **root**? The answer is in the root directory.\n\nOne of common privilege escalation attack vectors is badly configured **sudo**. To see what you can use sudo for, use the **`sudo --list`** command.\n",
-    "solution" : "1. You can see that the only command you can use sudo on is **`less /home/alice/flag.txt`**. There is not much to see in the flag, but you can run this as **root**. Is there a way to get a shell?\n\n2. There is, all you have to do is enter **`!sh`** while running the **`sudo less /home/alice/flag.txt`** to get a root shell.\n\n3. To get the answer, use **`cd`** to enter the root directory and **`cat flag.txt`** to read the answer. The answer is **`${ANSWER}`**",
-    "solution_penalized" : true,
-    "hints" : [ {
-      "title" : "Using the privilege escalation",
-      "content" : "You have probably figured out that you can run **sudo** on a certain **less** command. To get a shell run **`sudo less /home/alice/flag.txt`**, enter the password. Type **`!sh`** to get a root shell.",
-      "hint_penalty" : 60,
-      "order" : 0
-    } ],
-    "incorrect_answer_limit" : 10,
-    "attachments" : [ ],
-    "max_score" : 100,
-    "variant_answers" : true,
-    "reference_solution" : [ ],
-    "mitre_techniques" : [ {
-      "technique_key" : "TA0004.T1068"
-    }, {
-      "technique_key" : "TA0043.T1592"
-    } ],
-    "expected_commands" : [ "cat", "ls", "sudo" ],
-    "commands_required" : true
-  }, {
-    "title" : "Test Example",
-    "level_type" : "ASSESSMENT_LEVEL",
-    "order" : 5,
-    "estimated_duration" : 5,
-    "minimal_possible_solve_time" : null,
-    "questions" : [ {
-      "question_type" : "FFQ",
-      "text" : "What was the name of a file storing the answer?",
-      "points" : 100,
-      "penalty" : 0,
-      "order" : 0,
-      "answer_required" : true,
-      "choices" : [ {
-        "text" : "flag.txt",
-        "correct" : true,
-        "order" : 0
-      } ]
-    }, {
-      "question_type" : "MCQ",
-      "text" : "The Telnet service was running on the default port.",
-      "points" : 100,
-      "penalty" : 0,
-      "order" : 1,
-      "answer_required" : true,
-      "choices" : [ {
-        "text" : "Yes",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "No",
-        "correct" : true,
-        "order" : 1
-      } ]
-    }, {
-      "question_type" : "EMI",
-      "text" : "Match services with their default port numbers.",
-      "points" : 100,
-      "penalty" : 0,
-      "order" : 2,
-      "answer_required" : true,
-      "extended_matching_options" : [ {
-        "text" : "22",
-        "order" : 0
-      }, {
-        "text" : "23",
-        "order" : 1
-      }, {
-        "text" : "80",
-        "order" : 2
-      }, {
-        "text" : "443",
-        "order" : 3
-      } ],
-      "extended_matching_statements" : [ {
-        "text" : "HTTP",
-        "order" : 0,
-        "correct_option_order" : 2
-      }, {
-        "text" : "SSH",
-        "order" : 1,
-        "correct_option_order" : 0
-      }, {
-        "text" : "HTTPS",
-        "order" : 2,
-        "correct_option_order" : 3
-      }, {
-        "text" : "Telnet",
-        "order" : 3,
-        "correct_option_order" : 1
-      } ]
-    } ],
-    "instructions" : "A simple test.",
-    "assessment_type" : "TEST"
-  }, {
-    "title" : "Assessment Example",
-    "level_type" : "ASSESSMENT_LEVEL",
-    "order" : 6,
-    "estimated_duration" : 5,
-    "minimal_possible_solve_time" : null,
-    "questions" : [ {
-      "question_type" : "MCQ",
-      "text" : "How did you connect to the client?",
-      "points" : 0,
-      "penalty" : 0,
-      "order" : 0,
-      "answer_required" : true,
-      "choices" : [ {
-        "text" : "Graphical user interface of KYPO",
-        "correct" : false,
-        "order" : 0
-      }, {
-        "text" : "SSH",
-        "correct" : false,
-        "order" : 1
-      } ]
-    }, {
-      "question_type" : "EMI",
-      "text" : "Do you agree that... ?",
-      "points" : 0,
-      "penalty" : 0,
-      "order" : 1,
-      "answer_required" : true,
-      "extended_matching_options" : [ {
-        "text" : "Very much",
-        "order" : 0
-      }, {
-        "text" : "A little bit",
-        "order" : 1
-      }, {
-        "text" : "Not really",
-        "order" : 2
-      }, {
-        "text" : "Not at all",
-        "order" : 3
-      } ],
-      "extended_matching_statements" : [ {
-        "text" : "Everything went smoothly",
-        "order" : 0
-      }, {
-        "text" : "The User Interface is nice",
-        "order" : 1
-      }, {
-        "text" : "The test was easy",
-        "order" : 2
-      } ]
-    }, {
-      "question_type" : "FFQ",
-      "text" : "How would you improve this demo?",
-      "points" : 0,
-      "penalty" : 0,
-      "order" : 2,
-      "answer_required" : false
-    } ],
-    "instructions" : "Please answer the questions. The last question is voluntary.",
-    "assessment_type" : "QUESTIONNAIRE"
-  } ],
-  "estimated_duration" : 45,
-  "variant_sandboxes" : false
+  "title": "CyberRangeCZ Platform - Demo Content (terminal)",
+  "description": "The demo contains all types of levels to demonstrate the training capabilities of the CyberRangeCZ Platform.",
+  "prerequisites": [],
+  "outcomes": [
+    "Scanning ports with nmap",
+    "Password guessing with hydra at telnet",
+    "Privilege escalation using misconfigured sudo"
+  ],
+  "state": "UNRELEASED",
+  "levels": [
+    {
+      "title": "Info",
+      "level_type": "INFO_LEVEL",
+      "order": 0,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "content": "# Demo Summary\n\nThe demo contains all types of levels to demonstrate the training capabilities of the CyberRangeCZ Platform.\n\n**Note**: It is recommended to use the Chrome browser. In case you run into difficulties with submitting the answer, try to Log out and Log in again. \n\n| Level | Level Name | Level Type |\n|:------:|------| ------ |\n| 1. | Info | Info |\n| 2. | Finding Open Ports | Training |\n| 3. | Connecting via Telnet | Training |\n| 4. | Privilege Escalation | Training |\n| 5. | Test Example | Assessment |\n| 6. | Assessment Example | Assessment |\n\n## Info\n\nThe level contains this information page.\n\n## Finding open ports\n\nThe level provides information on how to connect to a sandbox. In general, there are two possible options. The first option is to use the platform'a GUI to connect to the machine via Spice console. The second option is to connect through SSH with a generated config file and keys.\n\nThis level's small challenge is to scan open ports.\n\n## Connecting Via Telnet\n\nThis level's challenge is to connect to the server machine without a password and discover the secret answer.\n\n## Privilege Escalation\n\nThis demo's bigger challenge is to gain root privileges and read an answer available only to a root user. Enjoy! \n\n## Test Example\n\nThe level contains a simple example of a test. Tests can be used, for example, for additional testing of students for grading purposes.\n\n## Assessment Example\n\nThe level contains a simple example of a test. For example, the tests can be used to verify the learning outcomes or for collecting feedback.\n"
+    },
+    {
+      "title": "Get Access",
+      "level_type": "ACCESS_LEVEL",
+      "order": 1,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "passkey": "start",
+      "cloud_content": "Your first task is to access the sandbox, where you will complete all following tasks. After you have successfully connected, Submit the answer **`start`**.\n\n### Sandbox access\n1. In the topology overview on the right, right-click on **`client`** and then click on **`Open console`**, and a new pop-up window will appear. \n2. Login with username **`user`** and password **`Password123`**.\n\nAlternatively, you can use SSH to connect to the machine. SSH access makes it easier to copy-paste commands and flags, but requires more steps to set up. See [documentation](https://docs.platform.cyberrange.cz/user-guide-advanced/sandboxes/sandbox-access/#user-access) for more details.",
+      "local_content": "This sandbox has not been tested for use with local sandbox."
+    },
+    {
+      "title": "Finding open ports",
+      "level_type": "TRAINING_LEVEL",
+      "order": 2,
+      "estimated_duration": 10,
+      "minimal_possible_solve_time": 1,
+      "answer": null,
+      "answer_variable_name": "telnet_port",
+      "content": "Your goal is to get access to the **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The answer is the port number.\n",
+      "solution": "1. Look for open ports using the command **`nmap -p- 192.168.20.5`**. You can see **ssh** running on port **22** and some other service running on port **${ANSWER}**. This has to be the **telnet** service.\n\n2. Enter **`${ANSWER}`** as the answer.",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Tool to find open ports",
+          "content": "A common tool to find open ports is **nmap**. You can learn how to use nmap using **`nmap --help`** or by searching online.",
+          "hint_penalty": 20,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 50,
+      "variant_answers": true,
+      "reference_solution": [],
+      "mitre_techniques": [
+        {
+          "technique_key": "TA0007.T1046"
+        },
+        {
+          "technique_key": "TA0043.T1595"
+        }
+      ],
+      "expected_commands": [
+        "ls",
+        "nmap"
+      ],
+      "commands_required": true
+    },
+    {
+      "title": "Connecting via Telnet",
+      "level_type": "TRAINING_LEVEL",
+      "order": 3,
+      "estimated_duration": 10,
+      "minimal_possible_solve_time": 1,
+      "answer": null,
+      "answer_variable_name": "alice_flag",
+      "content": "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The answer is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\n",
+      "solution": "Replace **${telnet_port}** with the port number from the previous level:\n\n1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:${telnet_port}`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 ${telnet_port}`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the answer you can use **`cat flag.txt`**. The answer is **`${ANSWER}`**\n",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Connecting using telnet",
+          "content": "The command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet 192.168.20.5 ${telnet_port}`**. You will be prompted to enter an username and password.",
+          "hint_penalty": 10,
+          "order": 1
+        },
+        {
+          "title": "Tool for password attacks",
+          "content": "Common tools for password attacks are **hydra** and **medusa**. Consult their help commands or man pages to find appropriate options to perform the attack. You can use the list of common passwords stored in your home directory. Use **`ls`** to list files.",
+          "hint_penalty": 20,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 100,
+      "variant_answers": true,
+      "reference_solution": [],
+      "mitre_techniques": [
+        {
+          "technique_key": "TA0006.T1110"
+        }
+      ],
+      "expected_commands": [
+        "hydra",
+        "telnet",
+        "cat"
+      ],
+      "commands_required": true
+    },
+    {
+      "title": "Privilege Escalation",
+      "level_type": "TRAINING_LEVEL",
+      "order": 4,
+      "estimated_duration": 15,
+      "minimal_possible_solve_time": 1,
+      "answer": null,
+      "answer_variable_name": "root_flag",
+      "content": "Great, you managed to login to the server as **alice** but there is not much you can do as **alice**. Can you find a way to become **root**? The answer is in the root directory.\n\nOne of common privilege escalation attack vectors is badly configured **sudo**. To see what you can use sudo for, use the **`sudo --list`** command.\n",
+      "solution": "1. You can see that the only command you can use sudo on is **`less /home/alice/flag.txt`**. There is not much to see in the flag, but you can run this as **root**. Is there a way to get a shell?\n\n2. There is, all you have to do is enter **`!sh`** while running the **`sudo less /home/alice/flag.txt`** to get a root shell.\n\n3. To get the answer, use **`cd`** to enter the root directory and **`cat flag.txt`** to read the answer. The answer is **`${ANSWER}`**",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Using the privilege escalation",
+          "content": "You have probably figured out that you can run **sudo** on a certain **less** command. To get a shell run **`sudo less /home/alice/flag.txt`**, enter the password. Type **`!sh`** to get a root shell.",
+          "hint_penalty": 60,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 100,
+      "variant_answers": true,
+      "reference_solution": [],
+      "mitre_techniques": [
+        {
+          "technique_key": "TA0004.T1068"
+        },
+        {
+          "technique_key": "TA0043.T1592"
+        }
+      ],
+      "expected_commands": [
+        "cat",
+        "ls",
+        "sudo"
+      ],
+      "commands_required": true
+    },
+    {
+      "title": "Test Example",
+      "level_type": "ASSESSMENT_LEVEL",
+      "order": 5,
+      "estimated_duration": 5,
+      "minimal_possible_solve_time": null,
+      "questions": [
+        {
+          "question_type": "FFQ",
+          "text": "What was the name of a file storing the answer?",
+          "points": 100,
+          "penalty": 0,
+          "order": 0,
+          "answer_required": true,
+          "choices": [
+            {
+              "text": "flag.txt",
+              "correct": true,
+              "order": 0
+            }
+          ]
+        },
+        {
+          "question_type": "MCQ",
+          "text": "The Telnet service was running on the default port.",
+          "points": 100,
+          "penalty": 0,
+          "order": 1,
+          "answer_required": true,
+          "choices": [
+            {
+              "text": "Yes",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "No",
+              "correct": true,
+              "order": 1
+            }
+          ]
+        },
+        {
+          "question_type": "EMI",
+          "text": "Match services with their default port numbers.",
+          "points": 100,
+          "penalty": 0,
+          "order": 2,
+          "answer_required": true,
+          "extended_matching_options": [
+            {
+              "text": "22",
+              "order": 0
+            },
+            {
+              "text": "23",
+              "order": 1
+            },
+            {
+              "text": "80",
+              "order": 2
+            },
+            {
+              "text": "443",
+              "order": 3
+            }
+          ],
+          "extended_matching_statements": [
+            {
+              "text": "HTTP",
+              "order": 0,
+              "correct_option_order": 2
+            },
+            {
+              "text": "SSH",
+              "order": 1,
+              "correct_option_order": 0
+            },
+            {
+              "text": "HTTPS",
+              "order": 2,
+              "correct_option_order": 3
+            },
+            {
+              "text": "Telnet",
+              "order": 3,
+              "correct_option_order": 1
+            }
+          ]
+        }
+      ],
+      "instructions": "A simple test.",
+      "assessment_type": "TEST"
+    },
+    {
+      "title": "Assessment Example",
+      "level_type": "ASSESSMENT_LEVEL",
+      "order": 6,
+      "estimated_duration": 5,
+      "minimal_possible_solve_time": null,
+      "questions": [
+        {
+          "question_type": "MCQ",
+          "text": "How did you connect to the client?",
+          "points": 0,
+          "penalty": 0,
+          "order": 0,
+          "answer_required": true,
+          "choices": [
+            {
+              "text": "Graphical user interface of CyberRangeCZ Platform",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "SSH",
+              "correct": false,
+              "order": 1
+            }
+          ]
+        },
+        {
+          "question_type": "EMI",
+          "text": "Do you agree that... ?",
+          "points": 0,
+          "penalty": 0,
+          "order": 1,
+          "answer_required": true,
+          "extended_matching_options": [
+            {
+              "text": "Very much",
+              "order": 0
+            },
+            {
+              "text": "A little bit",
+              "order": 1
+            },
+            {
+              "text": "Not really",
+              "order": 2
+            },
+            {
+              "text": "Not at all",
+              "order": 3
+            }
+          ],
+          "extended_matching_statements": [
+            {
+              "text": "Everything went smoothly",
+              "order": 0
+            },
+            {
+              "text": "The User Interface is nice",
+              "order": 1
+            },
+            {
+              "text": "The test was easy",
+              "order": 2
+            }
+          ]
+        },
+        {
+          "question_type": "FFQ",
+          "text": "How would you improve this demo?",
+          "points": 0,
+          "penalty": 0,
+          "order": 2,
+          "answer_required": false
+        }
+      ],
+      "instructions": "Please answer the questions. The last question is voluntary.",
+      "assessment_type": "QUESTIONNAIRE"
+    }
+  ],
+  "estimated_duration": 45,
+  "variant_sandboxes": false
 }

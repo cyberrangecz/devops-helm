@@ -1,0 +1,6 @@
+apiVersion: v2
+name: crczp-postgres
+description: PostgreSQL Helm chart
+type: application
+version: 0.9.0
+appVersion: "13-alpine"
