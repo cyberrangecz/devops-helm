@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-training/training-service
-  tag: v0.0.4
+  tag: v0.0.6
 
 environments:
   - name: SERVICE_PRECONDITION
