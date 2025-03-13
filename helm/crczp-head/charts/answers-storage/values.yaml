@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-answers-storage/answers-storage-service
-  tag: v0.0.1
+  tag: v0.0.2
 
 mounts:
   - name: answers-storage
