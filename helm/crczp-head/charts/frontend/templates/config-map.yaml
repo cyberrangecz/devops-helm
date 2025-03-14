@@ -10,6 +10,8 @@ data:
         "uagAdmin": "ROLE_USER_AND_GROUP_ADMINISTRATOR",
         "trainingDesigner": "ROLE_TRAINING_DESIGNER",
         "trainingOrganizer": "ROLE_TRAINING_ORGANIZER",
+        "adaptiveTrainingDesigner": "ROLE_ADAPTIVE_TRAINING_DESIGNER",
+        "adaptiveTrainingOrganizer": "ROLE_ADAPTIVE_TRAINING_ORGANIZER",
         "trainingTrainee": "ROLE_TRAINING_TRAINEE",
         "sandboxDesigner": "ROLE_SANDBOX-SERVICE_DESIGNER",
         "sandboxOrganizer": "ROLE_SANDBOX-SERVICE_ORGANIZER"
