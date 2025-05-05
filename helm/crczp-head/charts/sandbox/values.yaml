@@ -101,3 +101,5 @@ aws:
   availabilityZone: eu-central-1a
   baseVpc: BaseNet
   baseSubnet: BaseSubnetA
+
+keystoneCA:
