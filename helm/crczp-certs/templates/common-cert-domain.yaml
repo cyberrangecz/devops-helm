@@ -1,4 +1,4 @@
-{{- if and (not (and .Values.global.tlsPrivateKey .Values.global.tlsPublicKey)) (not (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost)) }}
+{{- if and (not (and .Values.global.tlsPrivateKey .Values.global.tlsPublicKey)) (not (mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" .Values.global.headHost)) (not .Values.selfSigned) }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
