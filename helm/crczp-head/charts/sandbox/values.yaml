@@ -68,6 +68,7 @@ manUser: debian
 proxyHost:
 proxyUser:
 proxyKey:
+proxyPort:
 ansibleDockerNetwork: host
 djangoSecretKey:
 flavorMapping: {}
