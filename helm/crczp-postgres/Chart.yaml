@@ -3,4 +3,3 @@ name: crczp-postgres
 description: PostgreSQL Helm chart
 type: application
 version: 1.0.0
-appVersion: "13-alpine"
