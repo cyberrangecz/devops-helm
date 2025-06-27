@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/frontend-training-portal/training-portal
-  tag: v1.0.0
+  tag: v1.0.4
 
 mounts:
   - name: config
