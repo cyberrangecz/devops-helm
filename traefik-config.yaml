@@ -9,6 +9,8 @@ spec:
       - "--log.level=INFO"
       - "--ping"
       - "--metrics.prometheus"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
 
     deployment:
       kind: DaemonSet
@@ -24,22 +26,19 @@ spec:
     ports:
       web:
         port: 80
-        expose: true
         protocol: TCP
-        exposePort: 80
-        redirectTo: websecure
+        exposedPort: 80
       websecure:
         port: 443
-        expose: true
         protocol: TCP
-        exposePort: 443
+        exposedPort: 443
         tls:
-          enable: true
-
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: null
-
+          enabled: true
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: null
     # run as root to 80 and 443 port listen permission
     securityContext:
       capabilities:

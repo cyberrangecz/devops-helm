@@ -30,7 +30,7 @@ global:
     db: 0
 
   postgres:
-    serviceName: postgres
+    serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
     user: postgres
     password: password

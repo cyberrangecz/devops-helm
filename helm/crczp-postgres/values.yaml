@@ -1,14 +1,8 @@
-postgres:
+cluster:
   name: postgres
-  image:
-    url: postgres
-    tag: 13-alpine
-  ports:
-    - port: 5432
-      protocol: TCP
-      probe: true
-  password: password
-  pvc:
-    size: 500Mi
-
-parameters:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17-standard-bookworm
+  storageSize: 5Gi
+  superuserSecret: cnpg-superuser
+  superuserPassword: password
+  parameters:

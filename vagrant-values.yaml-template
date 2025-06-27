@@ -29,7 +29,7 @@ global:
       responseType: code
       refreshToken: true
   postgres:
-    serviceName: postgres
+    serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
     user: postgres
     password: password
@@ -60,3 +60,6 @@ sandbox:
     user: git
     ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
     ansibleNetworkingRev: v1.0.0
+
+cluster:
+  superuserPassword: password
