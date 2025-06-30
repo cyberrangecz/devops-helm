@@ -30,15 +30,15 @@ spec:
             value: {{ $.Values.guacd.name | quote }}
           - name: GUACD_PORT
             value: {{ (index $.Values.guacd.ports 0).port | quote }}
-          - name: POSTGRES_USER
+          - name: POSTGRESQL_USERNAME
             value: {{ $.Values.postgresServices.guacamole.dbUser | quote }}
-          - name: POSTGRES_PASSWORD
+          - name: POSTGRESQL_PASSWORD
             value: {{ $.Values.postgresServices.guacamole.dbPassword | quote }}
-          - name: POSTGRES_HOSTNAME
+          - name: POSTGRESQL_HOSTNAME
             value: {{ $.Values.global.postgres.serviceName | quote }}
-          - name: POSTGRES_DATABASE
+          - name: POSTGRESQL_DATABASE
             value: {{ $.Values.postgresServices.guacamole.dbName | quote }}
-          - name: POSTGRES_PORT
+          - name: POSTGRESQL_PORT
             value: {{ $.Values.global.postgres.port | quote }}
           - name: LOGBACK_LEVEL
             value: DEBUG
