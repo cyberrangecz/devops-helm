@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.services.guacamole.name }}-configmap
+  labels: {{- include "common.labels" (dict "name" .Values.global.services.guacamole.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+data:
+  training.properties: |
+    ## server port for a given service, e.g., 8089
+    server.port={{ .Values.global.services.guacamole.port }}
+    ## server context path (the base url for the service), e.g., /guacamole/api/v1
+    server.servlet.context-path={{ .Values.global.services.guacamole.contextPath }}
+    ## microservice name which is used in user management service for identification of this service, e.g. training
+    microservice.name={{ .Values.global.services.guacamole.name }}
+
+    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
+    {{- if .Values.global.corsWhitelist }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
+    {{- else }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }}
+    {{- end }}
+
+    # calling user-and-group project, e.g., https://localhost:8084/user-and-group/api/v1
+    user-and-group-service.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
+    # calling sandbox-service, e.g., http://localhost:8080/sandbox-service/api/v1
+    sandbox-service.uri=http://{{ .Values.global.services.sandbox.name }}:{{ .Values.global.services.sandbox.port }}{{ .Values.global.services.sandbox.contextPath }}
+    # calling elasticsearch-service, e.g., http://elastic-service:8085/elastic/api/v1
+    elasticsearch-service.uri=http://{{ .Values.global.services.elasticsearch.name }}:{{ .Values.global.services.elasticsearch.port }}{{ .Values.global.services.elasticsearch.contextPath }}
+
+    # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
+    central.syslog.ip={{ .Values.global.headHost }}
+
+    # OpenID Connect (OIDC) configuration settings for a resource servers configuration
+    # Allowed OIDC provider, e.g., https://oidc.provider.cz/oidc/, https://crczp-oidc-idp.cz/oidc/
+{{- range $index, $element := .Values.global.oidcProviders }}
+    crczp.identity.providers[{{ $index }}].issuer={{ $element.issuerIdentifier | default $element.url }}
+    crczp.identity.providers[{{ $index }}].userInfoEndpoint={{ $element.userInfoUrl | default "" }}
+{{- end }}
+
+    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.guacamole.dbName }}
+    spring.datasource.username={{ .Values.global.postgresServices.guacamole.dbUser }}
+    spring.datasource.password={{ .Values.global.postgresServices.guacamole.dbPassword }}
+    spring.datasource.driver-class-name=org.postgresql.Driver
+    {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
+    spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
+    spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
+    {{- end }}
+
+    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
+    spring.data.jpa.repositories.enabled=true
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.hibernate.ddl-auto=
+    spring.jpa.show-sql=true
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
+
+    # spring-cloud
+    spring.cloud.refresh.enabled = false
+    ## disables the settings in application.properties in resource folder
+    spring.jmx.enabled=false
+    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
+    spring.jackson.serialization.write_dates_as_timestamps=false
+    ## all atributes in JSON are in SNAKE_CASE
+    spring.jackson.property-naming-strategy=SNAKE_CASE
+
+    ## the requirement for ssl, e.g., false
+    security.require-ssl=false
+    management.health.refresh.enabled=false
+
+    # Logging
+    ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
+    logging.level.cz.cyberrange.platform=DEBUG
+    crczp.audit.syslog.host={{ .Values.global.crczpSyslogServiceName }}
+    crczp.audit.syslog.port=514
+    crczp.audit.messages.format=guacamole-service --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} --- %msg%n
+
+    elasticsearch.protocol=http
+    elasticsearch.host={{ .Values.global.crczpElasticsearchServiceName }}
+    elasticsearch.port=9200

@@ -1,3 +1,0 @@
-{{- if .Values.guacamole.authTokenMaxValidity }}
-{{- include "common.pvc" (dict "name" .Values.guacamole.name "pvc" .Values.pvc "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
-{{- end }}

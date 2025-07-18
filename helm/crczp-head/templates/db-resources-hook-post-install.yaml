@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
     - name: head-post-install-job
-      image: postgres:13-alpine
+      image: ghcr.io/cloudnative-pg/postgresql:17-standard-bookworm
       imagePullPolicy: IfNotPresent
       command:
         - "/bin/bash"

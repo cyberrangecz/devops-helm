@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.cluster.superuserSecret }}
+type: Opaque
+stringData:
+  username: postgres
+  password: {{ .Values.cluster.superuserPassword | quote }}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Values.cluster.name }}
+spec:
+  instances: {{ .Values.cluster.instances }}
+  imageName: {{ .Values.cluster.image }}
+  storage:
+    size: {{ .Values.cluster.storageSize }}
+  superuserSecret:
+    name: {{ .Values.cluster.superuserSecret }}
+  enableSuperuserAccess: true
+{{- if .Values.cluster.parameters }}
+  postgresql:
+    parameters:
+{{ toYaml .Values.cluster.parameters | indent 6 }}
+{{- end }}
