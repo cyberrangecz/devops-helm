@@ -64,6 +64,10 @@ global:
       dbName: user-and-group
       dbUser: user-and-group
       dbPassword: user-and-group
+    guacamole:
+      dbName: crczp-guacamole
+      dbUser: crczp-guacamole
+      dbPassword: crczp-guacamole
 
   services:
     angularFrontend:
@@ -111,3 +115,7 @@ global:
       name: uag-service
       port: 8084
       contextPath: /user-and-group/api/v1/
+    guacamole:
+      name: guacamole-service
+      port: 8089
+      contextPath: /guacamole/api/v1/
