@@ -5,7 +5,7 @@ image:
   tag: v1.0.0
 
 mounts:
-  - name: config
+  config:
     extension: .json
     mountPath: /app/assets/
     isOneFile: true

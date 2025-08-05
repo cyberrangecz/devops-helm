@@ -5,11 +5,10 @@ image:
   tag: v1.0.0
 
 environments:
-  - name: SERVICE_PRECONDITION
-    value: uag-service:8084
+  SERVICE_PRECONDITION: uag-service:8084
 
 mounts:
-  - name: elasticsearch-service
+  elasticsearch-service:
     extension: .properties
     mountPath: /app/etc/
     isOneFile: true
@@ -17,7 +16,7 @@ mounts:
     type:
       configMap:
         name: elasticsearch-service-configmap
-  - name: tls
+  tls:
     extension: .crt
     mountPath: /srv/
     isOneFile: true

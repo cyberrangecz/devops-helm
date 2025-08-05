@@ -19,7 +19,7 @@ ports:
     protocol: UDP
 
 mounts:
-  - name: logstash
+  logstash:
     extension: .yml
     mountPath: /usr/share/logstash/config/
     isOneFile: true
@@ -27,7 +27,7 @@ mounts:
     type:
       configMap:
         name: crczp-logstash-configmap
-  - name: pipelines
+  pipelines:
     extension: .yml
     mountPath: /usr/share/logstash/config/
     isOneFile: true
@@ -35,7 +35,7 @@ mounts:
     type:
       configMap:
         name: crczp-logstash-configmap
-  - name: pipes
+  pipes:
     mountPath: /usr/share/logstash/pipeline/
     isOneFile: true
     subPath: false

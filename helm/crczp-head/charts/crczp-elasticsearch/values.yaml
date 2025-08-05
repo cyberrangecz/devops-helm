@@ -11,23 +11,16 @@ ports:
     probe: true
 
 environments:
-  - name: node.name
-    value: es01
-  - name: bootstrap.memory_lock
-    value: true
-  - name: discovery.type
-    value: single-node
-  - name: ES_JAVA_OPTS
-    value: -Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true
-  - name: cluster.max_shards_per_node
-    value: 5000
-  - name: xpack.security.enabled
-    value: false
-  - name: action.destructive_requires_name
-    value: false
+  node.name: es01
+  bootstrap.memory_lock: true
+  discovery.type: single-node
+  ES_JAVA_OPTS: -Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true
+  cluster.max_shards_per_node: 5000
+  xpack.security.enabled: false
+  action.destructive_requires_name: false
 
 mounts:
-  - name: data-elasticsearch
+  data-elasticsearch:
     mountPath: /usr/share/elasticsearch/data
     type:
       persistentVolumeClaim:

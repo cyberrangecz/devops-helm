@@ -1,3 +1,4 @@
+
 {{- define "common.deployment.header" -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -18,10 +19,11 @@ spec:
     metadata:
       labels: {{- include "common.labels" . | nindent 8 }}
     spec:
-    {{- if .serviceAccountName }}
+      {{- if .serviceAccountName }}
       serviceAccountName: {{ .serviceAccountName }}
-    {{- end }}
+      {{- end }}
 {{- end }}
+
 {{- define "common.deployment.containers" }}
       containers:
         - name: {{ .name }}
@@ -34,9 +36,9 @@ spec:
           {{- end }}
           {{- if .Values.environments }}
           env:
-            {{- range .Values.environments }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+            {{- range $key, $value := .Values.environments }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
             {{- end }}
           {{- end }}
           {{- if not .portsDisabled }}
@@ -55,36 +57,37 @@ spec:
             {{- end }}
           {{- end }}
           volumeMounts:
-            {{- range .Values.mounts }}
-            - name: {{ .name | replace "_" "-" }}
-              mountPath: "{{ .mountPath }}{{ if .isOneFile }}{{ if .subPath }}{{ .name }}{{ .extension }}{{ end }}{{ end }}"
-              {{- if .subPath }}
-              subPath: "{{ .name }}{{ .extension }}"
+            {{- range $key, $mount := .Values.mounts }}
+            - name: {{ $key | replace "_" "-" }}
+              mountPath: "{{ $mount.mountPath }}{{ if $mount.isOneFile }}{{ if $mount.subPath }}{{ $key }}{{ $mount.extension }}{{ end }}{{ end }}"
+              {{- if $mount.subPath }}
+              subPath: "{{ $key }}{{ $mount.extension }}"
               {{- end }}
             {{- end }}
 {{- end }}
+
 {{- define "common.deployment.volumes" }}
       volumes:
-        {{- range .Values.mounts }}
-        - name: {{ .name | replace "_" "-" }}
-          {{- toYaml .type | nindent 10 }}
-          {{- if .isOneFile }}
+        {{- range $key, $mount := .Values.mounts }}
+        - name: {{ $key | replace "_" "-" }}
+          {{- toYaml $mount.type | nindent 10 }}
+            {{- if $mount.isOneFile }}
             items:
-              {{- if .items }}
-              {{- range .items }}
-                - key: "{{ .name }}{{ .extension }}"
-                  path: "{{ .name }}{{ .extension }}"
-                  {{- if .mode }}
-                  mode: {{ .mode }}
-                  {{- end }}
-              {{- end }}
-              {{- else }}
+              {{- if $mount.items }}
+              {{- range $mount.items }}
               - key: "{{ .name }}{{ .extension }}"
                 path: "{{ .name }}{{ .extension }}"
                 {{- if .mode }}
                 mode: {{ .mode }}
                 {{- end }}
               {{- end }}
-          {{- end }}
+              {{- else }}
+              - key: "{{ $key }}{{ $mount.extension }}"
+                path: "{{ $key }}{{ $mount.extension }}"
+                {{- if $mount.mode }}
+                mode: {{ $mount.mode }}
+                {{- end }}
+              {{- end }}
+            {{- end }}
         {{- end }}
 {{- end }}

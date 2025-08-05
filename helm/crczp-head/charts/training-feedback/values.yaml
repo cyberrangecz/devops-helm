@@ -5,7 +5,7 @@ image:
   tag: v1.0.0
 
 mounts:
-  - name: training-feedback
+  training-feedback:
     extension: .properties
     mountPath: /app/etc/
     isOneFile: true
@@ -13,7 +13,7 @@ mounts:
     type:
       configMap:
         name: training-feedback-service-configmap
-  - name: tls
+  tls:
     extension: .crt
     mountPath: /srv/
     isOneFile: true

@@ -5,7 +5,7 @@ image:
   tag: v1.0.0
 
 mounts:
-  - name: adaptive-smart-assistant
+  adaptive-smart-assistant:
     extension: .properties
     mountPath: /app/etc/
     isOneFile: true

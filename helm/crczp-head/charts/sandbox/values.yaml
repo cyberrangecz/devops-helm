@@ -5,11 +5,13 @@ image:
   tag: v1.1.0
 
 environments:
-  - name: SERVICE_PRECONDITION
-    value: uag-service:8084
+  SERVICE_PRECONDITION: "uag-service:8084"
+  DJANGO_ADMIN_USER: crczp-admin
+  DJANGO_ADMIN_PASSWORD:
+  DJANGO_ADMIN_EMAIL: crczp-admin@example.com
 
 mounts:
-  - name: config
+  config:
     extension: .yml
     mountPath: /app/
     isOneFile: true
@@ -17,16 +19,16 @@ mounts:
     type:
       secret:
         secretName: sandbox-service-secret
-  - name: tls
+  tls:
     extension: .crt
     mountPath: /usr/local/share/ca-certificates/
     isOneFile: true
-    subPath: false
+    subPath: true
     type:
       secret:
         secretName: crczp-certs
-  - name: proxy-key
-    extension:
+  proxy-key:
+    extension: ""
     mountPath: /root/.ssh/
     isOneFile: true
     subPath: true
@@ -34,8 +36,8 @@ mounts:
     type:
       secret:
         secretName: proxy-key
-  - name: ansible-runner-vol
-    extension:
+  ansible-runner-vol:
+    extension: ""
     mountPath: /var/opt/crczp/ansible-runner-volumes
     isOneFile: false
     type:

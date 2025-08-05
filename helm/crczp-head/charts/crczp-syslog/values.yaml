@@ -18,7 +18,7 @@ ports:
     protocol: TCP
 
 mounts:
-  - name: conf-d
+  conf-d:
     mountPath: /etc/syslog-ng/conf.d/
     isOneFile: true
     subPath: false
@@ -30,7 +30,7 @@ mounts:
         extension: .conf
       - name: syslog-sandbox
         extension: .conf
-  - name: syslog-ng
+  syslog-ng:
     extension: .conf
     mountPath: /etc/syslog-ng/
     isOneFile: true

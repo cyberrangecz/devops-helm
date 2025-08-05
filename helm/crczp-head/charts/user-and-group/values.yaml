@@ -5,7 +5,7 @@ image:
   tag: v1.0.0
 
 mounts:
-  - name: configs
+  configs:
     mountPath: /app/etc/
     isOneFile: true
     subPath: false
@@ -19,7 +19,7 @@ mounts:
         extension: .yml
       - name: exported-local-oidc-users
         extension: .yml
-  - name: tls
+  tls:
     extension: .crt
     mountPath: /srv/
     isOneFile: true

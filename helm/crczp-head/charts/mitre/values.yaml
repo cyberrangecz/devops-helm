@@ -5,11 +5,10 @@ image:
   tag: 1.0.0
 
 environments:
-  - name: SERVICE_PRECONDITION
-    value: uag-service:8084
+  SERVICE_PRECONDITION: uag-service:8084
 
 mounts:
-  - name: config
+  config:
     extension: .yml
     mountPath: /app/
     isOneFile: true
