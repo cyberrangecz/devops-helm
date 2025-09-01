@@ -44,6 +44,10 @@ global:
       dbName: crczp-answers-storage
       dbUser: crczp-answers-storage
       dbPassword: crczp-answers-storage
+    guacamole:
+      dbName: guacamole
+      dbUser: guacamole
+      dbPassword: guacamole
     sandbox:
       dbName: sandbox-service
       dbUser: sandbox-service
@@ -84,6 +88,10 @@ global:
       name: elasticsearch-service
       port: 8085
       contextPath: /elasticsearch-service/api/v1/
+    guacamole:
+      name: guacamole-service
+      port: 8089
+      contextPath: /guacamole/api/v1/
     mitre:
       name: mitre-service
       port: 8001

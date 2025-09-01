@@ -5,10 +5,6 @@ type: application
 version: 1.5.0
 appVersion: v2025.03
 dependencies:
-  - name: crczp-guacamole
-    version: 1.0.0
-    repository: file://charts/crczp-guacamole
-    condition: crczp-guacamole.enabled
   - name: common
     version: 1.0.0
     repository: file://../charts/common
