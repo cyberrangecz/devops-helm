@@ -1,0 +1,15 @@
+{{- $ports := list (dict "port" .Values.global.services.guacamole.port "protocol" "TCP" "probe" true) -}}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.guacamole.name "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.containers" (dict "name" .Values.global.services.guacamole.name "ports" $ports "Values" .Values) }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "/opt/java/openjdk/bin/keytool -importcert -alias crczp -file /srv/tls.crt -cacerts -storepass changeit -noprompt"
+      {{- if .Values.global.imageCredentials.username }}
+      imagePullSecrets:
+        - name: github-auth-secret
+      {{- end }}
+{{- include "common.deployment.volumes" (dict "Values" .Values) }}

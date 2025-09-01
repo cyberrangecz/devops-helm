@@ -1,0 +1,9 @@
+apiVersion: v2
+name: guacamole-service
+description: Guacamole service Helm chart
+type: application
+version: 1.0.0
+dependencies:
+  - name: common
+    version: 1.0.0
+    repository: file://../common

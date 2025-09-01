@@ -1,0 +1,11 @@
+
+name: guacd
+image:
+  url: guacamole/guacd
+  tag: 1.6.0
+ports:
+  - port: 4822
+    protocol: TCP
+    probe: true
+pvc:
+  size: 500Mi

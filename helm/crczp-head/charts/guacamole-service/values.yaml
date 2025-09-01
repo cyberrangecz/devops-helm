@@ -1,0 +1,24 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cyberrangecz/backend-guacamole/guacamole-service
+  tag: v0.0.3-dev
+
+mounts:
+  guacamole-service:
+    extension: .properties
+    mountPath: /app/etc/
+    isOneFile: true
+    subPath: false
+    type:
+      configMap:
+        name: guacamole-service-configmap
+  tls:
+    extension: .crt
+    mountPath: /srv/
+    isOneFile: true
+    subPath: false
+    type:
+      secret:
+        secretName: crczp-certs
+

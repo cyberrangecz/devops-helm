@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+  labels: {{- include "common.labels" (dict "name" .Values.name "chart" $.Chart "release" $.Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{- include "common.matchLabels" (dict "name" .Values.name "release" $.Release)  | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels" (dict "name" .Values.name "chart" $.Chart "release" $.Release "extraLabels" .Values.extraLabels) | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.name }}
+          image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          ports:
+            {{- range .Values.ports }}
+            - containerPort: {{ .port }}
+              name: guacd-{{ .port }}
+            {{- end }}
+          readinessProbe:
+            {{- range .Values.ports }}
+            {{- if eq .protocol "TCP" }}
+            tcpSocket:
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            - name: data-{{ .Values.name }}
+              mountPath: /drive
+              subPath: drive
+            - name: data-{{ .Values.name }}
+              mountPath: /record
+              subPath: record
+      volumes:
+        - name: data-{{ .Values.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.name }}

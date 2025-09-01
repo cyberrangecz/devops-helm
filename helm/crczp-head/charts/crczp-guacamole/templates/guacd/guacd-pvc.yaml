@@ -1,1 +1,0 @@
-{{- include "common.pvc" (dict "name" .Values.guacd.name "pvc" .Values.guacd.pvc "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
