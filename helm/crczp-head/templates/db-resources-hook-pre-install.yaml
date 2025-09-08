@@ -12,14 +12,86 @@ spec:
     - name: pre-install-job
       image: ghcr.io/cloudnative-pg/postgresql:17-standard-bookworm
       imagePullPolicy: IfNotPresent
+      env:
+        - name: PGPASSWORD
+          value: {{ $postgres.password | quote }}
+        - name: PGHOST
+          value: {{ $postgres.serviceName | quote }}
+        - name: PGPORT
+          value: {{ $postgres.port | quote }}
+        - name: PGUSER
+          value: {{ $postgres.user | quote }}
+        - name: PGDATABASE
+          value: {{ $postgres.database | default "postgres" | quote }}
       command:
         - "/bin/bash"
         - "-c"
-        - | {{- range $k, $v := $postgresServices }}
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE USER "{{ $v.dbUser }}";' 2> /dev/null
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c "ALTER USER \"{{ $v.dbUser }}\" PASSWORD '{{ $v.dbPassword }}';" 2> /dev/null
-          PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} -c 'CREATE DATABASE "{{ $v.dbName }}" OWNER "{{ $v.dbUser }}";' 2> /dev/null
+        - |
+          set -e
+          set -o pipefail
+
+          echo "Waiting for PostgreSQL to become fully available..."
+          for i in {1..30}; do
+            if pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE"; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Postgres is unavailable - attempt $i/30, sleeping..."
+            sleep 2
+          done
+
+          # Final connectivity test
+          psql -c "SELECT 1" || exit 1
+          echo "PostgreSQL connection verified!"
+
+          echo "Creating database users and databases..."
+
+          {{- range $k, $v := $postgresServices }}
+          echo "Processing service: {{ $k }}"
+
+          # Create or update user
+          echo "Creating/updating user: {{ $v.dbUser }}"
+          psql -c "
+          DO \$\$
+          DECLARE
+            user_exists BOOLEAN;
+          BEGIN
+            SELECT EXISTS (
+              SELECT 1 FROM pg_catalog.pg_roles WHERE rolname = '{{ $v.dbUser }}'
+            ) INTO user_exists;
+
+            IF NOT user_exists THEN
+              CREATE ROLE \"{{ $v.dbUser }}\" WITH LOGIN PASSWORD '{{ $v.dbPassword }}';
+              RAISE NOTICE 'Role \"{{ $v.dbUser }}\" created successfully';
+            ELSE
+              BEGIN
+                ALTER ROLE \"{{ $v.dbUser }}\" WITH PASSWORD '{{ $v.dbPassword }}';
+                RAISE NOTICE 'Password updated for role \"{{ $v.dbUser }}\"';
+              EXCEPTION WHEN OTHERS THEN
+                RAISE NOTICE 'Could not update password for role \"{{ $v.dbUser }}\", may require superuser privileges';
+              END;
+            END IF;
+          END
+          \$\$;"
+
+          # Create database
+          echo "Creating database: {{ $v.dbName }}"
+          DB_EXISTS=$(psql -tAc "SELECT 1 FROM pg_database WHERE datname='{{ $v.dbName }}'")
+          if [ -z "$DB_EXISTS" ]; then
+            psql -c "CREATE DATABASE \"{{ $v.dbName }}\" OWNER \"{{ $v.dbUser }}\";"
+            echo "Database {{ $v.dbName }} created successfully"
+          else
+            echo "Database {{ $v.dbName }} already exists"
+          fi
+
+          # Grant privileges on the database
+          echo "Granting privileges for {{ $v.dbUser }} on database {{ $v.dbName }}..."
+          psql -d "{{ $v.dbName }}" -c "GRANT ALL PRIVILEGES ON DATABASE \"{{ $v.dbName }}\" TO \"{{ $v.dbUser }}\";" || echo "Failed to grant database privileges"
+
+          echo "Completed processing for service: {{ $k }}"
+          echo "---"
           {{- end }}
-          exit 0
+
+          echo "All database resources created successfully."
   restartPolicy: Never
-  terminationGracePeriodSeconds: 0
+  terminationGracePeriodSeconds: 10

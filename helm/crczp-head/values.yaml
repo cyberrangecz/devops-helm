@@ -92,6 +92,7 @@ global:
       name: guacamole-service
       port: 8089
       contextPath: /guacamole/api/v1/
+      ingressAutoexpose: true
     mitre:
       name: mitre-service
       port: 8001
