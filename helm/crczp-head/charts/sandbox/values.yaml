@@ -63,8 +63,8 @@ sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
 manFlavor: standard.small
-manImage: debian-12-x86_64
-manUser: debian
+manImage: ubuntu-noble-x86_64
+manUser: ubuntu
 proxyHost:
 proxyUser:
 proxyKey:
