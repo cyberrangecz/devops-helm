@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-training/training-service
-  tag: v1.0.0
+  tag: v1.2.1
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084

@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/mitre-technique-service
-  tag: 1.0.0
+  url: ghcr.io/cyberrangecz/backend-mitre-technique-service/mitre-technique-service
+  tag: v1.1.0
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084

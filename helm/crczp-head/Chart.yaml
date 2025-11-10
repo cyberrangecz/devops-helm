@@ -2,8 +2,8 @@ apiVersion: v2
 name: crczp-head
 description: A Helm umbrella chart for deploying a head services
 type: application
-version: 1.5.0
-appVersion: v2025.03
+version: 2.0.0
+appVersion: v2025.11
 dependencies:
   - name: common
     version: 1.0.0

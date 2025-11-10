@@ -11,7 +11,6 @@ spec:
   client:
     attributes:
       pkce.code.challenge.method: S256
-      post.logout.redirect.uris: "https://{{ $.Values.global.headHost }}/login"
     clientId: {{ range $.Values.global.oidcProviders }}{{- if contains "keycloak" .url }}{{ .clientId }}{{- end }}{{- end }}
     clientAuthenticatorType: client-secret
     defaultClientScopes:

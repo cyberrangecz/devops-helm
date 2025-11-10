@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
-  tag: v1.2.4
+  tag: v1.3.1
 
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
@@ -89,14 +89,14 @@ redis:
 ansibleRunner:
   image:
     url: ghcr.io/cyberrangecz/crczp-ansible-runner
-    tag: 1.0.0
+    tag: 1.1.0
 
 gitConfig:
   providers: {}
   #providers: {"https://github.com/": "TOKEN"}
   user: git
   ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-  ansibleNetworkingRev: v1.0.0
+  ansibleNetworkingRev: v1.5.1
 
 aws:
   accessKeyId:
