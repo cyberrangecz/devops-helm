@@ -24,9 +24,9 @@ spec:
     {{- end }}
     - kind: Rule
       {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
-      match: PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && Method(`GET`, `PUT`, `DELETE`, `PATCH`, `HEAD`)
+      match: PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && (Method(`GET`) || Method(`PUT`) || Method(`DELETE`) || Method(`PATCH`) || Method(`HEAD`))
       {{- else }}
-      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && Method(`GET`, `PUT`, `DELETE`, `PATCH`, `HEAD`)
+      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && (Method(`GET`) || Method(`PUT`) || Method(`DELETE`) || Method(`PATCH`) || Method(`HEAD`))
       {{- end }}
       services:
         - kind: Service

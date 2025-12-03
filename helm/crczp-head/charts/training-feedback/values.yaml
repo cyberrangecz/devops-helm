@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-training-feedback/training-feedback-service
-  tag: v1.0.0
+  tag: v1.2.0
 
 mounts:
   training-feedback:

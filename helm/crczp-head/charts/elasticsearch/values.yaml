@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-elasticsearch-service/elasticsearch-service-service
-  tag: v1.0.0
+  tag: v1.2.0
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084

@@ -16,7 +16,7 @@ spec:
         - "/bin/bash"
         - "-c"
         - |
-          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 4 ]
+          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 5 ]
           do
               echo "Waiting for microservices to register"
               ((c++)) && ((c==40)) && break

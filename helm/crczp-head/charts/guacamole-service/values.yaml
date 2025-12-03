@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-guacamole/guacamole-service
-  tag: v0.0.3-dev
+  tag: v1.0.1
 
 mounts:
   guacamole-service:
@@ -21,4 +21,3 @@ mounts:
     type:
       secret:
         secretName: crczp-certs
-
