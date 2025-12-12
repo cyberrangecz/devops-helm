@@ -1,7 +1,7 @@
 replicasCount: 1
 
 image:
-  url: balabit/syslog-ng
+  url: ghcr.io/cyberrangecz/docker-dependencies-mirror/syslog-ng
   tag: latest
 
 externalPorts:

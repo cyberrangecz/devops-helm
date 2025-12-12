@@ -2,7 +2,7 @@
 {{- include "common.deployment.containers" (dict "name" .Values.global.crczpElasticsearchServiceName "ports" .Values.ports "Values" .Values) }}
       initContainers:
         - name: change-ownership-container
-          image: busybox
+          image: quay.io/curl/curl:latest
           command: ["/bin/chown","-R","1000:1000", "/usr/share/elasticsearch/data"]
           securityContext:
             runAsUser: 0
