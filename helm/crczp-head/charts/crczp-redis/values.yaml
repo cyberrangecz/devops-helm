@@ -1,7 +1,7 @@
 replicasCount: 1
 
 image:
-  url: redis
+  url: ghcr.io/cyberrangecz/docker-dependencies-mirror/redis
   tag: 6.2.6
 
 ports:

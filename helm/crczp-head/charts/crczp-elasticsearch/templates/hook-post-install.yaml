@@ -8,11 +8,11 @@ metadata:
 spec:
   containers:
     - name: {{ .Values.global.crczpElasticsearchServiceName }}-post-install-job-template-settings
-      image: rancher/curl
+      image: quay.io/curl/curl:latest
       imagePullPolicy: IfNotPresent
       command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"index_patterns":["*"], "order": 100, "settings":{ "number_of_shards": {{ .Values.numberOfShards }}, "number_of_replicas" : {{ .Values.numberOfReplicas }}, "index.max_result_window": {{ .Values.global.crczpElasticsearchServiceIndexMaxResultWindow }}, "index.refresh_interval": "{{ .Values.indexRefreshInterval }}" }}', 'http://{{ .Values.global.crczpElasticsearchServiceName }}:9200/_template/template_1']
     - name: {{ .Values.global.crczpElasticsearchServiceName }}-post-install-job-template-mappings
-      image: rancher/curl
+      image: quay.io/curl/curl:latest
       imagePullPolicy: IfNotPresent
       command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"template":"*","index_patterns":["crczp*"],"mappings":{"default":{"properties":{"timestamp":{"type":"date","format":"epoch_millis"},"timestamp_ms":{"type":"date","format":"epoch_millis"},"start_time":{"type":"date","format":"epoch_millis"},"end_time":{"type":"date","format":"epoch_millis"},"game_time":{"type":"date","format":"epoch_millis"}}}}}', 'http://{{ .Values.global.crczpElasticsearchServiceName }}:9200/_template/template_2']
   restartPolicy: Never
