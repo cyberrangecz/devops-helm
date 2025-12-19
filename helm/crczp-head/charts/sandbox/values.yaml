@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
-  tag: v1.5.0
+  tag: v1.6.0
 
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
@@ -54,6 +54,7 @@ stackNamePrefix: default0
 dnsNameServers:
   - 1.1.1.1
   - 1.0.0.1
+syslogDestinationPort: 515
 osAuthUrl:
 osApplicationCredentialId:
 osApplicationCredentialSecret:
@@ -96,7 +97,7 @@ gitConfig:
   #providers: {"https://github.com/": "TOKEN"}
   user: git
   ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-  ansibleNetworkingRev: v1.5.1
+  ansibleNetworkingRev: v1.7.0
 
 aws:
   accessKeyId:
