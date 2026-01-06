@@ -68,6 +68,7 @@ sandboxAnsibleTimeout: 7200
 manFlavor: standard.small
 manImage: ubuntu-noble-x86_64
 manUser: ubuntu
+sandboxManCidr:
 proxyHost:
 proxyUser:
 proxyKey:
