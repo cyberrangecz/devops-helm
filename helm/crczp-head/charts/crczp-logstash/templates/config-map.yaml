@@ -107,8 +107,8 @@ data:
          }
     }
     output {
-        elasticsearch {
-            hosts => [ "crczp-elasticsearch:9200" ]
+        opensearch {
+            hosts => [ "{{ .Values.openSearchHost }}" ]
             index => "%{[@metadata][index_prefix]}.pool=%{[@metadata][poolId]}.sandbox=%{[@metadata][sandboxId]}.definition=%{[@metadata][definitionId]}.instance=%{[@metadata][instanceId]}.run=%{[@metadata][runId]}"
             codec => json
             # custom document ID prevents duplicates in elasticsearch storage
@@ -175,14 +175,14 @@ data:
     }
     output {
         if [@metadata][sandboxid] {
-    elasticsearch {
-                hosts => [ "crczp-elasticsearch:9200" ]
+    opensearch {
+                hosts => [ "{{ .Values.openSearchHost }}" ]
                 index => "crczp.logs.console.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
                 codec => json
             }
         } else {
-           elasticsearch {
-                hosts => [ "crczp-elasticsearch:9200" ]
+           opensearch {
+                hosts => [ "{{ .Values.openSearchHost }}" ]
                 index => "crczp.logs.console.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
                 codec => json
             }
@@ -245,14 +245,14 @@ data:
     }
     output {
         if [@metadata][sandboxid] {
-    elasticsearch {
-                hosts => [ "crczp-elasticsearch:9200" ]
+    opensearch {
+                hosts => [ "{{ .Values.openSearchHost }}" ]
                 index => "crczp.logs.console.pool=%{[@metadata][poolid]}.sandbox=%{[@metadata][sandboxid]}"
                 codec => json
             }
         } else {
-           elasticsearch {
-                hosts => [ "crczp-elasticsearch:9200" ]
+           opensearch {
+                hosts => [ "{{ .Values.openSearchHost }}" ]
                 index => "crczp.logs.console.access-token=%{[@metadata][accesstoken]}.user=%{[@metadata][userid]}"
                 codec => json
             }

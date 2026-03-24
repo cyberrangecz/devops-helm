@@ -24,8 +24,6 @@ data:
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
     # calling sandbox-service, e.g., http://localhost:8080/sandbox-service/api/v1
     sandbox-service.uri=http://{{ .Values.global.services.sandbox.name }}:{{ .Values.global.services.sandbox.port }}{{ .Values.global.services.sandbox.contextPath }}
-    # calling elasticsearch-service, e.g., http://elastic-service:8085/elastic/api/v1
-    elasticsearch-service.uri=http://{{ .Values.global.services.elasticsearch.name }}:{{ .Values.global.services.elasticsearch.port }}{{ .Values.global.services.elasticsearch.contextPath }}
 
     # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
     central.syslog.ip={{ .Values.global.headHost }}
@@ -75,6 +73,7 @@ data:
     crczp.audit.syslog.port=514
     crczp.audit.messages.format=guacamole-service --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} --- %msg%n
 
-    elasticsearch.protocol=http
-    elasticsearch.host={{ .Values.global.crczpElasticsearchServiceName }}
-    elasticsearch.port=9200
+    opensearch.protocol=http
+    opensearch.host={{ .Values.global.crczpOpensearchServiceName }}
+    opensearch.port=9200
+    opensearch.max-result-count=10000

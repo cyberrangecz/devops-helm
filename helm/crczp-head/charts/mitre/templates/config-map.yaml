@@ -33,9 +33,6 @@ data:
         # An address of java linear training endpoint
         java_linear_training_mitre_endpoint: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}visualizations/training-definitions/mitre-techniques"
 
-        # An address of java adaptive training endpoint
-        java_adaptive_training_mitre_endpoint: "http://{{ .Values.global.services.adaptiveTraining.name }}:{{ .Values.global.services.adaptiveTraining.port }}{{ .Values.global.services.adaptiveTraining.contextPath }}visualizations/training-definitions/mitre-techniques"
-
         # The location of jinja template and the locally stored MITRE data
         file_storage_location: {{ .Values.fileStorage }}
 

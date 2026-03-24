@@ -29,10 +29,6 @@ global:
       keycloakPassword:
   userCount: 0
 
-crczp-guacamole:
-  guacamole:
-    guacamoleAdminPassword:
-
 
 sandbox:
   djangoSecretKey:

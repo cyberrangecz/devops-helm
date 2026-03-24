@@ -21,6 +21,7 @@ kubectl config set-context --current --namespace=crczp
 helm repo add jetstack https://charts.jetstack.io
 helm repo add stakater https://stakater.github.io/stakater-charts
 helm repo add cloudnative-pg https://cloudnative-pg.github.io/charts
+helm repo add opensearch https://opensearch-project.github.io/helm-charts/
 helm repo update
 
 helm upgrade --install cnpg cloudnative-pg/cloudnative-pg \
@@ -34,6 +35,12 @@ helm upgrade --install crczp-postgres /vagrant/helm/crczp-postgres \
   --namespace cnpg-system \
   --create-namespace \
   -f /vagrant/vagrant-values.yaml \
+  --wait
+
+helm upgrade --install opensearch opensearch/opensearch \
+  --namespace opensearch \
+  --create-namespace \
+  -f /vargrant/values-opensearch.yaml
   --wait
 
 helm upgrade --install reloader stakater/reloader \

@@ -16,7 +16,7 @@ spec:
         - "/bin/bash"
         - "-c"
         - |
-          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 5 ]
+          while [ `PGPASSWORD={{ $postgres.password }} psql -h {{ $postgres.serviceName }} -p {{ $postgres.port }} -U {{ $postgres.user }} --dbname user-and-group -c 'select count(*) from microservice' -t` -ne 4 ]
           do
               echo "Waiting for microservices to register"
               ((c++)) && ((c==40)) && break
@@ -40,15 +40,6 @@ spec:
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
-
-            INSERT INTO idm_group_role(role_id, idm_group_id)
-            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
-            INSERT INTO idm_group_role(role_id, idm_group_id)
-            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
-            INSERT INTO idm_group_role(role_id, idm_group_id)
-            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
-            INSERT INTO idm_group_role(role_id, idm_group_id)
-            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
 
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_SANDBOX-SERVICE_ADMIN'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;

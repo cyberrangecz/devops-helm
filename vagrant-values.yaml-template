@@ -38,9 +38,6 @@ crczp-keycloak:
   keycloakPassword: password
   grafanaClientSecret: secret
 
-crczp-guacamole:
-  enabled: False
-
 sandbox:
   djangoSecretKey:
   headHost: 172.19.0.22

@@ -1,0 +1,44 @@
+clusterName: crczp-opensearch
+nodeGroup: nodes
+fullnameOverride: crczp-opensearch
+
+replicas: 1
+
+image:
+  tag: "2.19.0"
+
+opensearchJavaOpts: "-Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true"
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "2Gi"
+  limits:
+    cpu: "1000m"
+    memory: "2Gi"
+
+extraEnvs:
+  - name: DISABLE_SECURITY_PLUGIN
+    value: "true"
+
+clusterManagerNodeCount: 0
+masterService: ""
+singleNode: true
+
+config:
+  opensearch.yml: |
+    cluster.name: crczp-opensearch
+    network.host: 0.0.0.0
+    discovery.type: single-node
+    cluster.max_shards_per_node: 5000
+    action.destructive_requires_name: false
+
+sysctlVmMaxMapCount: 262144
+
+service:
+  type: ClusterIP
+  port: 9200

@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: docker.elastic.co/logstash/logstash
-  tag: 8.1.2
+  url: opensearchproject/logstash-oss-with-opensearch-output-plugin
+  tag: 8.9.0
 
 ports:
   - port: 5044
@@ -49,3 +49,5 @@ mounts:
         extension: .conf
       - name: 30-crczp-logstash-msf-commands
         extension: .conf
+
+openSearchHost: crczp-opensearch.opensearch.svc.cluster.local:9200
