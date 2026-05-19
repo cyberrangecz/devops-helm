@@ -109,3 +109,9 @@ aws:
   baseSubnet: BaseSubnetA
 
 keystoneCA:
+
+netbird:
+  managementUrl: http://netbird-server.netbird.svc.cluster.local
+  clientManagementUrl:
+  serviceUserPatFilePath: /srv/netbird-pat/pat
+  keyExpirySeconds: 604800
