@@ -223,3 +223,7 @@ spec:
     realm: "{{ .Values.realm }}"
     enabled: True
     displayName: "{{ .Values.realm }} Realm"
+    defaultDefaultClientScopes:
+      - email
+      - profile
+      - openid
