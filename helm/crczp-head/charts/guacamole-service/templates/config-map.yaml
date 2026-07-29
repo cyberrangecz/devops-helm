@@ -69,11 +69,5 @@ data:
     # Logging
     ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
     logging.level.cz.cyberrange.platform=DEBUG
-    crczp.audit.syslog.host={{ .Values.global.crczpSyslogServiceName }}
-    crczp.audit.syslog.port=514
-    crczp.audit.messages.format=guacamole-service --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} --- %msg%n
 
-    opensearch.protocol=http
-    opensearch.host={{ .Values.global.crczpOpensearchServiceName }}
-    opensearch.port=9200
-    opensearch.max-result-count=10000
+    rdp.disable-bitmap-caching=true

@@ -34,11 +34,18 @@ spec:
           {{- if .args }}
           args: {{ .args }}
           {{- end }}
-          {{- if .Values.environments }}
+          {{- if or .Values.environments .Values.secretEnvironments }}
           env:
             {{- range $key, $value := .Values.environments }}
             - name: {{ $key }}
               value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.secretEnvironments }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.secretKey }}
             {{- end }}
           {{- end }}
           {{- if not .portsDisabled }}

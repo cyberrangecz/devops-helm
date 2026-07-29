@@ -2,10 +2,15 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-mitre-technique-service/mitre-technique-service
-  tag: v1.1.0
+  tag: v2.0.0
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084
+
+secretEnvironments:
+  DJANGO_SECRET_KEY:
+    secretName: mitre-service-secrets
+    secretKey: djangoSecretKey
 
 mounts:
   config:
@@ -21,3 +26,5 @@ redis:
   db: 1
 
 fileStorage: crczp/mitre_matrix_visualizer_app/templates/
+
+djangoSecretKey:

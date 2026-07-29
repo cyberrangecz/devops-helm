@@ -31,7 +31,7 @@ data:
         ssl_ca_certificate_verify: /etc/ssl/certs/ca-certificates.crt
 
         # An address of java linear training endpoint
-        java_linear_training_mitre_endpoint: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}visualizations/training-definitions/mitre-techniques"
+        training_mitre_techniques_endpoint: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}training-definitions/played-mitre-techniques"
 
         # The location of jinja template and the locally stored MITRE data
         file_storage_location: {{ .Values.fileStorage }}

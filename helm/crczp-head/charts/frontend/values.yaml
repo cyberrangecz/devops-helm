@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/frontend-platform/frontend-platform
-  tag: v2.5.5
+  tag: v3.0.0
 
 mounts:
   config:
@@ -14,4 +14,4 @@ mounts:
       configMap:
         name: angular-frontend-configmap
 
-releaseVersion: v2026.02
+releaseVersion: v2026.08

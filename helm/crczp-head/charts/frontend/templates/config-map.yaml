@@ -9,9 +9,14 @@ data:
       "enableLocalMode": false,
       "defaultPageSize": 15,
       "polling": {
-        "pollingPeriodShort": 1500,
-        "pollingPeriodLong": 5000,
+        "pollingPeriodShort": "2s",
+        "pollingPeriodLong": "5s",
         "retryCount": 3
+      },
+      "caching": {
+        "eventCacheTtl": "7d",
+        "entityCacheTtl": "30m",
+        "eventCacheMaxSize": "2GB"
       },
       "basePaths": {
         "linearTraining": "https://{{ .Values.global.headHost }}{{ .Values.global.services.training.contextPath }}",
