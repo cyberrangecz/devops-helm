@@ -73,7 +73,4 @@ data:
     crczp.audit.syslog.port=514
     crczp.audit.messages.format=guacamole-service --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} --- %msg%n
 
-    opensearch.protocol=http
-    opensearch.host={{ .Values.global.crczpOpensearchServiceName }}
-    opensearch.port=9200
-    opensearch.max-result-count=10000
+    rdp.disable-bitmap-caching=true

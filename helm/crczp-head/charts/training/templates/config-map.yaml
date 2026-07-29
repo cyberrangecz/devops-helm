@@ -22,7 +22,7 @@ data:
     # calling user-and-group project, e.g., https://localhost:8084/user-and-group/api/v1
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
     # calling sandbox-service, e.g., http://localhost:8080/sandbox-service/api/v1
-    openstack-server.uri=http://{{ .Values.global.services.sandbox.name }}:{{ .Values.global.services.sandbox.port }}{{ .Values.global.services.sandbox.contextPath }}
+    sandbox-service.uri=http://{{ .Values.global.services.sandbox.name }}:{{ .Values.global.services.sandbox.port }}{{ .Values.global.services.sandbox.contextPath }}
     # calling answers-storage, e.g., http://answers-storage:8087/answers-storage/api/v1
     answers-storage.uri=http://{{ .Values.global.services.answersStorage.name }}:{{ .Values.global.services.answersStorage.port }}{{ .Values.global.services.answersStorage.contextPath }}
 
@@ -77,4 +77,3 @@ data:
     opensearch.protocol=http
     opensearch.host={{ .Values.global.crczpOpensearchServiceName }}
     opensearch.port=9200
-    opensearch.max-result-count=10000

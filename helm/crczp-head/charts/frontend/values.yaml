@@ -14,4 +14,4 @@ mounts:
       configMap:
         name: angular-frontend-configmap
 
-releaseVersion: v2026.02
+releaseVersion: v2026.08
