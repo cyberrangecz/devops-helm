@@ -45,9 +45,10 @@ sandbox:
   dnsNameServers:
     - 1.1.1.1
     - 1.0.0.1
-  osAuthUrl:
-  osApplicationCredentialId:
-  osApplicationCredentialSecret:
+  openstack:
+    authUrl:
+    applicationCredentialId:
+    applicationCredentialSecret:
   proxyHost:
   proxyUser:
   proxyKey:
