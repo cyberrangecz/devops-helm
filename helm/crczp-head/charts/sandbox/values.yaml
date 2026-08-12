@@ -55,10 +55,6 @@ dnsNameServers:
   - 1.1.1.1
   - 1.0.0.1
 syslogDestinationPort: 515
-osAuthUrl:
-osApplicationCredentialId:
-osApplicationCredentialSecret:
-osConsoleType: spice-html5
 openstackWorkerCount: 4
 ansibleWorkerCount: 4
 defaultWorkerCount: 4
@@ -83,6 +79,8 @@ senderEmail: "sandbox.service@crczp.cz"
 senderEmailPassword:
 smtpEncryption:
 
+networkForwardingEnabled: false
+
 redis:
   defaultCacheTimeout: 86400
   uagCacheTimeout: 86400
@@ -100,6 +98,14 @@ gitConfig:
   ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
   ansibleNetworkingRev: v1.8.0
   topologyCacheMode: AGGRESSIVE
+
+openstack:
+  authUrl:
+  applicationCredentialId:
+  applicationCredentialSecret:
+  consoleType: spice-html5
+  hypervisorCidr: 10.99.0.0/16
+  mirrorType: erspanv1
 
 aws:
   accessKeyId:
