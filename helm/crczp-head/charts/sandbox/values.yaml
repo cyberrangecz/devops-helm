@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
-  tag: v2.4.2
+  url: ghcr.io/cyberrangecz/backend-sandbox-platform/sandbox-service
+  tag: v4.0.0
 
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
@@ -55,10 +55,6 @@ dnsNameServers:
   - 1.1.1.1
   - 1.0.0.1
 syslogDestinationPort: 515
-osAuthUrl:
-osApplicationCredentialId:
-osApplicationCredentialSecret:
-osConsoleType: spice-html5
 openstackWorkerCount: 4
 ansibleWorkerCount: 4
 defaultWorkerCount: 4
@@ -83,6 +79,8 @@ senderEmail: "sandbox.service@crczp.cz"
 senderEmailPassword:
 smtpEncryption:
 
+networkForwardingEnabled: false
+
 redis:
   defaultCacheTimeout: 86400
   uagCacheTimeout: 86400
@@ -91,15 +89,21 @@ redis:
 ansibleRunner:
   image:
     url: ghcr.io/cyberrangecz/crczp-ansible-runner
-    tag: 1.1.0
+    tag: 1.2.0
 
 gitConfig:
   providers: {}
   #providers: {"https://github.com/": "TOKEN"}
   user: git
   ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-  ansibleNetworkingRev: v1.8.0
+  ansibleNetworkingRev: v2.3.0
   topologyCacheMode: AGGRESSIVE
+
+openstack:
+  authUrl:
+  applicationCredentialId:
+  applicationCredentialSecret:
+  consoleType:
 
 aws:
   accessKeyId:

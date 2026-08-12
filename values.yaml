@@ -37,9 +37,10 @@ sandbox:
   dnsNameServers:
     - 1.1.1.1
     - 1.0.0.1
-  osAuthUrl:
-  osApplicationCredentialId:
-  osApplicationCredentialSecret:
+  openstack:
+    authUrl:
+    applicationCredentialId:
+    applicationCredentialSecret:
   proxyHost:
   proxyUser:
   proxyKey:
@@ -48,7 +49,7 @@ sandbox:
     #providers: {"https://github.com/": "TOKEN"}
     user: git
     ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-    ansibleNetworkingRev: v1.0.0
+    ansibleNetworkingRev: v2.3.0
 
 cluster:
   superuserPassword: password

@@ -26,12 +26,14 @@ Vagrant Disk Plugin | https://github.com/sprotheroe/vagrant-disksize | 0.1.3+
     2. Edit a **vagrant-values.yaml** file with the following variables using values obtained from the previous step.
 
         ```yaml
-        # The URL of OpenStack Identity service API.
-        osAuthUrl: <OS_AUTH_URL>
-        # The ID of application credentials to authenticate at the OpenStack cloud platform.
-        osApplicationCredentialId: <OS_APPLICATION_CREDENTIAL_ID>
-        # The ID of application credentials secret to authenticate at the OpenStack cloud platform.
-        osApplicationCredentialSecret: <OS_APPLICATION_CREDENTIAL_SECRET>
+        sandbox:
+          openstack:
+            # The URL of OpenStack Identity service API.
+            authUrl: <OS_AUTH_URL>
+            # The ID of application credentials to authenticate at the OpenStack cloud platform.
+            applicationCredentialId: <OS_APPLICATION_CREDENTIAL_ID>
+            # The ID of application credentials secret to authenticate at the OpenStack cloud platform.
+            applicationCredentialSecret: <OS_APPLICATION_CREDENTIAL_SECRET>
         ```
 
 3. Configure access to the VM of the OpenStack cloud that has direct access to the virtual network dedicated to sandboxes (i.e. `Proxy Jump host`).
