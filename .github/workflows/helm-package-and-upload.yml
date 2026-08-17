@@ -4,6 +4,7 @@ on:
   push:  # Runs on every push, regardless of branch
     branches:
       - "**"  # Matches all branches
+  workflow_dispatch:  # Allows manual triggering from the Actions tab
 
 jobs:
   build:
