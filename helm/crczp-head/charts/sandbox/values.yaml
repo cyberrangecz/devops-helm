@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
-  tag: v2.4.0
+  tag: v2.4.2
 
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
