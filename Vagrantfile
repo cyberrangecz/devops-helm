@@ -71,14 +71,11 @@ kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-k8
 kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml
 kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/kubernetes.yml
 
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_externalkeycloaks_crd.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_keycloakclients_crd.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_keycloakrealms_crd.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/crds/legacy.k8s.keycloak.org_keycloakusers_crd.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/role.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/role_binding.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/service_account.yaml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-realm-operator/main/deploy/operator.yaml
+helm upgrade --install keycloak-resource-operator oci://ghcr.io/hostzero-gmbh/charts/keycloak-operator \
+  --namespace keycloak-operator \
+  --create-namespace \
+  --version 0.12.0 \
+  --wait
 
 helm upgrade --install crczp-head /vagrant/helm/crczp-head \
   --namespace crczp \

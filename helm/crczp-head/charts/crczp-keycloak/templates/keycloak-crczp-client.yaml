@@ -1,34 +1,25 @@
-apiVersion: legacy.k8s.keycloak.org/v1alpha1
+apiVersion: keycloak.hostzero.com/v1beta1
 kind: KeycloakClient
 metadata:
   name: crczp-client
-  labels:
-    app: external-sso
 spec:
-  realmSelector:
-    matchLabels:
-      app: external-sso
-  client:
-    attributes:
-      pkce.code.challenge.method: S256
-      post.logout.redirect.uris: +
-    clientId: {{ range $.Values.global.oidcProviders }}{{- if contains "keycloak" .url }}{{ .clientId }}{{- end }}{{- end }}
-    clientAuthenticatorType: client-secret
-    defaultClientScopes:
-      - email
-      - profile
-      - openid
+  realmRef:
+    name: crczp-realm
+  clientId: {{ range $.Values.global.oidcProviders }}{{- if contains "keycloak" .url }}{{ .clientId }}{{- end }}{{- end }}
+  definition:
+    name: "CRCZP-Client"
+    protocol: openid-connect
+    publicClient: true
+    standardFlowEnabled: true
     directAccessGrantsEnabled: true
     {{- if .Values.development }}
     implicitFlowEnabled: true
     {{- else }}
     implicitFlowEnabled: false
     {{- end }}
-    name: "CRCZP-Client"
-    optionalClientScopes:
-      - offline_access
-    protocol: openid-connect
-    publicClient: true
+    attributes:
+      pkce.code.challenge.method: S256
+      post.logout.redirect.uris: +
     redirectUris:
       - "https://{{ $.Values.global.headHost }}"
       - "https://{{ $.Values.global.headHost }}/login"
@@ -37,4 +28,9 @@ spec:
       {{- if .Values.development }}
       - "https://localhost:4200"
       {{- end }}
-    standardFlowEnabled: true
+    defaultClientScopes:
+      - email
+      - profile
+      - openid
+    optionalClientScopes:
+      - offline_access
