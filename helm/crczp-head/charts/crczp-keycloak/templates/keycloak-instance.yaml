@@ -14,7 +14,7 @@ metadata:
 spec:
   # FQDN + /keycloak: the operator runs in its own namespace and the server uses
   # http-relative-path=/keycloak, so a bare service name or missing path fails.
-  baseUrl: http://keycloak-service.crczp.svc.cluster.local:8080/keycloak
+  baseUrl: http://keycloak-service.{{ .Release.Namespace }}.svc.cluster.local:8080/keycloak
   realm: master
   auth:
     passwordGrant:
