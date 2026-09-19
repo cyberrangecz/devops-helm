@@ -6,7 +6,7 @@ metadata:
 type: Opaque
 stringData:
   client-id: Grafana-Client
-  client-secret: {{ .Values.grafanaClientSecret }}
+  client-secret: {{ .Values.grafanaClientSecret | quote }}
 ---
 {{- end }}
 apiVersion: keycloak.hostzero.com/v1beta1
