@@ -4,8 +4,8 @@ metadata:
   name: keycloak-admin
 type: Opaque
 stringData:
-  username: {{ .Values.keycloakAdmin }}
-  password: {{ .Values.keycloakPassword }}
+  username: {{ .Values.keycloakAdmin | quote }}
+  password: {{ .Values.keycloakPassword | quote }}
 ---
 apiVersion: keycloak.hostzero.com/v1beta1
 kind: KeycloakInstance
