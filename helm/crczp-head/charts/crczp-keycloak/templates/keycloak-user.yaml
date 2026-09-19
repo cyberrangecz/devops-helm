@@ -19,11 +19,10 @@ spec:
     email: {{ .email }}
     enabled: true
     emailVerified: false
-    credentials:
-      - type: "password"
-        value: {{ .keycloakPassword }}
-        temporary: false
   realmRoles:
     - offline_access
+  initialPassword:
+    value: {{ .keycloakPassword | quote }}
+    temporary: false
 {{- end }}
 {{- end }}
