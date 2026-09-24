@@ -1,34 +1,47 @@
-apiVersion: legacy.k8s.keycloak.org/v1alpha1
+{{- if .Values.grafanaClientSecret }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-client-secret
+type: Opaque
+stringData:
+  client-id: Grafana-Client
+  client-secret: {{ .Values.grafanaClientSecret | quote }}
+---
+{{- end }}
+apiVersion: keycloak.hostzero.com/v1beta1
 kind: KeycloakClient
 metadata:
   name: grafana-client
-  labels:
-    app: external-sso
 spec:
-  realmSelector:
-    matchLabels:
-      app: external-sso
-  client:
+  realmRef:
+    name: crczp-realm
+  clientId: Grafana-Client
+  definition:
+    name: "Grafana-Client"
+    protocol: openid-connect
+    publicClient: false
+    standardFlowEnabled: true
+    directAccessGrantsEnabled: false
+    implicitFlowEnabled: false
     attributes:
       pkce.code.challenge.method: S256
       post.logout.redirect.uris: "https://{{ $.Values.global.headHost }}/logout-confirmed"
-    clientId: Grafana-Client
-    clientAuthenticatorType: client-secret
+    redirectUris:
+      - "https://{{ $.Values.global.headHost }}/grafana"
+      - "https://{{ $.Values.global.headHost }}/grafana/login/generic_oauth"
     defaultClientScopes:
       - email
       - profile
       - openid
-    directAccessGrantsEnabled: false
-    implicitFlowEnabled: false
-    name: "Grafana-Client"
     optionalClientScopes:
       - offline_access
-    protocol: openid-connect
-    publicClient: false
-    redirectUris:
-      - "https://{{ $.Values.global.headHost }}/grafana"
-      - "https://{{ $.Values.global.headHost }}/grafana/login/generic_oauth"
+  clientSecretRef:
+    name: grafana-client-secret
+    clientIdKey: client-id
+    clientSecretKey: client-secret
     {{- if .Values.grafanaClientSecret }}
-    secret: {{ .Values.grafanaClientSecret }}
+    create: false
+    {{- else }}
+    create: true
     {{- end }}
-    standardFlowEnabled: true

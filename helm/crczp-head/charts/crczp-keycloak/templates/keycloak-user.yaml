@@ -5,28 +5,24 @@
 {{- range $users }}
 {{- if .keycloakPassword }}
 ---
-apiVersion: legacy.k8s.keycloak.org/v1alpha1
+apiVersion: keycloak.hostzero.com/v1beta1
 kind: KeycloakUser
 metadata:
   name: {{ .keycloakUsername | replace "@" "-" }}
-  labels:
-    app: external-sso
 spec:
-  realmSelector:
-    matchLabels:
-      app: external-sso
-  user:
-    username: {{ .keycloakUsername }}
+  realmRef:
+    name: crczp-realm
+  username: {{ .keycloakUsername }}
+  definition:
     firstName: {{ .givenName }}
     lastName: {{ .familyName }}
     email: {{ .email }}
-    enabled: True
-    emailVerified: False
-    id: {{ .email }}
-    credentials:
-      - type: "password"
-        value: {{ .keycloakPassword }}
-    realmRoles:
-      - offline_access
+    enabled: true
+    emailVerified: false
+  realmRoles:
+    - offline_access
+  initialPassword:
+    value: {{ .keycloakPassword | quote }}
+    temporary: false
 {{- end }}
 {{- end }}
