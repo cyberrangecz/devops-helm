@@ -47,18 +47,16 @@ data:
 
     # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
     spring.data.jpa.repositories.enabled=true
-    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.hibernate.ddl-auto=
     spring.jpa.show-sql=true
-    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
 
     # spring-cloud
     spring.cloud.refresh.enabled = false
     ## disables the settings in application.properties in resource folder
     spring.jmx.enabled=false
     ## Configuring Jackson serializer for converting Java 8 dates to ISO format
-    spring.jackson.serialization.write_dates_as_timestamps=false
+    spring.jackson.datatype.datetime.write-dates-as-timestamps=false
     ## all atributes in JSON are in SNAKE_CASE
     spring.jackson.property-naming-strategy=SNAKE_CASE
 
