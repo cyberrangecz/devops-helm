@@ -25,9 +25,6 @@ data:
     # calling sandbox-service, e.g., http://localhost:8080/sandbox-service/api/v1
     sandbox-service.uri=http://{{ .Values.global.services.sandbox.name }}:{{ .Values.global.services.sandbox.port }}{{ .Values.global.services.sandbox.contextPath }}
 
-    # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
-    central.syslog.ip={{ .Values.global.headHost }}
-
     # OpenID Connect (OIDC) configuration settings for a resource servers configuration
     # Allowed OIDC provider, e.g., https://oidc.provider.cz/oidc/, https://crczp-oidc-idp.cz/oidc/
 {{- range $index, $element := .Values.global.oidcProviders }}
@@ -35,34 +32,12 @@ data:
     crczp.identity.providers[{{ $index }}].userInfoEndpoint={{ $element.userInfoUrl | default "" }}
 {{- end }}
 
-    # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.guacamole.dbName }}
-    spring.datasource.username={{ .Values.global.postgresServices.guacamole.dbUser }}
-    spring.datasource.password={{ .Values.global.postgresServices.guacamole.dbPassword }}
-    spring.datasource.driver-class-name=org.postgresql.Driver
-    {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
-    spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
-    spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
-    {{- end }}
-
-    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
-    spring.data.jpa.repositories.enabled=true
-    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-    spring.jpa.hibernate.ddl-auto=
-    spring.jpa.show-sql=true
-
-    # spring-cloud
-    spring.cloud.refresh.enabled = false
     ## disables the settings in application.properties in resource folder
     spring.jmx.enabled=false
     ## Configuring Jackson serializer for converting Java 8 dates to ISO format
     spring.jackson.datatype.datetime.write-dates-as-timestamps=false
     ## all atributes in JSON are in SNAKE_CASE
     spring.jackson.property-naming-strategy=SNAKE_CASE
-
-    ## the requirement for ssl, e.g., false
-    security.require-ssl=false
-    management.health.refresh.enabled=false
 
     # Logging
     ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED

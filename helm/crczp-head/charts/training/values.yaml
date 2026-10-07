@@ -16,6 +16,11 @@ mounts:
     type:
       configMap:
         name: training-service-configmap
+    items:
+      - name: training
+        extension: .properties
+      - name: logback-spring
+        extension: .xml
   tls:
     extension: .crt
     mountPath: /srv/

@@ -47,23 +47,15 @@ data:
     {{- end }}
 
     # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
-    spring.data.jpa.repositories.enabled=true
-    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.hibernate.ddl-auto=
     spring.jpa.show-sql=true
 
-    # spring-cloud
-    spring.cloud.refresh.enabled = false
     ## disables the settings in application.properties in resource folder
     spring.jmx.enabled=false
     ## Configuring Jackson serializer for converting Java 8 dates to ISO format
     spring.jackson.datatype.datetime.write-dates-as-timestamps=false
     ## all atributes in JSON are in SNAKE_CASE
     spring.jackson.property-naming-strategy=SNAKE_CASE
-
-    ## the requirement for ssl, e.g., false
-    security.require-ssl=false
-    management.health.refresh.enabled=false
 
     # Logging
     ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
@@ -75,3 +67,47 @@ data:
     opensearch.protocol=http
     opensearch.host={{ .Values.global.crczpOpensearchServiceName }}
     opensearch.port=9200
+  logback-spring.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <configuration>
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+        <property file="${spring.config.location}"/>
+
+        <logger name="org.springframework.boot" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="cz.cyberrange.platform" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%-5level --- [%thread] %logger{5} --- %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="AUDIT_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${crczp.audit.messages.format:-backend-training --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5}
+                    --- %msg%n}
+                </pattern>
+            </encoder>
+        </appender>
+
+        <appender name="CRCZP_SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+            <syslogHost>${crczp.audit.syslog.host:-localhost}</syslogHost>
+            <port>${crczp.audit.syslog.port:-514}</port>
+            <facility>AUDIT</facility>
+            <suffixPattern>
+                ${crczp.audit.messages.format:-backend-training --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} ---
+                %msg%n}
+            </suffixPattern>
+        </appender>
+
+        <logger name="cz.cyberrange.platform.training.opensearch.events.training.logging.AuditService" level="INFO" additivity="false">
+            <appender-ref ref="AUDIT_CONSOLE"/>
+            <appender-ref ref="CRCZP_SYSLOG"/>
+        </logger>
+    </configuration>

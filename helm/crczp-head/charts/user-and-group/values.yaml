@@ -19,6 +19,8 @@ mounts:
         extension: .yml
       - name: exported-local-oidc-users
         extension: .yml
+      - name: logback-spring
+        extension: .xml
   tls:
     extension: .crt
     mountPath: /srv/
