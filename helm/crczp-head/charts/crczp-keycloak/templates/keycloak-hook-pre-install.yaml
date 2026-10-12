@@ -12,7 +12,7 @@ spec:
   {{- end }}
   containers:
     - name: {{ .Values.name }}-pre-install-job
-      image: ghcr.io/cyberrangecz/psql-db-init:1.0.0
+      image: ghcr.io/cyberrangecz/psql-db-init:1.1.0
       imagePullPolicy: IfNotPresent
       env:
         - name: HOST

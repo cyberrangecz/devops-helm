@@ -40,7 +40,8 @@ helm upgrade --install crczp-postgres /vagrant/helm/crczp-postgres \
 helm upgrade --install opensearch opensearch/opensearch \
   --namespace opensearch \
   --create-namespace \
-  -f /vargrant/values-opensearch.yaml
+  --version 3.5.0 \
+  -f /vagrant/values-opensearch.yaml \
   --wait
 
 helm upgrade --install reloader stakater/reloader \
@@ -67,14 +68,20 @@ helm upgrade --install crczp-gen-users /vagrant/helm/crczp-gen-users \
   -f /vagrant/vagrant-values.yaml \
   --wait
 
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/keycloaks.k8s.keycloak.org-v1.yml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml
-kubectl apply -n crczp -f https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/25.0.1/kubernetes/kubernetes.yml
+helm upgrade --install keycloak-operator oci://quay.io/keycloak/keycloak-operator-helm \
+  --namespace keycloak-system \
+  --create-namespace \
+  --version 26.8.0 \
+  --set operator.envs.QUARKUS_OPERATOR_SDK_CONTROLLERS_KEYCLOAKCONTROLLER_NAMESPACES=crczp \
+  --set operator.envs.QUARKUS_OPERATOR_SDK_CONTROLLERS_KEYCLOAKREALMIMPORTCONTROLLER_NAMESPACES=crczp \
+  --set operator.envs.QUARKUS_OPERATOR_SDK_CONTROLLERS_KEYCLOAKOIDCCLIENTCONTROLLER_NAMESPACES=crczp \
+  --set operator.envs.QUARKUS_OPERATOR_SDK_CONTROLLERS_KEYCLOAKSAMLCLIENTCONTROLLER_NAMESPACES=crczp \
+  --wait
 
 helm upgrade --install keycloak-resource-operator oci://ghcr.io/hostzero-gmbh/charts/keycloak-operator \
-  --namespace keycloak-operator \
+  --namespace keycloak-resource-operator \
   --create-namespace \
-  --version 0.12.0 \
+  --version 0.13.1 \
   --wait
 
 helm upgrade --install crczp-head /vagrant/helm/crczp-head \
