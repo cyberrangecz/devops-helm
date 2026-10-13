@@ -21,6 +21,7 @@ spec:
     name: "Grafana-Client"
     protocol: openid-connect
     publicClient: false
+    fullScopeAllowed: false
     standardFlowEnabled: true
     directAccessGrantsEnabled: false
     implicitFlowEnabled: false

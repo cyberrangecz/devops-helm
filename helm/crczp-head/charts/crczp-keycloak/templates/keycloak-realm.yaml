@@ -9,10 +9,6 @@ spec:
   definition:
     displayName: "{{ .Values.realm }} Realm"
     enabled: true
-    defaultDefaultClientScopes:
-      - email
-      - profile
-      - openid
 ---
 # Custom "openid" scope carrying the sub -> email remap. email/profile/offline_access
 # are Keycloak built-ins and are intentionally not re-declared here.

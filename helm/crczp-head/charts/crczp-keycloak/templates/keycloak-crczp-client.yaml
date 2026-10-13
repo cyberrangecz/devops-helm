@@ -10,6 +10,7 @@ spec:
     name: "CRCZP-Client"
     protocol: openid-connect
     publicClient: true
+    fullScopeAllowed: false
     standardFlowEnabled: true
     directAccessGrantsEnabled: true
     {{- if .Values.development }}
