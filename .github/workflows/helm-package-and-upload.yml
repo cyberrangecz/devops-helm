@@ -63,7 +63,7 @@ jobs:
         run: export HELM_EXPERIMENTAL_OCI=1
 
       - name: Authenticate to the registry
-        run: echo $GH_REGISTRY_TOKEN | helm registry login ghcr.io/$OWNER --username $OWNER --password-stdin
+        run: echo $GH_REGISTRY_TOKEN | helm registry login ghcr.io --username $OWNER --password-stdin
 
       - name: Push to Github OCI Repository
         run: |
