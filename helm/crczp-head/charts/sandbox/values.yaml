@@ -89,7 +89,7 @@ redis:
 ansibleRunner:
   image:
     url: ghcr.io/cyberrangecz/crczp-ansible-runner
-    tag: 1.2.0
+    tag: 1.3.0
 
 gitConfig:
   providers: {}
