@@ -32,15 +32,4 @@ data:
     crczp.identity.providers[{{ $index }}].userInfoEndpoint={{ $element.userInfoUrl | default "" }}
 {{- end }}
 
-    ## disables the settings in application.properties in resource folder
-    spring.jmx.enabled=false
-    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
-    spring.jackson.datatype.datetime.write-dates-as-timestamps=false
-    ## all atributes in JSON are in SNAKE_CASE
-    spring.jackson.property-naming-strategy=SNAKE_CASE
-
-    # Logging
-    ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
-    logging.level.cz.cyberrange.platform=DEBUG
-
     rdp.disable-bitmap-caching=true

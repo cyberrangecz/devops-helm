@@ -9,6 +9,8 @@ data:
     server.port={{ .Values.global.services.answersStorage.port }}
     ## server context path (the base url for the service), e.g., /answer-storage/api/v1
     server.servlet.context-path={{ .Values.global.services.answersStorage.contextPath }}
+    ## raised from the 8KB default, as in the service's reference config
+    server.max-http-request-header-size=40KB
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
     spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.answersStorage.dbName }}
@@ -16,11 +18,6 @@ data:
     spring.datasource.password={{ .Values.global.postgresServices.answersStorage.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver
 
-    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
-    spring.jpa.hibernate.ddl-auto=
-
-    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
-    spring.jackson.datatype.datetime.write-dates-as-timestamps=false
-    ## all atributes in JSON are in SNAKE_CASE
-    spring.jackson.property-naming-strategy=SNAKE_CASE
+    ## Flyway creates and upgrades the schema; Hibernate only checks it matches the entities
+    spring.jpa.hibernate.ddl-auto=validate
     spring.flyway.enabled=true
