@@ -31,6 +31,10 @@ spec:
     headers: xforwarded
   serviceMonitor:
     enabled: false
+  env:
+    # CVE-2026-114938 stopgap until the JDK is patched
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:-UseBASE64Intrinsics"
   additionalOptions:
     - name: http-relative-path
       value: /keycloak
