@@ -4,6 +4,9 @@ image:
   url: ghcr.io/cyberrangecz/backend-user-and-group/user-and-group-service
   tag: v1.4.2
 
+environments:
+  JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"  # CVE-2026-114938 stopgap until the JDK is patched
+
 mounts:
   configs:
     mountPath: /app/etc/

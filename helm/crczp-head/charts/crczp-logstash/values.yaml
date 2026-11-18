@@ -4,6 +4,9 @@ image:
   url: opensearchproject/logstash-oss-with-opensearch-output-plugin
   tag: 8.9.0
 
+environments:
+  JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"  # CVE-2026-114938 stopgap until the JDK is patched
+
 ports:
   - port: 5044
     protocol: TCP

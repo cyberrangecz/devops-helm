@@ -7,7 +7,7 @@ replicas: 1
 image:
   tag: "2.19.0"
 
-opensearchJavaOpts: "-Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true"
+opensearchJavaOpts: "-Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true -XX:-UseBASE64Intrinsics"
 
 persistence:
   enabled: true

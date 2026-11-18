@@ -5,6 +5,7 @@ image:
   tag: v2.4.0
 
 environments:
+  JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"  # CVE-2026-114938 stopgap until the JDK is patched
   SERVICE_PRECONDITION: uag-service:8084
 
 mounts:
