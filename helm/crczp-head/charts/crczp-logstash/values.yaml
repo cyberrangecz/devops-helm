@@ -5,7 +5,7 @@ image:
   tag: 8.9.0
 
 environments:
-  JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"  # CVE-2026-114938 stopgap until the JDK is patched
+  LS_JAVA_OPTS: "-XX:-UseBASE64Intrinsics"  # CVE-2026-114938 stopgap; Logstash ignores JAVA_TOOL_OPTIONS
 
 ports:
   - port: 5044
