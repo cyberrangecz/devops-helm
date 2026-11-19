@@ -9,15 +9,8 @@ data:
     server.port={{ .Values.global.services.answersStorage.port }}
     ## server context path (the base url for the service), e.g., /answer-storage/api/v1
     server.servlet.context-path={{ .Values.global.services.answersStorage.contextPath }}
-    ## microservice name which is used in user management service for identification of this service, e.g. answers-storage
-    microservice.name=answers-storage
-
-    ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
-    {{- if .Values.global.corsWhitelist }}
-    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
-    {{- else }}
-    cors.allowed.origins=https://{{ .Values.global.headHost }}
-    {{- end }}
+    ## raised from the 8KB default, as in the service's reference config
+    server.max-http-request-header-size=40KB
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
     spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.answersStorage.dbName }}
@@ -25,13 +18,6 @@ data:
     spring.datasource.password={{ .Values.global.postgresServices.answersStorage.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver
 
-    # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
-    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-    spring.jpa.hibernate.ddl-auto=
-    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
-
-    ## Configuring Jackson serializer for converting Java 8 dates to ISO format
-    spring.jackson.serialization.write_dates_as_timestamps=false
-    ## all atributes in JSON are in SNAKE_CASE
-    spring.jackson.property-naming-strategy=SNAKE_CASE
+    ## Flyway creates and upgrades the schema; Hibernate only checks it matches the entities
+    spring.jpa.hibernate.ddl-auto=validate
     spring.flyway.enabled=true
