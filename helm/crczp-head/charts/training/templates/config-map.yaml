@@ -18,6 +18,7 @@ data:
     {{- else }}
     cors.allowed.origins=https://{{ .Values.global.headHost }}
     {{- end }}
+    cors.exposed.headers=Content-Length,X-Attachment-Duration,X-Attachment-Width,X-Attachment-Height
 
     # calling user-and-group project, e.g., https://localhost:8084/user-and-group/api/v1
     user-and-group-server.uri=http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}
@@ -40,7 +41,6 @@ data:
     spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.training.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.training.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.training.dbPassword }}
-    spring.datasource.driver-class-name=org.postgresql.Driver
     {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
     spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
     spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
@@ -57,47 +57,9 @@ data:
     opensearch.protocol=http
     opensearch.host={{ .Values.global.crczpOpensearchServiceName }}
     opensearch.port=9200
-  logback-spring.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <configuration>
-        <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-        <property file="${spring.config.location}"/>
-
-        <logger name="org.springframework.boot" level="WARN" additivity="false">
-            <appender-ref ref="CONSOLE"/>
-        </logger>
-        <logger name="cz.cyberrange.platform" level="WARN" additivity="false">
-            <appender-ref ref="CONSOLE"/>
-        </logger>
-
-        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%-5level --- [%thread] %logger{5} --- %msg%n</pattern>
-            </encoder>
-        </appender>
-
-        <appender name="AUDIT_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <charset>UTF-8</charset>
-                <pattern>${crczp.audit.messages.format:-backend-training --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5}
-                    --- %msg%n}
-                </pattern>
-            </encoder>
-        </appender>
-
-        <appender name="CRCZP_SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
-            <syslogHost>${crczp.audit.syslog.host:-localhost}</syslogHost>
-            <port>${crczp.audit.syslog.port:-514}</port>
-            <facility>AUDIT</facility>
-            <suffixPattern>
-                ${crczp.audit.messages.format:-backend-training --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} ---
-                %msg%n}
-            </suffixPattern>
-        </appender>
-
-        <logger name="cz.cyberrange.platform.training.opensearch.events.training.logging.AuditService" level="INFO" additivity="false">
-            <appender-ref ref="AUDIT_CONSOLE"/>
-            <appender-ref ref="CRCZP_SYSLOG"/>
-        </logger>
-    </configuration>
+    ## cap on the total size of the distinct attachment files linked to one training definition
+    ## the largest accepted file equals it, the largest multipart request exceeds it by a fixed margin
+    attachments.budget.per.definition=200MB
+    ## most parts, the definition and its files, one multipart request may carry
+    server.tomcat.max-part-count=1000

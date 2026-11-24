@@ -20,8 +20,6 @@ mounts:
     items:
       - name: training
         extension: .properties
-      - name: logback-spring
-        extension: .xml
   tls:
     extension: .crt
     mountPath: /srv/
