@@ -27,6 +27,9 @@ data:
     # calling answers-storage, e.g., http://answers-storage:8087/answers-storage/api/v1
     answers-storage.uri=http://{{ .Values.global.services.answersStorage.name }}:{{ .Values.global.services.answersStorage.port }}{{ .Values.global.services.answersStorage.contextPath }}
 
+    ## let trainees of instances that are not managed allocate their own sandbox when they enter the instance
+    single.sandbox.per.user.enabled=true
+
     # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
     central.syslog.ip={{ .Values.global.headHost }}
 
