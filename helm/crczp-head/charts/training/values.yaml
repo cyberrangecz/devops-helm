@@ -13,7 +13,7 @@ mounts:
     extension: .properties
     mountPath: /app/etc/
     isOneFile: true
-    subPath: false
+    subPath: true
     type:
       configMap:
         name: training-service-configmap
