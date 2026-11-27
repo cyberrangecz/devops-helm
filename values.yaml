@@ -44,8 +44,8 @@ sandbox:
   proxyHost:
   proxyUser:
   proxyKey:
-  traineeSandboxCleanup:
-    enabled: true
+  expiredTraineeSandboxDeletion:
+    suspend: false
     schedule: "0 * * * *"
   gitConfig:
     providers: {}

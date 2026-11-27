@@ -1,0 +1,1 @@
+{{- include "sandbox.cronjob" (dict "root" . "cron" .Values.stalledSandboxRecovery "name" (print .Values.global.services.sandbox.name "-recover-stalled-sandboxes") "command" "observe_lost_jobs") }}

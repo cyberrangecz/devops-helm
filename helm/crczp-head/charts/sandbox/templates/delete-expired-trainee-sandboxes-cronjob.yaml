@@ -1,0 +1,1 @@
+{{- include "sandbox.cronjob" (dict "root" . "cron" .Values.expiredTraineeSandboxDeletion "name" (print .Values.global.services.sandbox.name "-delete-expired-trainee-sandboxes") "command" "cleanup_trainee_sandboxes") }}
