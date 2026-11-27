@@ -1,0 +1,1 @@
+{{- include "sandbox.cronjob" (dict "root" . "cron" .Values.orphanedCloudResourceDeletion "name" (print .Values.global.services.sandbox.name "-delete-orphaned-cloud-resources") "command" "remove_leftover_stacks") }}

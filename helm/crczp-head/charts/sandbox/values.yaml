@@ -81,6 +81,61 @@ smtpEncryption:
 
 networkForwardingEnabled: false
 
+# Cleanup of the sandboxes trainees allocate for themselves, run by a CronJob.
+expiredTraineeSandboxDeletion:
+  # Whether scheduled runs are started; runs created manually from the CronJob still work.
+  suspend: false
+  # Cron schedule of the CronJob.
+  schedule: "0 * * * *"
+  # Seconds a scheduled run may start late before it is skipped.
+  startingDeadlineSeconds: 1800
+  # Number of finished successful jobs kept.
+  successfulJobsHistoryLimit: 1
+  # Number of finished failed jobs kept.
+  failedJobsHistoryLimit: 3
+  # Seconds a job may run before it is terminated.
+  activeDeadlineSeconds: 3300
+  # Container resource requests and limits; empty sets none.
+  resources: {}
+  # Hours a trainee keeps their sandbox before the cleanup removes it.
+  maxAgeHours: 24
+
+# Detection of sandbox work whose job was lost, run by a CronJob.
+stalledSandboxRecovery:
+  # Whether scheduled runs are started; runs created manually from the CronJob still work.
+  suspend: true
+  # Cron schedule of the CronJob.
+  schedule: "* * * * *"
+  # Seconds a scheduled run may start late before it is skipped.
+  startingDeadlineSeconds: 30
+  # Number of finished successful jobs kept.
+  successfulJobsHistoryLimit: 1
+  # Number of finished failed jobs kept.
+  failedJobsHistoryLimit: 3
+  # Seconds a job may run before it is terminated.
+  activeDeadlineSeconds: 50
+  # Container resource requests and limits; empty sets none.
+  resources: {}
+  # Seconds a dead stage job may wait before the detection fails its stage.
+  graceSeconds: 60
+
+# Removal of the stacks that no allocation unit owns, run by a CronJob.
+orphanedCloudResourceDeletion:
+  # Whether scheduled runs are started; runs created manually from the CronJob still work.
+  suspend: true
+  # Cron schedule of the CronJob.
+  schedule: "*/15 * * * *"
+  # Seconds a scheduled run may start late before it is skipped.
+  startingDeadlineSeconds: 450
+  # Number of finished successful jobs kept.
+  successfulJobsHistoryLimit: 1
+  # Number of finished failed jobs kept.
+  failedJobsHistoryLimit: 3
+  # Seconds a job may run before it is terminated.
+  activeDeadlineSeconds: 840
+  # Container resource requests and limits; empty sets none.
+  resources: {}
+
 redis:
   defaultCacheTimeout: 86400
   uagCacheTimeout: 86400

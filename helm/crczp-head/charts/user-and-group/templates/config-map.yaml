@@ -31,7 +31,6 @@ data:
     spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.userAndGroup.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.userAndGroup.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.userAndGroup.dbPassword }}
-    spring.datasource.driver-class-name=org.postgresql.Driver
     {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
     spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
     spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
@@ -42,11 +41,6 @@ data:
 
     ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
     logging.level.cz.cyberrange.platform=WARN
-  logback-spring.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <configuration>
-        <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    </configuration>
   initial-users.yml: |
     {{- $users := $.Values.global.users }}
     {{- if (lookup "v1" "Secret" "crczp" "generated-users") }}

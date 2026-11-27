@@ -44,6 +44,9 @@ sandbox:
   proxyHost:
   proxyUser:
   proxyKey:
+  expiredTraineeSandboxDeletion:
+    suspend: false
+    schedule: "0 * * * *"
   gitConfig:
     providers: {}
     #providers: {"https://github.com/": "TOKEN"}
